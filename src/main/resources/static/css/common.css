@@ -1,0 +1,218 @@
+/* --- RESET E VARIÁVEIS --- */
+:root {
+    --bg-dark: #050505;
+    --bg-card: #121212;
+    --primary-green: #2ef861;
+    --accent-orange: #ff9900;
+    --text-white: #e0e0e0;
+    --text-gray: #a0a0a0;
+    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-righteous: 'Righteous', cursive;
+    --font-logo: 'Bungee', cursive;
+    --font-sub: 'Inter', sans-serif;
+    --bg-comment: #1a1c1e;
+    --border-comment: #2d3135;
+    --accent-comment: #3e94ff;
+    --accent-gold: #ffcc00;
+    --accent-red: #ff4d4d;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s;
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- HEADER --- */
+header {
+    background-color: rgba(5, 5, 5, 0.95);
+    border-bottom: 2px solid var(--primary-green);
+    padding: 0.8rem 5%;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center;
+    gap: 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 15px rgba(46, 248, 97, 0.15);
+}
+
+.logo-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-family: var(--font-logo);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--primary-green);
+    line-height: 1.1;
+    letter-spacing: 1px;
+}
+
+.logo span {
+    color: white;
+}
+
+.subtitle {
+    font-family: var(--font-sub);
+    font-size: 0.75rem;
+    color: var(--text-gray);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+}
+
+/* BARRA DE PESQUISA E RESULTADOS */
+.search-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.search-bar {
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 10px 20px;
+    border-radius: 25px;
+    color: white;
+    width: 100%;
+    max-width: 400px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.search-bar:focus {
+    border-color: var(--primary-green);
+}
+
+.search-results {
+    position: absolute;
+    top: 110%;
+    width: 100%;
+    max-width: 400px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 2000;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+.result-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 15px;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.result-item:hover {
+    background: #222;
+}
+
+.result-img {
+    width: 45px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+.result-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.result-title {
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: var(--text-white);
+}
+
+.result-meta {
+    font-size: 0.75rem;
+    color: var(--text-gray);
+}
+
+.result-item:hover .result-title {
+    color: var(--primary-green);
+}
+
+.result-item:last-child {
+    border-bottom: none;
+}
+
+/* MENU */
+nav ul {
+    display: flex;
+    gap: 25px;
+}
+
+nav ul li a {
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-white);
+    padding: 5px 0;
+    border-bottom: 2px solid transparent;
+}
+
+nav ul li a:hover {
+    color: var(--primary-green);
+    border-bottom: 2px solid var(--primary-green);
+}
+
+.login-group {
+    display: flex;
+    align-items: center;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 6px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.login-group:hover {
+    border-color: var(--primary-green);
+}
+
+.btn-login-main {
+    padding: 8px 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--text-white);
+    border-right: 1px solid #333;
+    cursor: pointer;
+}
+
+.btn-login-main:hover {
+    background: #222;
+    color: var(--primary-green);
+}

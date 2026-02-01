@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br"  xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!-- A common header fragment -->
+        <header th:fragment="header">
+            <div class="logo-container">
+                <div class="logo">Animes <span>Achimid</span></div>
+                <div class="subtitle">Feito por um amante de animes. De fã para fã.</div>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-bar" id="animeSearch" placeholder="Pesquisar anime agora..." autocomplete="off">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Início</a></li>
+                    <li><a href="#">Lista de Animes</a></li>
+                    <li><a href="#">Temporada</a></li>
+                </ul>
+            </nav>
+            <div class="login-group">
+                <div class="btn-login-main">LOGIN</div>
+            </div>
+        </header>
+
+        <!-- A common footer fragment -->
+        <footer th:fragment="footer">
+            <p>&copy; 2026 <strong>Animes Achimid</strong>. Todos os direitos reservados.</p>
+            <div class="disclaimer">Disclaimer: Não hospedamos nenhum dos vídeos nos nossos servidores, apenas os indexamos.</div>
+        </footer>
+
+    </body>
+</html>

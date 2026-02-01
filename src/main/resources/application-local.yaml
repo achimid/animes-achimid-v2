@@ -1,0 +1,5 @@
+spring:
+  main:
+    lazy-initialization: false
+  mongodb:
+    uri: mongodb://root:password@localhost:27027/animes-achimid

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://animes.achimid.com.br/sitemap.xml

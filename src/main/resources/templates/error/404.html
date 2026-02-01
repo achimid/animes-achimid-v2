@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+    <title>404 - Página Não Encontrada - Animes Achimid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --primary-green: #2ef861;
+            --accent-orange: #ff9900;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* CONTEÚDO DE ERRO */
+        .error-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .error-code {
+            font-family: 'Bungee', cursive;
+            font-size: clamp(6rem, 15vw, 10rem);
+            color: var(--primary-green);
+            line-height: 1;
+            text-shadow: 0 0 20px rgba(46, 248, 97, 0.3);
+        }
+
+        .error-title {
+            font-family: 'Righteous', cursive;
+            font-size: 2rem;
+            color: var(--accent-orange);
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+
+        .error-text {
+            color: var(--text-gray);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-home {
+            background: var(--primary-green);
+            color: #000;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-family: 'Righteous', cursive;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .btn-home:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        /* FOOTER ORIGINAL */
+        footer {
+            background: #000;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid #222;
+        }
+
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                grid-template-columns: 1fr;
+                text-align: center;
+                justify-items: center;
+                gap: 15px;
+            }
+
+            nav ul {
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header th:replace="fragments/layout :: header"></header>
+
+    <main class="error-content">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Área Restrita ou Inexistente</h1>
+        <p class="error-text">
+            Parece que você tentou acessar um anime que ainda não foi lançado ou um link que se perdeu no fluxo do tempo.
+            Até os melhores aventureiros pegam o caminho errado às vezes!
+        </p>
+        <a href="/" class="btn-home">Voltar para a Home</a>
+    </main>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</body>
+</html>

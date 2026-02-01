@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    <title>Início - Animes Achimid</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/home.css}" />
+</head>
+<body>
+    <header th:replace="fragments/layout :: header"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <section id="releases-section">
+                <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
+                <div class="anime-grid" id="recent-grid"></div>
+                <div class="load-more-container">
+                    <button class="btn-load-more" id="btn-load-recent">Exibir mais</button>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados</h2></div>
+                <div class="anime-grid">
+                    <script>
+                        const recommendedData = [
+                            { name: "Frieren: Beyond Journey's End", url: "https://cdn.myanimelist.net/images/anime/1015/138006.webp", score: "9.1" },
+                            { name: "Solo Leveling", url: "https://cdn.myanimelist.net/images/anime/1864/96171.webp", score: "8.8" },
+                            { name: "Jujutsu Kaisen", url: "https://cdn.myanimelist.net/images/anime/1127/154488.webp", score: "8.7" },
+                            { name: "Chainsaw Man", url: "https://cdn.myanimelist.net/images/anime/1655/153574.webp", score: "8.5" },
+                            { name: "Vinland Saga", url: "https://cdn.myanimelist.net/images/anime/1559/154695.webp", score: "9.0" },
+                            { name: "Spy x Family", url: "https://cdn.myanimelist.net/images/anime/1056/139398.webp", score: "8.4" }
+                        ];
+                        recommendedData.forEach((anime) => {
+                            document.write(`
+                                <a href="#" class="anime-card">
+                                    <div class="rating-badge">⭐ ${anime.score}</div>
+                                    <img src="${anime.url}" alt="${anime.name}">
+                                    <div class="anime-card-info"><span class="anime-card-title">${anime.name}</span></div>
+                                </a>
+                            `);
+                        });
+                    </script>
+                </div>
+            </section>
+        </main>
+
+        <aside class="sidebar">
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">📥 Lista de Episódios</h3>
+                <div class="sidebar-search-wrapper">
+                    <input type="text" id="sidebarSearch" class="sidebar-search" placeholder="Filtrar por nome...">
+                    <span id="clearSidebar" class="btn-clear-sidebar">&times;</span>
+                </div>
+                <div id="sidebar-episodes"></div>
+            </div>
+
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">📅 Calendário</h3>
+                <script>
+                    const calData = [
+                        { name: "29-sai Dokushin Chuuken Boukensha no Nichijou", time: "10:00", rel: true },
+                        { name: "Okiraku Ryoushu no Tanoshii Ryouchi Bouei", time: "10:30", rel: true },
+                        { name: "Odayaka Kizoku no Kyuuka no Susume.", time: "12:00", rel: true },
+                        { name: "Oshi no Ko S3", time: "12:00", rel: false },
+                        { name: "Yuusha Party wo Oidasareta Kiyoubinbou", time: "12:30", rel: false },
+                        { name: "Shibou Yuugi de Meshi wo Kuu.", time: "13:00", rel: false }
+                    ];
+                    calData.forEach(item => {
+                        document.write(`
+                            <div class="calendar-item ${item.rel ? 'released' : ''}">
+                                <span class="cal-name">${item.name}</span>
+                                <div class="cal-info">
+                                    <span class="cal-time">${item.time}</span>
+                                    ${item.rel ? '<span class="check-icon">✓</span>' : ''}
+                                </div>
+                            </div>
+                        `);
+                    });
+                </script>
+            </div>
+
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">❤️ Acompanhando</h3>
+                <div class="fav-item">
+                    <img src="https://cdn.myanimelist.net/images/anime/1127/154488.webp" class="fav-img">
+                    <div style="flex:1"><span class="fav-name">Jujutsu Kaisen</span><div class="fav-progress-bg"><div class="fav-progress-fill" style="width: 80%;"></div></div></div>
+                </div>
+                <div class="fav-item">
+                    <img src="https://cdn.myanimelist.net/images/anime/1864/96171.webp" class="fav-img">
+                    <div style="flex:1"><span class="fav-name">Solo Leveling</span><div class="fav-progress-bg"><div class="fav-progress-fill" style="width: 45%;"></div></div></div>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">🌐 Sites Acompanhados</h3>
+                <div class="sidebar-search-wrapper">
+                    <input type="text" id="siteSearch" class="sidebar-search" placeholder="Filtrar sites...">
+                    <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>
+                </div>
+                <div id="sidebar-sites"></div>
+            </div>
+        </aside>
+    </div>
+
+    <footer th:replace="fragments/layout :: footer"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/home.js}"></script>
+</body>
+</html>
