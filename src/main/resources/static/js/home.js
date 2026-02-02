@@ -142,7 +142,7 @@ function renderSites(filter = "") {
         if (site.name.toLowerCase().includes(filter.toLowerCase())) {
             const div = document.createElement('div');
             div.className = 'calendar-item ' + (site.online ? 'released' : '');
-            div.innerHTML = `
+            div.innerHTML = `    
                         <span class="cal-name">${site.name}</span>
                         <div class="cal-info">
                             <span class="cal-time" style="font-size: 0.7rem;">${site.lastCheck}</span>

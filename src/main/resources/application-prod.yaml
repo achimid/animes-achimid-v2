@@ -1,3 +1,9 @@
 spring:
   thymeleaf:
     cache: true
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 2592000
+          cache-public: true

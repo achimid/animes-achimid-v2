@@ -18,20 +18,20 @@ class AnimeController(
     @GetMapping
     fun animePage(model: Model): String {
 
-        val releasesSupply = supplyAsync({ mockUseCase.getLastReleases() })
         val animeSupply = supplyAsync({ mockUseCase.getAnime() })
+        val releasesSupply = supplyAsync({ mockUseCase.getLastReleases() })
         val animeCommentSupply = supplyAsync({ mockUseCase.getAnimeComment() })
         val recommendationsSupply = supplyAsync({ mockUseCase.getRecommendations() })
 
         allOf(
             animeSupply,
+            releasesSupply,
             animeCommentSupply,
-            recommendationsSupply,
-            releasesSupply
+            recommendationsSupply
         ).join()
 
-        val releases = releasesSupply.join()
         val anime = animeSupply.join()
+        val releases = releasesSupply.join()
         val animeComment = animeCommentSupply.join()
         val recommendations = recommendationsSupply.join()
 

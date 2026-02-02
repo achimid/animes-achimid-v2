@@ -2,13 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <!-- Daily URLs -->
     <url th:each="url : ${dailyUrls}">
-        <loc th:text="${'https://example.com' + url}">https://example.com/</loc>
+        <loc th:text="${'https://animes.achimid.com.br' + url}">https://animes.achimid.com.br/</loc>
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
     </url>
     <!-- Weekly URLs -->
     <url th:each="url : ${weeklyUrls}">
-        <loc th:text="${'https://example.com' + url}">https://example.com/about</loc>
+        <loc th:text="${'https://animes.achimid.com.br' + url}">https://animes.achimid.com.br/</loc>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
     </url>

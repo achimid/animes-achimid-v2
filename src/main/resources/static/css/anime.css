@@ -1,16 +1,4 @@
 /* --- HERO SECTION (Ajustada) --- */
-.anime-hero {
-    position: relative;
-    padding: 4rem 5%;
-    background: linear-gradient(0deg, var(--bg-dark) 0%, rgba(0, 0, 0, 0.85) 100%),
-    url('https://4kwallpapers.com/images/wallpapers/frieren-beyond-3840x2160-15146.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    gap: 40px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
 
 .anime-poster {
     flex: 0 0 300px;

@@ -8,6 +8,7 @@ data class AnimeDetail(
     val titleSecondary: String? = null,
     val status: AnimeDetailStatus = COMPLETO,
     val imageUrl: String,
+    val imageBackgroundUrl: String? = null,
     val description: String? = "Sem descrição no momento...",
     val tags: List<String> = emptyList(),
     val synopsis: String? = null,

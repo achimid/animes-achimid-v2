@@ -121,7 +121,7 @@
 </head>
 <body>
 
-    <header th:replace="fragments/layout :: header"></header>
+    <header th:replace="~{fragments/layout :: header}"></header>
 
     <main class="error-content">
         <div class="error-code">404</div>
@@ -133,7 +133,7 @@
         <a href="/" class="btn-home">Voltar para a Home</a>
     </main>
 
-    <footer th:replace="fragments/layout :: footer"></footer>
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
 
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
 </body>

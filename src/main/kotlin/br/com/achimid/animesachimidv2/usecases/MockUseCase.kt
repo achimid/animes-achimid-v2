@@ -58,21 +58,47 @@ class MockUseCase {
             "mushoku-tensei",
             "Mushoku Tensei",
             "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
-            "Fantasia / Isekai"
+            "Fantasia / Isekai",
+            rating = 9.22
         ), Recommendation(
             "1234",
             "violet-ever",
             "Violet Evergarden",
             "https://cdn.myanimelist.net/images/anime/1160/122627.jpg",
-            "Drama / Slice of Life"
+            "Drama / Slice of Life",
+            rating = 9.22
         )
     )
 
     fun getLastReleases(): List<AnimeRelease> = listOf(
-        AnimeRelease(animeTitle = "Solo Leveling", animeNumber = "Ep 12"),
-        AnimeRelease(animeTitle = "One Piec", animeNumber = "Ep 1105"),
-        AnimeRelease(animeTitle = "Ninja Kamui", animeNumber = "Ep 07"),
-        AnimeRelease(animeTitle = "Mashle S2", animeNumber = "Ep 10"),
+        AnimeRelease(animeTitle = "Solo Leveling", animeNumber = "12", options = optionsList),
+        AnimeRelease(animeTitle = "One Piec", animeNumber = "1105", options = optionsList),
+        AnimeRelease(animeTitle = "Ninja Kamui", animeNumber = "07", options = optionsList),
+        AnimeRelease(animeTitle = "Mashle S2", animeNumber = "10", options = optionsList),
+    )
+
+    fun getCalendarRelease(): CalendarRelease = CalendarRelease(
+        releasesToday = listOf(
+            CalendarItem("29-sai Dokushin Chuuken Boukensha no Nichijou", "10:00", true),
+            CalendarItem("Okiraku Ryoushu no Tanoshii Ryouchi Bouei", "10:30", true),
+            CalendarItem("Odayaka Kizoku no Kyuuka no Susume.", "12:00", true),
+            CalendarItem("Oshi no Ko S3", "12:00", false),
+            CalendarItem("Yuusha Party wo Oidasareta Kiyoubinbou", "12:30", false),
+            CalendarItem("Shibou Yuugi de Meshi wo Kuu.", "13:00", false),
+        )
+    )
+
+    fun getFallowing(): List<AnimeFallowing> = listOf(
+        AnimeFallowing("Jujutsu Kaisen", "https://cdn.myanimelist.net/images/anime/1127/154488.webp", 100),
+        AnimeFallowing("Solo Leveling", "https://cdn.myanimelist.net/images/anime/1864/96171.webp", 50)
+    )
+
+    fun getSitesMonitored(): List<SiteStatus> = listOf(
+        SiteStatus("Animes Achimid", "", "30/01 22:00", true),
+        SiteStatus("MyAnimeList", "", "30/01 21:45", true),
+        SiteStatus("Crunchyroll", "", "30/01 21:30", true),
+        SiteStatus("AnimeFire", "", "30/01 21:00", false),
+        SiteStatus("BetterAnime", "", "30/01 20:30", true),
     )
 
 }
