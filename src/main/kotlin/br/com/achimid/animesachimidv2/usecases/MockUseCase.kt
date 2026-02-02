@@ -13,7 +13,7 @@ class MockUseCase {
 
     fun getAnime(): Anime = Anime(
         id = UUID.randomUUID(),
-        slug = "frieren_jourys",
+        slug = "sousou-no-frieren",
         title = "Sousou no Frieren",
         detail = AnimeDetail(
             title = "Sousou no Frieren",
@@ -55,11 +55,13 @@ class MockUseCase {
     fun getRecommendations(): List<Recommendation> = listOf(
         Recommendation(
             "123",
+            "mushoku-tensei",
             "Mushoku Tensei",
             "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
             "Fantasia / Isekai"
         ), Recommendation(
             "1234",
+            "violet-ever",
             "Violet Evergarden",
             "https://cdn.myanimelist.net/images/anime/1160/122627.jpg",
             "Drama / Slice of Life"

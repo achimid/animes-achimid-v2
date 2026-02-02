@@ -4,16 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title th:text="|${anime.detail.title} - Animes Achimid|">Anime Page - Animes Achimid</title>
+
+    <meta name="robots" content="max-image-preview:large">
+    <meta name="googlebot" content="all">
+
+    <meta name="description" th:content="|Encontre informações de ${anime.detail.title} no Animes Achimid|">
+    <meta name="keywords" th:content="|${anime.detail.title}, Anime, Lançamento, Temporada, Fansub, Grátis|">
+    <meta property="og:title" th:content="|${anime.detail.title} - AnimesAchimid|">
+    <meta property="og:description" th:content="${anime.detail.description}">
+    <meta property="og:image" th:content="${anime.detail.imageUrl}">
+    <meta property="og:type" content="video.tv_show">
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Animes Achimid" />
+
+    <link rel="canonical" th:href="|https://animes.achimid.com.br/anime/${anime.slug}|" />
+
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
 
-    <title th:text="|${anime.detail.title} - AnimesAchimid|">Anime Page - Animes Achimid</title>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/anime.css}" />
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
+    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
+
+    <script th:inline="javascript" type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "TVSeries",
+            "name": [[${anime.detail.title}]],
+            "alternateName": [[${anime.detail.titleSecondary}]],
+            "image": [[${anime.detail.imageUrl}]],
+            "genre": [[${anime.detail.tags}]],
+            "description": [[${anime.detail.description}]],
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": [[${anime.detail.rankings.rating}]],
+                "bestRating": 10,
+                "worstRating": 1,
+                "ratingCount": 10000
+            }
+        }
+    </script>
 </head>
 <body>
     <header th:replace="fragments/layout :: header"></header>
@@ -21,7 +60,7 @@
     <section class="anime-hero">
         <div class="anime-poster">
             <span class="status-badge" th:text="${anime.detail.status}">Anime Status</span>
-            <img th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
+            <img loading="lazy" th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
         </div>
 
         <div class="anime-info-header">
@@ -46,13 +85,13 @@
 
                 <div class="external-icons">
                     <a href="https://www.crunchyroll.com" target="_blank" title="Assistir no Crunchyroll">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=crunchyroll.com" class="ext-icon" alt="CR">
+                        <img loading="lazy" src="https://www.google.com/s2/favicons?sz=64&domain=crunchyroll.com" class="ext-icon" alt="CR">
                     </a>
                     <a href="https://myanimelist.net" target="_blank" title="Ver no MyAnimeList">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=myanimelist.net" class="ext-icon" alt="MAL">
+                        <img loading="lazy" src="https://www.google.com/s2/favicons?sz=64&domain=myanimelist.net" class="ext-icon" alt="MAL">
                     </a>
                     <a href="https://anilist.co" target="_blank" title="Ver no AniList">
-                        <img src="https://www.google.com/s2/favicons?sz=64&domain=anilist.co" class="ext-icon" alt="AL">
+                        <img loading="lazy" src="https://www.google.com/s2/favicons?sz=64&domain=anilist.co" class="ext-icon" alt="AL">
                     </a>
                 </div>
             </div>
@@ -68,15 +107,17 @@
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
                 <div class="episode-container" th:each="episode : ${anime.detail.episodes}" >
-                    <div class="episode-item" onclick="toggleEpOptions(this)">
-                        <div class="ep-info">
-                            <span class="ep-num" th:text="|${episode.type}: ${episode.number}|"></span>
-                            <span class="ep-title" th:text="${episode.title}"></span></div>
-                        <div class="ep-play-btn">Visualizar ▼</div>
-                    </div>
-                    <div class="episode-options">
-                        <a class="opt-btn" th:each="option : ${episode.options}" th:href="${option.url}" th:text="${option.name}">Option Button</a>
-                    </div>
+                    <article>
+                        <div class="episode-item" onclick="toggleEpOptions(this)">
+                            <div class="ep-info">
+                                <span class="ep-num" th:text="|${episode.type}: ${episode.number}|"></span>
+                                <span class="ep-title" th:text="${episode.title}"></span></div>
+                            <div class="ep-play-btn">Visualizar ▼</div>
+                        </div>
+                        <div class="episode-options">
+                            <a class="opt-btn" th:each="option : ${episode.options}" th:href="${option.url}" th:text="${option.name}">Option Button</a>
+                        </div>
+                    </article>
                 </div>
             </div>
 
@@ -144,8 +185,8 @@
             <div class="sidebar-card" style="border-top-color: var(--accent-orange);">
                 <h3 style="color:var(--accent-orange); margin-bottom:15px;">Recomendados</h3>
                 <div class="recommended-list">
-                    <a href="#" class="rec-item" th:each="recomendation : ${recommendations}" th:href="|/anime/${recomendation.id}|">
-                        <img class="rec-thumb" th:src="${recomendation.imageUrl}" th:alt="${recomendation.title}">
+                    <a href="#" class="rec-item" th:each="recomendation : ${recommendations}" th:href="|/anime/${recomendation.slug}|">
+                        <img class="rec-thumb" loading="lazy" th:src="${recomendation.imageUrl}" th:alt="|Poster do anime ${recomendation.title}|">
                         <div class="rec-info">
                             <span class="rec-title" th:text="${recomendation.title}">Anime Recomendation Title</span>
                             <span class="rec-meta" th:text="${recomendation.meta}">Anime Recomendation Tags</span>

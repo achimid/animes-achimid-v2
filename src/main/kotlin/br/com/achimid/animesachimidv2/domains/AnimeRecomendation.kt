@@ -6,6 +6,7 @@ data class AnimeRecommendation(
 
 data class Recommendation(
     val id: String,
+    val slug: String,
     val title: String,
     val imageUrl: String,
     val meta: String
