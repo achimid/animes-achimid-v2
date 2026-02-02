@@ -3,13 +3,13 @@ package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.UUID
+import java.util.*
 
 
 @Document(collection = "anime_catalog")
 data class AnimeDetailsDocument(
     @Id
-    val uuid: UUID,
+    val id: UUID,
     @Indexed
     val malId: Int? = null,
     val url: String,

@@ -1,12 +1,12 @@
 package br.com.achimid.animesachimidv2.domains
 
-import java.util.*
-
-
-data class AnimeDetails(
-    val uuid: UUID,
-    val malId: Int? = null,
+data class AnimeMALIntegration(
+    val malId: Int,
     val url: String,
+    val detail: List<AnimeMALIntegrationDetails>? = null,
+)
+
+data class AnimeMALIntegrationDetails(
     val title: AnimeTitles,
     val mainPicture: ImageSources,
     val trailer: TrailerDetails?,

@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
 
-    <title>Sousou no Frieren - Animes Achimid</title>
+    <title th:text="|${anime.detail.title} - AnimesAchimid|">Anime Page - Animes Achimid</title>
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
@@ -20,29 +20,24 @@
 
     <section class="anime-hero">
         <div class="anime-poster">
-            <span class="status-badge">FINALIZADO</span>
-            <img src="https://cdn.myanimelist.net/images/anime/1015/138006.jpg" alt="Sousou no Frieren">
+            <span class="status-badge" th:text="${anime.detail.status}">Anime Status</span>
+            <img th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
         </div>
 
         <div class="anime-info-header">
-            <h1>Sousou no Frieren</h1>
-            <span class="native-title">葬送 de フリーレン (Frieren: Beyond Journey's End)</span>
+            <h1 th:text="${anime.detail.title}">Anime Title</h1>
+            <span class="native-title" th:text="${anime.detail.titleSecondary}">Anime Secondary Title</span>
             
             <div class="rating">
-                ★ 9.33 <span>(Rank #1 Global)</span>
+                ★ <div th:text="${anime.detail.rankings.rating}"></div>
+                <span>(Rank <span th:text="${anime.detail.rankings.rank}"></span> Global MyAnimeList)</span>
             </div>
 
             <div class="meta-tags">
-                <span class="tag">Ação</span>
-                <span class="tag">Aventura</span>
-                <span class="tag">Fantasia</span>
-                <span class="tag">Isekai</span>
-                <span class="tag">Reencarnação</span>
+                <span class="tag" th:each="tag : ${anime.detail.tags}" th:text="${tag}">Anime Tags</span>
             </div>
 
-            <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;">
-                A história acompanha a maga elfa Frieren, que após derrotar o Rei Demônio com seu grupo, inicia uma nova jornada para entender a brevidade da vida humana após a morte de seus antigos companheiros.
-            </p>
+            <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;" th:text="${anime.detail.description}"> Anime Description </p>
             
             <div class="action-container">
                 <button class="btn btn-primary">► Assistir Agora</button>
@@ -68,33 +63,21 @@
         
         <div class="main-column">
             <h2 class="section-title">Sinopse</h2>
-            <div class="description">
-                <p>The adventure is over but life goes on for an elf mage who is just beginning to learn what life is all about. Elf mage Frieren and her courageous fellow adventurers have defeated the Demon King and brought peace to the land.</p>
-                <p style="margin-top: 10px;">Decades later, the funeral of one of her friends confronts Frieren with her own near immortality. Frieren sets out to fulfill the last wishes of her comrades and finds herself beginning a new adventure...</p>
-            </div>
+            <div class="description" th:utext="${anime.detail.synopsis}"></div>
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
-                <script>
-                    const epTitles = ["O Fim da Jornada", "Não Precisa Ser Magia", "Zoltraak", "A Terra Onde as Almas Descansam", "Fantasmas dos Mortos", "Herói da Vila", "Conto de Fadas", "Frieren, a Assassina", "Aura, a Guilhotina", "Uma Maga Poderosa", "Inverno nas Terras do Norte", "O Verdadeiro Herói","Aversão à Magia"];
-
-                    epTitles.forEach((title, i) => {
-                        const num = String(i + 1).padStart(2, '0');
-                        document.write(`
-                            <div class="episode-container">
-                                <div class="episode-item" onclick="toggleEpOptions(this)">
-                                    <div class="ep-info"><span class="ep-num">${num}</span><span class="ep-title">${title}</span></div>
-                                    <div class="ep-play-btn">Visualizar ▼</div>
-                                </div>
-                                <div class="episode-options">
-                                    <button class="opt-btn">Player HD</button>
-                                    <button class="opt-btn">Player SD</button>
-                                    <button class="opt-btn">Download</button>
-                                </div>
-                            </div>
-                        `);
-                    });
-                </script>
+                <div class="episode-container" th:each="episode : ${anime.detail.episodes}" >
+                    <div class="episode-item" onclick="toggleEpOptions(this)">
+                        <div class="ep-info">
+                            <span class="ep-num" th:text="|${episode.type}: ${episode.number}|"></span>
+                            <span class="ep-title" th:text="${episode.title}"></span></div>
+                        <div class="ep-play-btn">Visualizar ▼</div>
+                    </div>
+                    <div class="episode-options">
+                        <a class="opt-btn" th:each="option : ${episode.options}" th:href="${option.url}" th:text="${option.name}">Option Button</a>
+                    </div>
+                </div>
             </div>
 
             <section class="comments-section">
@@ -106,23 +89,13 @@
                     </div>
 
                     <div class="comment-list">
-                        <div class="comment-item">
+                        <div class="comment-item" th:each="comment : ${animeComment.comments}">
                             <button class="delete-comment" title="Excluir comentário" onclick="removeComment(this)">🗑</button>
-                            <div class="comment-avatar">AH</div>
+                            <div class="comment-avatar" th:text="${comment.avatar}">AH</div>
                             <div class="comment-content">
-                                <span class="user-name">AnimeHunter_99</span>
-                                <p class="comment-text">Simplesmente o melhor anime da temporada. A animação da Madhouse continua impecável!</p>
-                                <span class="comment-date">Postado há 2 horas</span>
-                            </div>
-                        </div>
-
-                        <div class="comment-item">
-                            <button class="delete-comment" title="Excluir comentário" onclick="removeComment(this)">🗑</button>
-                            <div class="comment-avatar">F</div>
-                            <div class="comment-content">
-                                <span class="user-name">Fern_Simp</span>
-                                <p class="comment-text">A evolução da Fern e do Stark é muito fofa de acompanhar. Mal posso esperar pelo próximo episódio!</p>
-                                <span class="comment-date">Postado há 5 horas</span>
+                                <span class="user-name" th:text="${comment.user}">User</span>
+                                <p class="comment-text" th:text="${comment.content}">Content</p>
+                                <span class="comment-date" th:text="${comment.date}">Date</span>
                             </div>
                         </div>
                     </div>
@@ -133,59 +106,49 @@
         <aside class="sidebar">
             <div class="sidebar-card">
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Informações</h3>
-                <div class="info-row"><span class="info-label">Status:</span><span class="info-value">Ongoing</span></div>
-                <div class="info-row"><span class="info-label">Estúdio:</span><span class="info-value">Yokohama Animation Lab</span></div>
-                <div class="info-row"><span class="info-label">Lançado:</span><span class="info-value">jan 10, 2026</span></div>
-                <div class="info-row"><span class="info-label">Duração:</span><span class="info-value">23 min. per ep.</span></div>
-                <div class="info-row"><span class="info-label">Temporada:</span><span class="info-value">Inverno de 2026</span></div>
-                <div class="info-row"><span class="info-label">Tipo:</span><span class="info-value">TV</span></div>
-                <div class="info-row"><span class="info-label">Episódios:</span><span class="info-value">12</span></div>
-                <div class="info-row"><span class="info-label">Legendas:</span><span class="info-value">PT-BR, Multisubs</span></div>
-                <div class="info-row"><span class="info-label">Créditos:</span><span class="info-value">DarkMahou</span></div>
-                <div class="info-row elenco-row">
-                    <span class="info-label">Elenco:</span>
-                    <span class="elenco-value">Chiba Shouya, Hatanaka Tasuku, Ishikawa Hideo, Koichi Makoto, Miyake Marie, Miyamoto Takahiro, Ootsuka Akio, Senbongi Sayaka, Sugita Tomokazu, Tamura Mutsumi</span>
+                <div class="info-row" th:each="info : ${anime.detail.infoList}">
+                    <span class="info-label" th:text="${info.infoName}">Status:</span>
+                    <span class="info-value" th:text="${info.infoValue}">Ongoing</span>
                 </div>
-                <div class="info-row"><span class="info-label">Postado por:</span><span class="info-value">dark</span></div>
-                <div class="info-row"><span class="info-label">Lançado em:</span><span class="info-value">dezembro 16, 2025</span></div>
-                <div class="info-row"><span class="info-label">Atualizado em:</span><span class="info-value">janeiro 30, 2026</span></div>
-                <div class="info-row"><span class="info-label">Visualizações:</span><span class="info-value">6049</span></div>
+                <div class="info-row">
+                    <span class="info-label">Acessos:</span>
+                    <span class="info-value" th:text="${anime.detail.accessCounter}">0</span>
+                </div>
             </div>
 
             <div class="sidebar-card" style="border-color: var(--accent-orange);">
                 <h3 style="color:var(--accent-orange); margin-bottom:15px;">Rankings</h3>
                 <ul style="font-size: 0.9rem; color: #ccc;">
-                    <li style="padding: 5px 0; border-bottom: 1px solid #333;">Score: 9.33</li>
-                    <li style="padding: 5px 0; border-bottom: 1px solid #333;">Popularidade: #248</li>
-                    <li style="padding: 5px 0;">Rank: #1</li>
+                    <li style="padding: 5px 0; border-bottom: 1px solid #333;">Score:
+                        <span th:text="${anime.detail.rankings.rating}"></span>
+                    </li>
+                    <li style="padding: 5px 0; border-bottom: 1px solid #333;">Popularidade:
+                        <span th:text="${anime.detail.rankings.popularity}"></span>
+                    </li>
+                    <li style="padding: 5px 0;">Rank:
+                        <span th:text="${anime.detail.rankings.rank}"></span>
+                    </li>
                 </ul>
             </div>
 
             <div class="sidebar-card">
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Últimos Lançamentos</h3>
                 <div class="latest-list">
-                    <a href="#" class="latest-item"><span>Solo Leveling</span> <span class="ep-tag">Ep 12</span></a>
-                    <a href="#" class="latest-item"><span>One Piece</span> <span class="ep-tag">Ep 1105</span></a>
-                    <a href="#" class="latest-item"><span>Ninja Kamui</span> <span class="ep-tag">Ep 07</span></a>
-                    <a href="#" class="latest-item"><span>Mashle S2</span> <span class="ep-tag">Ep 10</span></a>
+                    <a href="#" class="latest-item" th:each="release : ${releases}">
+                        <span th:text="${release.animeTitle}">Anime Release Title</span>
+                        <span class="ep-tag" th:text="|${release.animeNumber}|">Anime Release Number</span>
+                    </a>
                 </div>
             </div>
 
             <div class="sidebar-card" style="border-top-color: var(--accent-orange);">
                 <h3 style="color:var(--accent-orange); margin-bottom:15px;">Recomendados</h3>
                 <div class="recommended-list">
-                    <a href="#" class="rec-item">
-                        <img src="https://cdn.myanimelist.net/images/anime/1208/94745.jpg" class="rec-thumb">
+                    <a href="#" class="rec-item" th:each="recomendation : ${recommendations}" th:href="|/anime/${recomendation.id}|">
+                        <img class="rec-thumb" th:src="${recomendation.imageUrl}" th:alt="${recomendation.title}">
                         <div class="rec-info">
-                            <span class="rec-title">Mushoku Tensei</span>
-                            <span class="rec-meta">Fantasia / Isekai</span>
-                        </div>
-                    </a>
-                    <a href="#" class="rec-item">
-                        <img src="https://cdn.myanimelist.net/images/anime/1160/122627.jpg" class="rec-thumb">
-                        <div class="rec-info">
-                            <span class="rec-title">Violet Evergarden</span>
-                            <span class="rec-meta">Drama / Slice of Life</span>
+                            <span class="rec-title" th:text="${recomendation.title}">Anime Recomendation Title</span>
+                            <span class="rec-meta" th:text="${recomendation.meta}">Anime Recomendation Tags</span>
                         </div>
                     </a>
                 </div>
