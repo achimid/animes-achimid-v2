@@ -16,7 +16,13 @@ data class AnimeDetail(
     val infoList: List<AnimeDetailsInfo>? = null,
     val rankings: RankingStats,
     val accessCounter: Long? = System.currentTimeMillis(),
-)
+) {
+    val baseInfoNames = listOf("EpisodesCount", "Studio", "Season", "Status")
+
+    fun getBaseInfo(): List<AnimeDetailsInfo>? {
+        return infoList?.filter { baseInfoNames.contains(it.infoName) }
+    }
+}
 
 enum class AnimeDetailStatus { COMPLETO, EXIBINDO, AGUARDANDO }
 

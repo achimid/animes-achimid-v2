@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Lista de Animes - Catalogo - Animes Achimid</title>
+
+    <meta name="robots" content="max-image-preview:large">
+    <meta name="googlebot" content="all">
+
+    <meta name="description" content="Encontre informações e lançamentos de animes no Animes Achimid">
+    <meta name="keywords" content="Anime, Lançamento, Temporada, Fansub, Grátis">
+    <meta property="og:title" content="Lista de Animes - Catalogo - Animes Achimid">
+    <meta property="og:description" content="Encontre informações e lançamentos de animes no Animes Achimid">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Animes Achimid" />
+
+    <link rel="canonical" href="https://animes.achimid.com.br/catalog" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
+    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
+    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/catalog.css}" />
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <main class="container-list">
+        <div class="controls-container">
+            <div class="search-box">
+                <label class="label-style">Filtrar por nome</label>
+                <input type="text" id="animeSearchList" class="input-style" placeholder="Digite para buscar...">
+            </div>
+
+            <div class="filter-group-wrapper">
+                <div class="filter-item">
+                    <label class="label-style">Ordenação</label>
+                    <select class="input-style">
+                        <option>Lançamento</option>
+                        <option>Data de Criação</option>
+                        <option>Ranking</option>
+                        <option>Ordem Alfabética</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label class="label-style">Gênero</label>
+                    <select class="input-style">
+                        <option>Todos</option>
+                        <option>Ação</option>
+                        <option>Isekai</option>
+                        <option>Aventura</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="animeContainer">
+            <article class="anime-card-compact" th:each="anime : ${catalogList}">
+                <a class="card-thumb" th:href="|/anime/${anime.slug}|" >
+                    <img th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
+                </a>
+                <div class="card-content">
+                    <div class="card-top">
+                        <a class="card-title" th:href="|/anime/${anime.slug}|" th:text="${anime.detail.title}">Anime Name</a>
+                        <div class="card-score">★ <span th:text="${anime.detail.rankings.rating}">Anime Rating</span></div>
+                    </div>
+                    <div class="card-info-grid">
+                        <div class="info-item" th:each="info : ${anime.detail.baseInfo}">
+                            <strong th:text="${info.infoName}">Estúdio:</strong>
+                            <span th:text="${info.infoValue}">Madhouse</span>
+                        </div>
+                    </div>
+                    <div class="card-footer-tags">
+                        <span class="mini-tag" th:each="tag : ${anime.detail.tags}" th:text="${tag}">Ação</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="pagination">
+            <div class="page-item active">1</div>
+            <div class="page-item">2</div>
+            <div class="page-item">3</div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/catalog.js}"></script>
+</body>
+</html>

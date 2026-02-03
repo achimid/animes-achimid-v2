@@ -45,6 +45,8 @@ class MockUseCase {
         )
     )
 
+    fun getCatalogList(): List<Anime> = listOf(getAnime(), getAnime(), getAnime(), getAnime(), getAnime())
+
     fun getAnimeComment(): AnimeComment = AnimeComment(
         UUID.randomUUID(), listOf(
             Comment(UUID.randomUUID(), "AnimeHunter_99", "AH", "Simplesmente o melhor anime da temporada!"),
