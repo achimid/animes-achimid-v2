@@ -23,7 +23,15 @@
         <main class="content-area">
             <section id="releases-section">
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
-                <div class="anime-grid" id="recent-grid"></div>
+                <div class="anime-grid" id="recent-grid">
+                    <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
+                        <span class="ep-badge" th:text="|${release.animeType}: ${release.animeNumber}|">Episode Number</span>
+                        <img th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}">
+                        <div class="anime-card-info">
+                            <span class="anime-card-title" th:text="${release.animeTitle}"></span>
+                        </div>
+                    </a>
+                </div>
                 <div class="load-more-container">
                     <button class="btn-load-more" id="btn-load-recent">Exibir mais</button>
                 </div>

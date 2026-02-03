@@ -71,10 +71,10 @@ class MockUseCase {
     )
 
     fun getLastReleases(): List<AnimeRelease> = listOf(
-        AnimeRelease(animeTitle = "Solo Leveling", animeNumber = "12", options = optionsList),
-        AnimeRelease(animeTitle = "One Piec", animeNumber = "1105", options = optionsList),
-        AnimeRelease(animeTitle = "Ninja Kamui", animeNumber = "07", options = optionsList),
-        AnimeRelease(animeTitle = "Mashle S2", animeNumber = "10", options = optionsList),
+        AnimeRelease(animeTitle = "Solo Leveling", animeNumber = "12", options = optionsList, animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"),
+        AnimeRelease(animeTitle = "One Piec", animeNumber = "1105", options = optionsList, animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"),
+        AnimeRelease(animeTitle = "Ninja Kamui", animeNumber = "07", options = optionsList, animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"),
+        AnimeRelease(animeTitle = "Mashle S2", animeNumber = "10", options = optionsList, animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"),
     )
 
     fun getCalendarRelease(): CalendarRelease = CalendarRelease(
