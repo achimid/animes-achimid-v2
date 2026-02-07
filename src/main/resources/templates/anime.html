@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title th:text="|${anime.detail.title} - Animes Achimid|">Anime Page - Animes Achimid</title>
+    <title th:text="|${anime.fullTitle} - Animes Achimid|">Anime Page - Animes Achimid</title>
 
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
 
-    <meta name="description" th:content="|Encontre informações de ${anime.detail.title} no Animes Achimid|">
-    <meta name="keywords" th:content="|${anime.detail.title}, Anime, Lançamento, Temporada, Fansub, Grátis|">
-    <meta property="og:title" th:content="|${anime.detail.title} - AnimesAchimid|">
+    <meta name="description" th:content="|Encontre informações de ${anime.title} no Animes Achimid|">
+    <meta name="keywords" th:content="|${anime.title}, Anime, Lançamento, Temporada, Fansub, Grátis|">
+    <meta property="og:title" th:content="|${anime.title} - AnimesAchimid|">
     <meta property="og:description" th:content="${anime.detail.description}">
     <meta property="og:image" th:content="${anime.detail.imageUrl}">
     <meta property="og:type" content="video.tv_show">
@@ -51,7 +51,7 @@
     <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
 
     <script th:inline="javascript" type="application/ld+json">
-        {"@context": "https://schema.org","@type": "TVSeries","name": [[${anime.detail.title}]],"alternateName": [[${anime.detail.titleSecondary}]],"image": [[${anime.detail.imageUrl}]],"genre": [[${anime.detail.tags}]],"description": [[${anime.detail.description}]],"aggregateRating": {"@type": "AggregateRating","ratingValue": [[${anime.detail.rankings.rating}]],"bestRating": 10,"worstRating": 1,"ratingCount": 10000}}
+        {"@context": "https://schema.org","@type": "TVSeries","name": [[${anime.fullTitle}]],"alternateName": [[${anime.detail.titles.secondary}]],"image": [[${anime.detail.imageUrl}]],"genre": [[${anime.detail.tags}]],"description": [[${anime.detail.description}]],"aggregateRating": {"@type": "AggregateRating","ratingValue": [[${anime.detail.rankings.rating}]],"bestRating": 10,"worstRating": 1,"ratingCount": 10000}}
     </script>
 </head>
 <body>
@@ -60,12 +60,12 @@
     <section class="anime-hero">
         <div class="anime-poster">
             <span class="status-badge" th:text="${anime.detail.status}">Anime Status</span>
-            <img loading="lazy" th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
+            <img loading="lazy" th:src="${anime.detail.imageUrl}" th:alt="${anime.title}">
         </div>
 
         <div class="anime-info-header">
-            <h1 th:text="${anime.detail.title}">Anime Title</h1>
-            <span class="native-title" th:text="${anime.detail.titleSecondary}">Anime Secondary Title</span>
+            <h1 th:text="${anime.fullTitle}">Anime Title</h1>
+            <span class="native-title" th:text="${anime.detail.titles.secondary}">Anime Secondary Title</span>
 
             <div class="rating">
                 ★ <div th:text="${anime.detail.rankings.rating}"></div>
@@ -106,7 +106,7 @@
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
-                <div class="episode-container" th:each="episode : ${anime.detail.episodes}" >
+                <div class="episode-container" th:each="episode : ${anime.episodes}" >
                     <article>
                         <div class="episode-item" onclick="toggleEpOptions(this)">
                             <div class="ep-info">
@@ -177,7 +177,7 @@
                 <div class="latest-list">
                     <a href="#" class="latest-item" th:each="release : ${releases}">
                         <span th:text="${release.animeTitle}">Anime Release Title</span>
-                        <span class="ep-tag" th:text="|${release.animeNumber}|">Anime Release Number</span>
+                        <span class="ep-tag" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Release Number</span>
                     </a>
                 </div>
             </div>

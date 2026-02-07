@@ -1,14 +1,13 @@
-package br.com.achimid.animesachimidv2.domains
+package br.com.achimid.animesachimidv2.domains.dto
 
 import java.time.Instant
 import java.util.*
 
-data class AnimeComment(
-    val animeId: UUID,
-    val comments: List<Comment>? = emptyList(),
+data class AnimeCommentDTO(
+    val comments: List<CommentDTO>? = emptyList(),
 )
 
-data class Comment(
+data class CommentDTO(
     val id: UUID? = null,
     val user: String? = "Anonymous",
     val avatar: String? = user?.take(2)?.uppercase() ?: "AA",

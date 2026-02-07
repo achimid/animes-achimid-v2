@@ -70,11 +70,11 @@
         <div id="animeContainer">
             <article class="anime-card-compact" th:each="anime : ${catalogList}">
                 <a class="card-thumb" th:href="|/anime/${anime.slug}|" >
-                    <img th:src="${anime.detail.imageUrl}" th:alt="${anime.detail.title}">
+                    <img th:src="${anime.detail.imageUrl}" th:alt="${anime.fullTitle}">
                 </a>
                 <div class="card-content">
                     <div class="card-top">
-                        <a class="card-title" th:href="|/anime/${anime.slug}|" th:text="${anime.detail.title}">Anime Name</a>
+                        <a class="card-title" th:href="|/anime/${anime.slug}|" th:text="${anime.fullTitle}">Anime Name</a>
                         <div class="card-score">★ <span th:text="${anime.detail.rankings.rating}">Anime Rating</span></div>
                     </div>
                     <div class="card-info-grid">

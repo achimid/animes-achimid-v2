@@ -1,6 +1,7 @@
 package br.com.achimid.animesachimidv2.gateways.inputs.http.site
 
 import br.com.achimid.animesachimidv2.usecases.MockUseCase
+import br.com.achimid.animesachimidv2.usecases.RetrieveMonitoredSitesUseCase
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 @Controller
 @RequestMapping("/")
 class HomeController(
+    val retrieveMonitoredSitesUseCase: RetrieveMonitoredSitesUseCase,
     val mockUseCase: MockUseCase
 ) {
 
@@ -26,7 +28,7 @@ class HomeController(
         model.addAttribute("recommendations", recommendations)
         model.addAttribute("calendarRelease", calendarRelease)
         model.addAttribute("fallowingList", fallowingList)
-        model.addAttribute("sitesStatus", sitesStatus)
+        model.addAttribute("monitoredSites", retrieveMonitoredSitesUseCase.execute())
 
         return "home"
     }

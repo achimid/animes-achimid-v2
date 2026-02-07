@@ -78,7 +78,17 @@
                     <input type="text" id="sidebarSearch" class="sidebar-search" placeholder="Filtrar por nome...">
                     <span id="clearSidebar" class="btn-clear-sidebar">&times;</span>
                 </div>
-                <div id="sidebar-episodes"></div>
+                <div id="sidebar-episodes">
+                    <div class="download-item-wrapper" th:each="release : ${releases}">
+                        <div class="download-item">
+                            <span class="download-name" th:text="${release.animeTitle}">Anime Name</span>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Episode</button>
+                        </div>
+                        <div class="download-options">
+                            <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}">Site Name</a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="sidebar-box">
@@ -112,11 +122,11 @@
                     <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>
                 </div>
                 <div id="sidebar-sites">
-                    <div class="calendar-item" th:each="status : ${sitesStatus}"  th:classappend="${status.ok} ? 'released' : ''">
-                        <span class="cal-name" th:text="${status.name}">Site Name</span>
+                    <div class="calendar-item" th:each="status : ${monitoredSites}"  th:classappend="${status.enabled} ? 'released' : ''">
+                        <a class="cal-name" th:text="${status.name}" th:href="${status.url}">Site Name</a>
                         <div class="cal-info">
-                            <span class="cal-time" style="font-size: 0.7rem;" th:text="${status.time}">Date Status</span>
-                            <span class="check-icon" th:if="${status.ok}">✓</span>
+                            <span class="cal-time" style="font-size: 0.7rem;" th:text="${status.lastExecutionDate}">Date Status</span>
+                            <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
                         </div>
                     </div>
                 </div>
