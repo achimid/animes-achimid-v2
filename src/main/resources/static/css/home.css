@@ -1,7 +1,7 @@
 
 .main-wrapper {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 7fr 3fr;
     gap: 25px;
     padding: 2rem 2%;
     max-width: 98%;
@@ -437,4 +437,40 @@ footer {
 .anime-card:hover .anime-card-title {
     color: var(--primary-green);
     transform: translateY(-2px); /* Pequeno pulo para dar vida */
+}
+
+
+/* --- ESTILO DE ACESSOS (SUGESTÃO ANTERIOR REFINADA) --- */
+.stats-box-single {
+    display: block;
+    /*padding: 15px;*/
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #222;
+    border-radius: 8px;
+    text-align: center;
+    transition: 0.3s ease;
+}
+
+.stats-box-single:hover {
+    border-color: var(--primary-green);
+    background: rgba(46, 248, 97, 0.05);
+}
+
+.stat-value-large {
+    display: block;
+    font-family: var(--font-righteous);
+    font-size: 1.6rem; /* Valor maior em destaque */
+    color: var(--primary-green);
+    text-shadow: 0 0 10px rgba(46, 248, 97, 0.3);
+    line-height: 1;
+}
+
+.stat-label-sub {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    letter-spacing: 2px;
+    margin-top: 8px;
+    font-weight: 700;
 }

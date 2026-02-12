@@ -17,7 +17,7 @@
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Animes Achimid" />
 
-    <link rel="canonical" href="https://animes.achimid.com.br/catalog" />
+    <link rel="canonical" href="https://animes.achimid.com.br/animes" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -32,7 +32,7 @@
     <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/catalog.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/animes.css}" />
 </head>
 <body>
 
@@ -68,23 +68,23 @@
         </div>
 
         <div id="animeContainer">
-            <article class="anime-card-compact" th:each="anime : ${catalogList}">
+            <article class="anime-card-compact" th:each="anime : ${animeList}">
                 <a class="card-thumb" th:href="|/anime/${anime.slug}|" >
-                    <img th:src="${anime.detail.imageUrl}" th:alt="${anime.fullTitle}">
+                    <img th:src="${anime.imageUrl}" th:alt="${anime.name}">
                 </a>
                 <div class="card-content">
                     <div class="card-top">
-                        <a class="card-title" th:href="|/anime/${anime.slug}|" th:text="${anime.fullTitle}">Anime Name</a>
-                        <div class="card-score">★ <span th:text="${anime.detail.rankings.rating}">Anime Rating</span></div>
+                        <a class="card-title" th:href="|/anime/${anime.slug}|" th:text="${anime.name}">Anime Name</a>
+                        <div class="card-score">★ <span th:text="${anime.score}">Anime Rating</span></div>
                     </div>
                     <div class="card-info-grid">
-                        <div class="info-item" th:each="info : ${anime.detail.baseInfo}">
+                        <div class="info-item" th:each="info : ${anime.infoList}">
                             <strong th:text="${info.infoName}">Estúdio:</strong>
                             <span th:text="${info.infoValue}">Madhouse</span>
                         </div>
                     </div>
                     <div class="card-footer-tags">
-                        <span class="mini-tag" th:each="tag : ${anime.detail.tags}" th:text="${tag}">Ação</span>
+                        <span class="mini-tag" th:each="tag : ${anime.tags}" th:text="${tag}">Ação</span>
                     </div>
                 </div>
             </article>
@@ -100,6 +100,6 @@
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script type="text/javascript" th:src="@{/js/catalog.js}"></script>
+    <script type="text/javascript" th:src="@{/js/animes.js}"></script>
 </body>
 </html>

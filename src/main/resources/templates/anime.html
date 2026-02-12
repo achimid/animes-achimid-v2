@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title th:text="|${anime.fullTitle} - Animes Achimid|">Anime Page - Animes Achimid</title>
+    <title th:text="|${anime.name} - Animes Achimid|">Anime Page - Animes Achimid</title>
 
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
 
-    <meta name="description" th:content="|Encontre informações de ${anime.title} no Animes Achimid|">
-    <meta name="keywords" th:content="|${anime.title}, Anime, Lançamento, Temporada, Fansub, Grátis|">
-    <meta property="og:title" th:content="|${anime.title} - AnimesAchimid|">
-    <meta property="og:description" th:content="${anime.detail.description}">
-    <meta property="og:image" th:content="${anime.detail.imageUrl}">
+    <meta name="description" th:content="|Encontre informações de ${anime.name} no Animes Achimid|">
+    <meta name="keywords" th:content="|${anime.name}, Anime, Lançamento, Temporada, Fansub, Grátis|">
+    <meta property="og:title" th:content="|${anime.name} - AnimesAchimid|">
+    <meta property="og:description" th:content="${anime.description}">
+    <meta property="og:image" th:content="${anime.imageUrl}">
     <meta property="og:type" content="video.tv_show">
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Animes Achimid" />
@@ -35,7 +35,7 @@
             position: relative;
             padding: 4rem 5%;
             background: linear-gradient(0deg, var(--bg-dark) 0%, rgba(0, 0, 0, 0.85) 100%),
-            url([(${anime.detail.imageBackgroundUrl} ?: ${anime.detail.imageUrl})]);
+            url([(${anime.imageBackgroundUrl} ?: ${anime.imageUrl})]);
             background-size: cover;
             background-position: center;
             display: flex;
@@ -51,7 +51,7 @@
     <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
 
     <script th:inline="javascript" type="application/ld+json">
-        {"@context": "https://schema.org","@type": "TVSeries","name": [[${anime.fullTitle}]],"alternateName": [[${anime.detail.titles.secondary}]],"image": [[${anime.detail.imageUrl}]],"genre": [[${anime.detail.tags}]],"description": [[${anime.detail.description}]],"aggregateRating": {"@type": "AggregateRating","ratingValue": [[${anime.detail.rankings.rating}]],"bestRating": 10,"worstRating": 1,"ratingCount": 10000}}
+        {"@context": "https://schema.org","@type": "TVSeries","name": [[${anime.name}]],"alternateName": [[${anime.nameSecondary}]],"image": [[${anime.imageUrl}]],"genre": [[${anime.tags}]],"description": [[${anime.description}]],"aggregateRating": {"@type": "AggregateRating","ratingValue": [[${anime.score}]],"bestRating": 10,"worstRating": 1,"ratingCount": 10000}}
     </script>
 </head>
 <body>
@@ -59,24 +59,24 @@
 
     <section class="anime-hero">
         <div class="anime-poster">
-            <span class="status-badge" th:text="${anime.detail.status}">Anime Status</span>
-            <img loading="lazy" th:src="${anime.detail.imageUrl}" th:alt="${anime.title}">
+            <span class="status-badge" th:text="${anime.status}">Anime Status</span>
+            <img loading="lazy" th:src="${anime.imageUrl}" th:alt="${anime.name}">
         </div>
 
         <div class="anime-info-header">
-            <h1 th:text="${anime.fullTitle}">Anime Title</h1>
-            <span class="native-title" th:text="${anime.detail.titles.secondary}">Anime Secondary Title</span>
+            <h1 th:text="${anime.name}">Anime Title</h1>
+            <span class="native-title" th:text="${anime.nameSecondary}">Anime Secondary Title</span>
 
             <div class="rating">
-                ★ <div th:text="${anime.detail.rankings.rating}"></div>
-                <span>(Rank <span th:text="${anime.detail.rankings.rank}"></span> Global MyAnimeList)</span>
+                ★ <div th:text="${anime.score}"></div>
+                <span>(Rank <span th:text="${anime.rank}"></span> Global MyAnimeList)</span>
             </div>
 
             <div class="meta-tags">
-                <span class="tag" th:each="tag : ${anime.detail.tags}" th:text="${tag}">Anime Tags</span>
+                <span class="tag" th:each="tag : ${anime.tags}" th:text="${tag}">Anime Tags</span>
             </div>
 
-            <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;" th:text="${anime.detail.description}"> Anime Description </p>
+            <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;" th:text="${anime.description}"> Anime Description </p>
 
             <div class="action-container">
                 <button class="btn btn-primary">► Assistir Agora</button>
@@ -102,7 +102,7 @@
 
         <div class="main-column">
             <h2 class="section-title">Sinopse</h2>
-            <div class="description" th:utext="${anime.detail.synopsis}"></div>
+            <div class="description" th:utext="${anime.synopsis}"></div>
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
@@ -147,13 +147,17 @@
         <aside class="sidebar">
             <div class="sidebar-card">
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Informações</h3>
-                <div class="info-row" th:each="info : ${anime.detail.infoList}">
+                <div class="info-row">
+                    <span class="info-label">Status:</span>
+                    <span class="info-value" th:text="${anime.status}">0</span>
+                </div>
+                <div class="info-row" th:each="info : ${anime.infoList}">
                     <span class="info-label" th:text="${info.infoName}">Status:</span>
                     <span class="info-value" th:text="${info.infoValue}">Ongoing</span>
                 </div>
                 <div class="info-row">
                     <span class="info-label">Acessos:</span>
-                    <span class="info-value" th:text="${anime.detail.accessCounter}">0</span>
+                    <span class="info-value" th:text="${anime.accessCounter}">0</span>
                 </div>
             </div>
 
@@ -161,13 +165,13 @@
                 <h3 style="color:var(--accent-orange); margin-bottom:15px;">Rankings</h3>
                 <ul style="font-size: 0.9rem; color: #ccc;">
                     <li style="padding: 5px 0; border-bottom: 1px solid #333;">Score:
-                        <span th:text="${anime.detail.rankings.rating}"></span>
+                        <span th:text="${anime.score}"></span>
                     </li>
                     <li style="padding: 5px 0; border-bottom: 1px solid #333;">Popularidade:
-                        <span th:text="${anime.detail.rankings.popularity}"></span>
+                        <span th:text="${anime.popularity}"></span>
                     </li>
                     <li style="padding: 5px 0;">Rank:
-                        <span th:text="${anime.detail.rankings.rank}"></span>
+                        <span th:text="${anime.rank}"></span>
                     </li>
                 </ul>
             </div>

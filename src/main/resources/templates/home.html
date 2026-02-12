@@ -58,9 +58,9 @@
             <section>
                 <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados</h2></div>
                 <div class="anime-grid">
-                    <a class="anime-card" th:each="recommended : ${recommendations}" th:href="@{/animes/${recommended.slug}}" >
+                    <a class="anime-card" th:each="recommended : ${recommendations}" th:href="@{/anime/${recommended.slug}}" >
                         <div class="rating-badge">
-                            ⭐ <span th:text="${recommended.rating}"></span>
+                            ⭐ <span th:text="${recommended.score}"></span>
                         </div>
                         <img th:src="${recommended.imageUrl}" th:alt="${recommended.title}">
                         <div class="anime-card-info">
@@ -79,9 +79,11 @@
                     <span id="clearSidebar" class="btn-clear-sidebar">&times;</span>
                 </div>
                 <div id="sidebar-episodes">
-                    <div class="download-item-wrapper" th:each="release : ${releases}">
+                    <div class="download-item-wrapper" th:each="release : ${releasesEpisodes}">
                         <div class="download-item">
-                            <span class="download-name" th:text="${release.animeTitle}">Anime Name</span>
+                            <a th:href="|/anime/${release.animeSlug}|">
+                                <span class="download-name" th:text="${release.animeTitle}">Anime Name</span>
+                            </a>
                             <button class="btn-download" onclick="toggleAccordion(this)" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Episode</button>
                         </div>
                         <div class="download-options">
@@ -99,6 +101,14 @@
                         <span class="cal-time" th:text="${item.time}"></span>
                         <span class="check-icon" th:if="${item.released}">✓</span>
                     </div>
+                </div>
+            </div>
+
+            <div class="sidebar-box">
+                <h3 class="sidebar-title">📊 Estatísticas</h3>
+                <div class="stats-box-single">
+                    <span class="stat-value-large" id="total-views" th:text="${pageAccess.totalCount}">0</span>
+                    <span class="stat-label-sub">Acessos Totais</span>
                 </div>
             </div>
 
@@ -122,10 +132,10 @@
                     <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>
                 </div>
                 <div id="sidebar-sites">
-                    <div class="calendar-item" th:each="status : ${monitoredSites}"  th:classappend="${status.enabled} ? 'released' : ''">
+                    <div class="calendar-item" th:each="status : ${siteIntegrations}"  th:classappend="${status.enabled} ? 'released' : ''">
                         <a class="cal-name" th:text="${status.name}" th:href="${status.url}">Site Name</a>
                         <div class="cal-info">
-                            <span class="cal-time" style="font-size: 0.7rem;" th:text="${status.lastExecutionDate}">Date Status</span>
+                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDate != null}" th:text="${status.lastExecutionDate}">Date Status</span>
                             <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
                         </div>
                     </div>

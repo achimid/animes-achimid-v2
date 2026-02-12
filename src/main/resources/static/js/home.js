@@ -10,37 +10,6 @@ const siteSearch = document.getElementById('siteSearch');
 const clearSiteBtn = document.getElementById('clearSiteSearch');
 
 
-// Dados dos Sites
-const sitesData = [
-    { name: "Animes Achimid", lastCheck: "30/01 22:00", online: true },
-    { name: "MyAnimeList", lastCheck: "30/01 21:45", online: true },
-    { name: "Crunchyroll", lastCheck: "30/01 21:30", online: true },
-    { name: "AnimeFire", lastCheck: "30/01 21:00", online: false },
-    { name: "BetterAnime", lastCheck: "30/01 20:30", online: true }
-];
-
-
-
-function renderSites(filter = "") {
-    siteContainer.innerHTML = "";
-    sitesData.forEach(site => {
-        if (site.name.toLowerCase().includes(filter.toLowerCase())) {
-            const div = document.createElement('div');
-            div.className = 'calendar-item ' + (site.online ? 'released' : '');
-            div.innerHTML = `
-                        <span class="cal-name">${site.name}</span>
-                        <div class="cal-info">
-                            <span class="cal-time" style="font-size: 0.7rem;">${site.lastCheck}</span>
-                            ${site.online ? '<span class="check-icon">✓</span>' : '<span style="color:var(--accent-red)">✕</span>'}
-                        </div>
-                    `;
-            siteContainer.appendChild(div);
-        }
-    });
-}
-
-
-
 btnLoad.addEventListener('click', showMoreButton);
 
 sidebarSearch.addEventListener('keyup', (e) => {
@@ -59,6 +28,22 @@ clearSidebar.addEventListener('click', () => {
     sidebarSearch.focus();
 });
 
+siteSearch.addEventListener('keyup', (e) => {
+    e.preventDefault();
+    if (e.key === "Enter") {
+        const val = e.target.value;
+        clearSiteBtn.style.display = val.length > 0 ? 'block' : 'none';
+        filterSites(val);
+    }
+});
+
+clearSiteBtn.addEventListener('click', () => {
+    siteSearch.value = "";
+    clearSiteBtn.style.display = 'none';
+    filterSites("");
+    siteSearch.focus();
+});
+
 
 
 
@@ -69,11 +54,11 @@ function toggleAccordion(btn) {
 }
 
 
-
+var releasesPageNumber = 2
 
 function showMoreButton() {
-    fetch("/api/v1/release").then(res => res.json()).then(result => {
-        result.releases.forEach((anime, index) => {
+    fetch(`/api/v1/release?pageNumber=${releasesPageNumber}`).then(res => res.json()).then(result => {
+        result.content.forEach((anime, index) => {
             grid.innerHTML += `
                 <a class="anime-card" href="/anime/${anime.animeSlug}">
                     <span class="ep-badge">${anime.animeType}: ${anime.animeNumber}</span>
@@ -84,23 +69,44 @@ function showMoreButton() {
                 </a>
             `
         });
+        releasesPageNumber = result.number + 1
     })
 }
 
 function filterAnimeReleaseEpisode(query) {
     fetch(`/api/v1/release?query=${query}`).then(res => res.json()).then(result => {
         epContainer.innerHTML = ''
-        result.releases.forEach((anime, index) => {
+        result.content.forEach((anime, index) => {
             epContainer.innerHTML += `
                 <div class="download-item-wrapper">
                     <div class="download-item">
-                        <span class="download-name">${anime.animeTitle}</span>
+                        <a href="/anime/${anime.animeSlug}">
+                            <span class="download-name">${anime.animeTitle}</span>
+                        </a>
                         <button class="btn-download" onclick="toggleAccordion(this)">${anime.animeType}: ${anime.animeNumber}</button>
                     </div>
                     <div class="download-options">
                         ${anime.options.map(item => {
                             return `<a class="btn-server" href="${item.url}">${item.name}</a>`    
                         }).join('')}                                                
+                    </div>
+                </div>
+            `
+        });
+    })
+}
+
+
+function filterSites(query) {
+    fetch(`/api/v1/site/integration?query=${query}`).then(res => res.json()).then(result => {
+        siteContainer.innerHTML = ''
+        result.sites.forEach((site, index) => {
+            siteContainer.innerHTML += `
+                <div class="calendar-item ${site.enabled ? 'released' : ''}">
+                    <a class="cal-name" href="${site.url}">${site.name}</a>
+                    <div class="cal-info">
+                        ${site.lastExecutionDate != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDate}</span>` : ''}
+                        ${site.lastExecutionSuccess === true ? '<span class="check-icon">✓</span>' : ''}
                     </div>
                 </div>
             `

@@ -1,20 +1,10 @@
 package br.com.achimid.animesachimidv2.usecases
 
-import br.com.achimid.animesachimidv2.domains.dto.AnimeDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeCommentDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeDetailDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeDetailTitleDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeDetailsInfoDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeFallowingDTO
-import br.com.achimid.animesachimidv2.domains.dto.AnimeReleaseResponse
-import br.com.achimid.animesachimidv2.domains.dto.CalendarItemDTO
-import br.com.achimid.animesachimidv2.domains.dto.CalendarRelease
-import br.com.achimid.animesachimidv2.domains.dto.CommentDTO
-import br.com.achimid.animesachimidv2.domains.dto.EpisodeInfoDTO
-import br.com.achimid.animesachimidv2.domains.dto.EpisodeLinkOptionsDTO
-import br.com.achimid.animesachimidv2.domains.dto.RankingStatsDTO
-import br.com.achimid.animesachimidv2.domains.dto.RecommendationDTO
-import br.com.achimid.animesachimidv2.domains.MonitoredSite
+import br.com.achimid.animesachimidv2.domains.EpisodeLinkOptions
+import br.com.achimid.animesachimidv2.domains.Recommendation
+import br.com.achimid.animesachimidv2.domains.Release
+import br.com.achimid.animesachimidv2.domains.SiteIntegration
+import br.com.achimid.animesachimidv2.domains.dto.*
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -22,44 +12,10 @@ import java.util.*
 class MockUseCase {
 
     val optionsList = listOf(
-        EpisodeLinkOptionsDTO("https://nyaa.si", "Player HD"),
-        EpisodeLinkOptionsDTO("#", "Player SD"),
-        EpisodeLinkOptionsDTO("#", "Download")
+        EpisodeLinkOptions("https://nyaa.si", "Player HD"),
+        EpisodeLinkOptions("#", "Player SD"),
+        EpisodeLinkOptions("#", "Download")
     )
-
-    fun getAnime(): AnimeDTO = AnimeDTO(
-        slug = "sousou-no-frieren-1-season",
-        title = "Sousou no Frieren",
-        episodes = listOf(
-            EpisodeInfoDTO("Episódio", "01", "O Fim da Jornada", options = optionsList),
-            EpisodeInfoDTO("Episódio", "02", "Não Precisa Ser Magia", options = optionsList),
-            EpisodeInfoDTO("Episódio", "03", "Zoltraak", options = optionsList),
-            EpisodeInfoDTO("Episódio", "08", "Frieren, a Assassina", options = optionsList),
-            EpisodeInfoDTO("Episódio", "13", "Aversão à Magia", options = optionsList),
-        ),
-        detail = AnimeDetailDTO(
-            titles = AnimeDetailTitleDTO("Sousou no Frieren", "葬送 de フリーレン (Frieren: Beyond Journey's End)"),
-            imageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.jpg",
-            tags = listOf("Ação", "Aventura", "Fantasia", "Isekai", "Reencarnação"),
-            description = "A história acompanha a maga elfa Frieren, que após derrotar o Rei Demônio com seu grupo, inicia uma nova jornada para entender a brevidade da vida humana após a morte de seus antigos companheiros.",
-            synopsis = "<p>The adventure is over but life goes on for an elf mage who is just beginning to learn what life is all about. Elf mage Frieren and her courageous fellow adventurers have defeated the Demon King and brought peace to the land.</p>\n" +
-                    "                <p style=\"margin-top: 10px;\">Decades later, the funeral of one of her friends confronts Frieren with her own near immortality. Frieren sets out to fulfill the last wishes of her comrades and finds herself beginning a new adventure...</p>",
-            infoList = listOf(
-                AnimeDetailsInfoDTO("Status", "Ongoing"),
-                AnimeDetailsInfoDTO("Studio", "Yokohama Animation Lab"),
-                AnimeDetailsInfoDTO("Released", "jan 10, 2026"),
-                AnimeDetailsInfoDTO("Duration", "23 min. per ep."),
-                AnimeDetailsInfoDTO("Season", "Inverno de 2026"),
-                AnimeDetailsInfoDTO("Episodes", "12"),
-                AnimeDetailsInfoDTO("Cast", "Chiba Shouya")
-            ),
-            rankings = RankingStatsDTO(
-                rating = 9.33, popularity = "#248", rank = "#1"
-            ),
-        )
-    )
-
-    fun getCatalogList(): List<AnimeDTO> = listOf(getAnime(), getAnime(), getAnime(), getAnime(), getAnime())
 
     fun getAnimeComment(): AnimeCommentDTO = AnimeCommentDTO(
         listOf(
@@ -68,44 +24,44 @@ class MockUseCase {
         )
     )
 
-    fun getRecommendations(): List<RecommendationDTO> = listOf(
-        RecommendationDTO(
+    fun getRecommendations(): List<Recommendation> = listOf(
+        Recommendation(
             "123",
             "mushoku-tensei",
             "Mushoku Tensei",
             "https://cdn.myanimelist.net/images/anime/1208/94745.jpg",
             "Fantasia / Isekai",
-            rating = 9.22
-        ), RecommendationDTO(
+            score = 9.22
+        ), Recommendation(
             "1234",
             "violet-ever",
             "Violet Evergarden",
             "https://cdn.myanimelist.net/images/anime/1160/122627.jpg",
             "Drama / Slice of Life",
-            rating = 9.22
+            score = 9.22
         )
     )
 
-    fun getLastReleases(): List<AnimeReleaseResponse> = listOf(
-        AnimeReleaseResponse(
+    fun getLastReleases(): List<Release> = listOf(
+        Release(
             animeTitle = "Solo Leveling",
             animeNumber = "12",
             options = optionsList,
             animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"
         ),
-        AnimeReleaseResponse(
+        Release(
             animeTitle = "One Piec",
             animeNumber = "1105",
             options = optionsList,
             animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"
         ),
-        AnimeReleaseResponse(
+        Release(
             animeTitle = "Ninja Kamui",
             animeNumber = "07",
             options = optionsList,
             animeImageUrl = "https://cdn.myanimelist.net/images/anime/1015/138006.webp"
         ),
-        AnimeReleaseResponse(
+        Release(
             animeTitle = "Mashle S2",
             animeNumber = "10",
             options = optionsList,
@@ -129,12 +85,12 @@ class MockUseCase {
         AnimeFallowingDTO("Solo Leveling", "https://cdn.myanimelist.net/images/anime/1864/96171.webp", 50)
     )
 
-    fun getSitesMonitored(): List<MonitoredSite> = listOf(
-        MonitoredSite("Animes Achimid", "", "30/01 22:00", true),
-        MonitoredSite("MyAnimeList", "", "30/01 21:45", true),
-        MonitoredSite("Crunchyroll", "", "30/01 21:30", true),
-        MonitoredSite("AnimeFire", "", "30/01 21:00", false),
-        MonitoredSite("BetterAnime", "", "30/01 20:30", true),
+    fun getSiteIntegrations(): List<SiteIntegration> = listOf(
+        SiteIntegration("Animes Achimid", "", "30/01 22:00", true),
+        SiteIntegration("MyAnimeList", "", "30/01 21:45", true),
+        SiteIntegration("Crunchyroll", "", "30/01 21:30", true),
+        SiteIntegration("AnimeFire", "", "30/01 21:00", false),
+        SiteIntegration("BetterAnime", "", "30/01 20:30", true),
     )
 
 }

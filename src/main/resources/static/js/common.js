@@ -8,40 +8,49 @@ const animes = [
 const searchInput = document.getElementById('animeSearch');
 const resultsBox = document.getElementById('searchResults');
 
+var searchTimeout = null
+
 searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimeout)
+    searchTimeout = setTimeout(searchAnime, 300)
+});
+
+function searchAnime() {
     const query = searchInput.value.toLowerCase();
     resultsBox.innerHTML = '';
 
-    if (query.length > 0) {
-        const filtered = animes.filter(anime => anime.title.toLowerCase().includes(query));
+    fetch(`/api/v1/animes?query=${query}&pageSize=5`).then(res => res.json()).then(result => {
+        if (query.length > 0) {
+            const filtered = result.content
+            if (filtered.length > 0) {
+                resultsBox.style.display = 'flex';
+                filtered.forEach(anime => {
+                    const item = document.createElement('a');
+                    item.classList.add('result-item');
+                    item.href = `/anime/${anime.slug}`
 
-        if (filtered.length > 0) {
-            resultsBox.style.display = 'flex';
-            filtered.forEach(anime => {
-                const item = document.createElement('div');
-                item.classList.add('result-item');
-
-                item.innerHTML = `
-                            <img src="${anime.img}" class="result-img" alt="${anime.title}">
+                    item.innerHTML = `
+                            <img src="${anime.imageUrl}" class="result-img" alt="${anime.name}">
                             <div class="result-info">
-                                <span class="result-title">${anime.title}</span>
-                                <span class="result-meta">Ano: ${anime.year} • Episódios: ${anime.eps}</span>
+                                <span class="result-title">${anime.name}</span>
+                                <span class="result-meta">Score: ${anime.score || '0.0'} • Status: ${anime.status}</span>
                             </div>
                         `;
 
-                item.onclick = () => {
-                    searchInput.value = anime.title;
-                    resultsBox.style.display = 'none';
-                };
-                resultsBox.appendChild(item);
-            });
+                    item.onclick = () => {
+                        searchInput.value = anime.name;
+                        resultsBox.style.display = 'none';
+                    };
+                    resultsBox.appendChild(item);
+                });
+            } else {
+                resultsBox.style.display = 'none';
+            }
         } else {
             resultsBox.style.display = 'none';
         }
-    } else {
-        resultsBox.style.display = 'none';
-    }
-});
+    })
+}
 
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.search-container')) {
