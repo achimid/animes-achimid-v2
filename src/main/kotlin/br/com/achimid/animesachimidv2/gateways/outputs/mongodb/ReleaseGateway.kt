@@ -31,18 +31,18 @@ class ReleaseGateway(
     fun fromDocument(document: ReleaseDocument): Release {
         return Release(
             id = UUID.randomUUID(),
-            animeSlug = document.animeSlug!!,
-            animeTitle = document.animeName!!,
+            animeSlug = document.animeSlug ?: document.anime?.source?.jikan?.url!!.split("/").last().lowercase(),
+            animeTitle = document.animeName ?: document.anime?.name ?: "",
             animeNumber = document.episode,
-            animeImageUrl = document.animeImage,
+            animeImageUrl = document.animeImage ?: document.anime?.image,
             animeId = document.animeId,
             options = document.sources.map { EpisodeLinkOptions(it.url, it.title) }
         )
     }
 
-//    @PostConstruct
+//        @PostConstruct
     fun migrate() {
-        val documents = repository.findAll().map {
+        val documents = repository.findAll().filter{ it.animeId == null }.map {
             val jikan = it.anime!!.source.jikan!!
             val slug = jikan.url!!.split("/").last().lowercase()
 

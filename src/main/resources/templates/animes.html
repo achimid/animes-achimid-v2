@@ -70,7 +70,7 @@
         <div id="animeContainer">
             <article class="anime-card-compact" th:each="anime : ${animeList}">
                 <a class="card-thumb" th:href="|/anime/${anime.slug}|" >
-                    <img th:src="${anime.imageUrl}" th:alt="${anime.name}">
+                    <img th:src="${anime.imageUrl}" th:alt="${anime.name}" loading="lazy">
                 </a>
                 <div class="card-content">
                     <div class="card-top">

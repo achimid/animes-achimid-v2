@@ -7,3 +7,6 @@ spring:
         cachecontrol:
           max-age: 2592000
           cache-public: true
+#  docker:
+#    compose:
+#      enabled: true

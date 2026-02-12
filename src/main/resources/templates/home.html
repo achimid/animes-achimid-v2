@@ -44,7 +44,7 @@
                 <div class="anime-grid" id="recent-grid">
                     <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
                         <span class="ep-badge" th:text="|${release.animeType}: ${release.animeNumber}|">Episode Number</span>
-                        <img th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}">
+                        <img th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}" fetchpriority="high">
                         <div class="anime-card-info">
                             <span class="anime-card-title" th:text="${release.animeTitle}"></span>
                         </div>
@@ -62,7 +62,7 @@
                         <div class="rating-badge">
                             ⭐ <span th:text="${recommended.score}"></span>
                         </div>
-                        <img th:src="${recommended.imageUrl}" th:alt="${recommended.title}">
+                        <img th:src="${recommended.imageUrl}" th:alt="${recommended.title}" loading="lazy">
                         <div class="anime-card-info">
                             <span class="anime-card-title" th:text="${recommended.title}">Anime Recommended Title</span>
                         </div>
@@ -115,7 +115,7 @@
             <div class="sidebar-box">
                 <h3 class="sidebar-title">❤️ Acompanhando</h3>
                 <div class="fav-item" th:each="fallow : ${fallowingList}">
-                    <img th:src="${fallow.imageUrl}" class="fav-img">
+                    <img th:src="${fallow.imageUrl}" class="fav-img"  loading="lazy">
                     <div style="flex:1">
                         <span class="fav-name" th:text="${fallow.name}">Anime Fallow Name</span>
                         <div class="fav-progress-bg">
