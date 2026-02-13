@@ -38,5 +38,7 @@ springdoc:
 external:
   puppeteer-executor:
     url: "https://puppeteer-executor.achimid.com.br/api/v1"
+  subsplease:
+    url: "https://subsplease.org/api"
 
 

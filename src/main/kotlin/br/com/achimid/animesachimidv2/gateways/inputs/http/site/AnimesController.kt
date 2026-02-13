@@ -16,7 +16,7 @@ class AnimesController(
     @GetMapping
     fun catalogPage(model: Model): String {
 
-        val animeList = findAnimesUseCase.execute(0, 20)
+        val animeList = findAnimesUseCase.execute(0, 30)
 
         model.addAttribute("animeList", animeList)
 

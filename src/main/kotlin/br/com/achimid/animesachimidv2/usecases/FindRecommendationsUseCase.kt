@@ -11,7 +11,7 @@ class FindRecommendationsUseCase(
     private val animeGateway: AnimeGateway
 ) {
 
-    fun execute(size: Int = 6) : Page<Recommendation> = animeGateway.findRandom(size).map(this::mapper)
+    fun execute(size: Int = 5) : Page<Recommendation> = animeGateway.findRandom(size).map(this::mapper)
     
     fun mapper(anime: Anime): Recommendation {
         return Recommendation(

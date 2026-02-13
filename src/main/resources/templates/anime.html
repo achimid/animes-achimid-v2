@@ -125,16 +125,16 @@
                 <h2 class="section-title">Comentários</h2>
                 <div class="comment-box">
                     <div class="comment-input-area">
-                        <textarea placeholder="Escreva o que você achou deste episódio..."></textarea>
-                        <button class="btn btn-primary" style="align-self: flex-end; padding: 10px 25px;">Publicar</button>
+                        <textarea id="txtComment" placeholder="Compartilhe o que você acha do anime..."></textarea>
+                        <button id="btnPublishComment" th:onclick="onClickPublishComment(this, [[${anime.id}]])" onclick="onClickPublishComment(this)" class="btn btn-primary" style="align-self: flex-end; padding: 10px 25px;">Publicar</button>
                     </div>
 
-                    <div class="comment-list">
-                        <div class="comment-item" th:each="comment : ${animeComment.comments}">
-                            <button class="delete-comment" title="Excluir comentário" onclick="removeComment(this)">🗑</button>
+                    <div class="comment-list" id="commentList">
+                        <div class="comment-item" th:each="comment : ${anime.comments}">
+<!--                            <button class="delete-comment" title="Excluir comentário" onclick="removeComment(this)">🗑</button>-->
                             <div class="comment-avatar" th:text="${comment.avatar}">AH</div>
                             <div class="comment-content">
-                                <span class="user-name" th:text="${comment.user}">User</span>
+                                <span class="user-name" th:text="${comment.userName}">User</span>
                                 <p class="comment-text" th:text="${comment.content}">Content</p>
                                 <span class="comment-date" th:text="${comment.date}">Date</span>
                             </div>
@@ -152,7 +152,7 @@
                     <span class="info-value" th:text="${anime.status}">0</span>
                 </div>
                 <div class="info-row" th:each="info : ${anime.infoList}">
-                    <span class="info-label" th:text="${info.infoName}">Status:</span>
+                    <span class="info-label" th:text="|${info.infoName}:|">Status:</span>
                     <span class="info-value" th:text="${info.infoValue}">Ongoing</span>
                 </div>
                 <div class="info-row">
@@ -179,7 +179,8 @@
             <div class="sidebar-card">
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Últimos Lançamentos</h3>
                 <div class="latest-list">
-                    <a href="#" class="latest-item" th:each="release : ${releases}">
+                    <a th:href="|/anime/${release.animeSlug}|" class="latest-item" th:each="release : ${releases}">
+                        <img loading="lazy" th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}" class="anime-tooltip">
                         <span th:text="${release.animeTitle}">Anime Release Title</span>
                         <span class="ep-tag" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Release Number</span>
                     </a>

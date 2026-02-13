@@ -1,5 +1,8 @@
 package br.com.achimid.animesachimidv2.domains
 
+import java.time.Instant
+import java.util.*
+
 data class Anime(
     val id: String,
     val slug: String,
@@ -8,8 +11,10 @@ data class Anime(
     val status: String,
     val imageUrl: String,
 
-    val episodes: List<EpisodeInfo>? = null,
     val accessCounter: Long = 0,
+
+    val episodes: List<EpisodeInfo>? = null,
+    val comments: List<AnimeComment>? = null,
 
     val description: String? = null,
     val synopsis: String? = null,
@@ -18,12 +23,10 @@ data class Anime(
     val nameSecondary: String? = null,
     val tags: List<String>? = null,
     val infoList: List<AnimeDetailsInfo>? = null,
-    val score: Double? = 0.1,
-    val popularity: String? = "??",
-    val rank: String? = "??",
+    val score: Double? = null,
+    val popularity: String? = null,
+    val rank: String? = null,
 ) {
-
-    fun getScore() { score ?: 0.1 }
 
     fun getTypeDescription(): String {
         if (type == "TV") return "Episódio"
@@ -47,3 +50,15 @@ data class AnimeDetailsInfo(
     val infoName: String,
     val infoValue: String? = null
 )
+
+
+data class AnimeComment(
+    val id: String? = UUID.randomUUID().toString(),
+    val userId: String,
+    val userName: String? = "Anonymous",
+    val avatar: String? = userName?.take(2)?.uppercase() ?: "AA",
+    val content: String,
+    val createdAt: Instant = Instant.now(),
+) {
+    fun date() = createdAt.toString().split("T")[0]
+}

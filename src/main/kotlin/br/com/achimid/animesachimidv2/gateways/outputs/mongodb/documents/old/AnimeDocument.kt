@@ -22,8 +22,10 @@ data class AnimeDocument(
     val type: AnimeTypeDocument = TV,
     val status: AnimeStatusDocument = COMPLETE,
 
-    val episodes: List<EpisodeInfoDocument>? = null,
     val accessCounter: Long? = null,
+
+    val episodes: List<EpisodeInfoDocument>? = null,
+    val comments: List<AnimeCommentDocument>? = null,
 
     val description: String? = null,
     val synopsis: String? = null,
@@ -64,6 +66,14 @@ data class AnimeDetailsInfoDocument(
     val infoValue: String? = null
 )
 
+data class AnimeCommentDocument(
+    val id: String,
+    val userId: String,
+    val userName: String,
+    val avatar: String? = null,
+    val content: String,
+    val createdAt: Instant,
+)
 
 
 

@@ -11,5 +11,5 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
 
     fun findByTitleContainingIgnoreCase(query: String, pageRequest: PageRequest): Page<ReleaseDocument>
 
-    fun findByAnimeIdOrderByEpisodeDesc(animeId: String): List<ReleaseDocument>
+    fun findByAnimeIdOrderByTitleDesc(animeId: String): List<ReleaseDocument>
 }

@@ -1,10 +1,9 @@
 package br.com.achimid.animesachimidv2.usecases
 
-import br.com.achimid.animesachimidv2.domains.EpisodeLinkOptions
-import br.com.achimid.animesachimidv2.domains.Recommendation
-import br.com.achimid.animesachimidv2.domains.Release
-import br.com.achimid.animesachimidv2.domains.SiteIntegration
-import br.com.achimid.animesachimidv2.domains.dto.*
+import br.com.achimid.animesachimidv2.domains.*
+import br.com.achimid.animesachimidv2.domains.dto.AnimeCommentDTO
+import br.com.achimid.animesachimidv2.domains.dto.AnimeFallowingDTO
+import br.com.achimid.animesachimidv2.domains.dto.CommentDTO
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -71,12 +70,12 @@ class MockUseCase {
 
     fun getCalendarRelease(): CalendarRelease = CalendarRelease(
         releasesToday = listOf(
-            CalendarItemDTO("29-sai Dokushin Chuuken Boukensha no Nichijou", "10:00", true),
-            CalendarItemDTO("Okiraku Ryoushu no Tanoshii Ryouchi Bouei", "10:30", true),
-            CalendarItemDTO("Odayaka Kizoku no Kyuuka no Susume.", "12:00", true),
-            CalendarItemDTO("Oshi no Ko S3", "12:00", false),
-            CalendarItemDTO("Yuusha Party wo Oidasareta Kiyoubinbou", "12:30", false),
-            CalendarItemDTO("Shibou Yuugi de Meshi wo Kuu.", "13:00", false),
+            ScheduleItem("29-sai Dokushin Chuuken Boukensha no Nichijou", "10:00"),
+            ScheduleItem("Okiraku Ryoushu no Tanoshii Ryouchi Bouei", "10:30"),
+            ScheduleItem("Odayaka Kizoku no Kyuuka no Susume.", "12:00"),
+            ScheduleItem("Oshi no Ko S3", "12:00"),
+            ScheduleItem("Yuusha Party wo Oidasareta Kiyoubinbou", "12:30"),
+            ScheduleItem("Shibou Yuugi de Meshi wo Kuu.", "13:00"),
         )
     )
 

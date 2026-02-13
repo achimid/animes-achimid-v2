@@ -1,3 +1,12 @@
+document.querySelectorAll('.latest-item').forEach(item => {
+    const tooltip = item.querySelector('.anime-tooltip');
+
+    item.addEventListener('mousemove', (e) => {
+        tooltip.style.left = (e.clientX + 20) + 'px';
+        tooltip.style.top = (e.clientY + 20) + 'px';
+    });
+});
+
 function toggleEpOptions(element) {
     const options = element.nextElementSibling;
     const isVisible = options.style.display === "flex";
@@ -23,4 +32,64 @@ function removeComment(button) {
     if(confirm("Deseja realmente excluir este comentário?")) {
         button.closest('.comment-item').remove();
     }
+}
+
+
+// --- INTEGRAÇÃO DE COMENTÁRIOS COM BACKEND ---
+const textarea = document.getElementById('txtComment');
+const publishBtn = document.getElementById('btnPublishComment');
+const commentList = document.getElementById('commentList');
+
+function onClickPublishComment(element, animeId) {
+    let content = textarea.value.trim()
+
+    if (content.length <= 5) return
+
+    const comment = {
+        userId:  getCookie('user_id'),
+        content: content,
+    };
+
+    publishBtn.disabled = true;
+    publishBtn.innerText = "Enviando...";
+
+    fetch(`/api/v1/anime/${animeId}/comment`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(comment)
+    }).then(res => {
+        if (res.status === 201) return res.json()
+    }).then((comment) => {
+        textarea.value = '';
+        commentList.innerHTML = `
+            <div class="comment-item">
+                <div class="comment-avatar">${comment.avatar}</div>
+                <div class="comment-content">
+                    <span class="user-name">${comment.userName}</span>
+                    <p class="comment-text">${comment.content}</p>
+                    <span class="comment-date">${comment.createdAt.split('T')[0]}</span>
+                </div>
+            </div>
+        ` + commentList.innerHTML;
+
+        publishBtn.disabled = false;
+        publishBtn.innerText = "Publicar";
+    })
+
+
+}
+
+function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) === ' ') {
+            c = c.substring(1, c.length);
+        }
+        if (c.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(c.substring(nameEQ.length, c.length));
+        }
+    }
+    return null;
 }

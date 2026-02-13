@@ -116,7 +116,7 @@ nav ul li a:hover {
 }
 .card-score { color: var(--accent-orange); font-weight: bold; font-size: 1.1rem; white-space: nowrap; }
 
-.card-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 30px; margin-bottom: 12px; }
+.card-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 30px; margin-bottom: 12px; }
 .info-item { font-size: 0.85rem; color: var(--text-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .info-item strong { color: #ccc; }
 

@@ -21,7 +21,7 @@ class ReleaseAPIController(
     @ResponseStatus(OK)
     fun releases(
         @RequestParam(required = false) pageNumber: Int = 0,
-        @RequestParam(required = false) pageSize: Int = 12,
+        @RequestParam(required = false) pageSize: Int = 10,
         @RequestParam(required = false) query: String? = null,
     ): Page<Release> {
         return findReleasesUseCase.execute(pageNumber, pageSize, query)

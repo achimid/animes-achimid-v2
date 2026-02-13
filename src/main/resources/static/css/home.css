@@ -231,7 +231,7 @@
 
 .anime-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
     margin-bottom: 30px;
 }
@@ -357,7 +357,37 @@ footer {
     }
 
     .anime-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .main-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .anime-grid {
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .main-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 420px) {
+    .main-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .anime-grid {
+        grid-template-columns: repeat(1, 1fr);
     }
 }
 

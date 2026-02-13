@@ -1,6 +1,7 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.Anime
+import br.com.achimid.animesachimidv2.domains.AnimeComment
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocumentMapper
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.AnimeRepository
 import org.springframework.cache.annotation.Cacheable
@@ -21,8 +22,8 @@ class AnimeGateway(
     }
 
     @Cacheable("recommendationsCache")
-    fun findRandom(size: Int = 6): Page<Anime> {
-        return animeRepository.findAll(of((0..300).random() , size)).map(mapper::fromDocument)
+    fun findRandom(size: Int = 5): Page<Anime> {
+        return animeRepository.findAll(of((0..300).random(), size)).map(mapper::fromDocument)
     }
 
     @Cacheable("animeSearchCache")
@@ -35,4 +36,16 @@ class AnimeGateway(
     fun findBySlug(slug: String): Anime? = animeRepository.findBySlug(slug)?.let(mapper::fromDocument)
 
     fun findById(id: String): Anime? = animeRepository.findById(id).get().let(mapper::fromDocument)
+
+    fun addComment(id: String, comment: AnimeComment): AnimeComment {
+        animeRepository.addComment(id, mapper.toDocument(comment))
+        return comment
+    }
+
+    //    @PostConstruct
+    fun migrate() {
+        val animes = animeRepository.findAll().map(mapper::mapper)
+
+        animeRepository.saveAll(animes)
+    }
 }

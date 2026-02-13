@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
 @Component
-class GetAnimeUseCase(
+class FindAnimeUseCase(
     private val animeGateway: AnimeGateway,
     private val releaseGateway: ReleaseGateway
 ) {

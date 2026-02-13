@@ -24,6 +24,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Google tag (gtag.js) -->
@@ -95,11 +98,11 @@
 
             <div class="sidebar-box">
                 <h3 class="sidebar-title">📅 Calendário</h3>
-                <div class="calendar-item" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.released} ? 'released' : ''">
-                    <span class="cal-name" th:text="${item.name}"></span>
+                <div class="calendar-item" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.shouldBeReleased} ? 'released' : ''">
+                    <span class="cal-name" th:text="${item.title}"></span>
                     <div class="cal-info">
-                        <span class="cal-time" th:text="${item.time}"></span>
                         <span class="check-icon" th:if="${item.released}">✓</span>
+                        <span class="cal-time" th:text="${item.time}"></span>
                     </div>
                 </div>
             </div>
@@ -115,7 +118,7 @@
             <div class="sidebar-box">
                 <h3 class="sidebar-title">❤️ Acompanhando</h3>
                 <div class="fav-item" th:each="fallow : ${fallowingList}">
-                    <img th:src="${fallow.imageUrl}" class="fav-img"  loading="lazy">
+                    <img th:src="${fallow.imageUrl}" class="fav-img" th:alt="${fallow.name}"  loading="lazy">
                     <div style="flex:1">
                         <span class="fav-name" th:text="${fallow.name}">Anime Fallow Name</span>
                         <div class="fav-progress-bg">
@@ -135,8 +138,8 @@
                     <div class="calendar-item" th:each="status : ${siteIntegrations}"  th:classappend="${status.enabled} ? 'released' : ''">
                         <a class="cal-name" th:text="${status.name}" th:href="${status.url}">Site Name</a>
                         <div class="cal-info">
-                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDate != null}" th:text="${status.lastExecutionDate}">Date Status</span>
                             <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
+                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDate != null}" th:text="${status.lastExecutionDate}">Date Status</span>
                         </div>
                     </div>
                 </div>

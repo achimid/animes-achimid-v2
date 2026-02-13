@@ -25,7 +25,7 @@ class ReleaseGateway(
     }
 
     fun findByAnimeIdOrderByEpisodeDesc(animeId: String): List<Release> {
-        return repository.findByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
+        return repository.findByAnimeIdOrderByTitleDesc(animeId).map(this::fromDocument)
     }
 
     fun fromDocument(document: ReleaseDocument): Release {

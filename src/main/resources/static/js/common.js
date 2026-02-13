@@ -8,7 +8,7 @@ const animes = [
 const searchInput = document.getElementById('animeSearch');
 const resultsBox = document.getElementById('searchResults');
 
-var searchTimeout = null
+let searchTimeout = null
 
 searchInput.addEventListener('input', () => {
     clearTimeout(searchTimeout)
