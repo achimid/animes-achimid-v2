@@ -14,17 +14,30 @@ function toggleEpOptions(element) {
     options.style.display = isVisible ? "none" : "flex";
 }
 
-function toggleFavorite() {
-    const btn = document.getElementById('fav-btn');
-    if (btn.innerText.includes("+")) {
-        btn.innerText = "✓ Na Lista";
-        btn.style.borderColor = "var(--primary-green)";
-        btn.style.color = "var(--primary-green)";
+const btnFavorite = document.getElementById('fav-btn');
+
+function toggleFavorite(element, animeId) {
+
+    if (btnFavorite.innerText.includes("+")) {
+        addFavorite(animeId)
     } else {
-        btn.innerText = "+ Minha Lista";
-        btn.style.borderColor = "var(--text-gray)";
-        btn.style.color = "var(--text-gray)";
+        btnFavorite.innerText = "+ Minha Lista";
+        btnFavorite.style.borderColor = "var(--text-gray)";
+        btnFavorite.style.color = "var(--text-gray)";
     }
+}
+
+function addFavorite(animeId) {
+    fetch(`/api/v1/anime/${animeId}/favorite`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}
+    }).then(res => {
+        if (res.status === 201) {
+            btnFavorite.innerText = "✓ Na Lista";
+            btnFavorite.style.borderColor = "var(--primary-green)";
+            btnFavorite.style.color = "var(--primary-green)";
+        }
+    })
 }
 
 // NOVA FUNÇÃO PARA REMOVER COMENTÁRIO

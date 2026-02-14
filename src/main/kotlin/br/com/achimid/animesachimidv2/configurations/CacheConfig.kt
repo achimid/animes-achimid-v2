@@ -17,9 +17,9 @@ class CacheConfig {
         val cacheManager = SimpleCacheManager()
         cacheManager.setCaches(
             listOf(
-                buildCache("pageAccessCache", 2, MINUTES, 1),
-                buildCache("releasesCache", 1, MINUTES, 100),
-                buildCache("animeCache", 5, MINUTES, 200),
+                buildCache("pageAccessCache", 5, MINUTES, 1),
+                buildCache("releasesCache", 5, MINUTES, 100),
+                buildCache("animeCache", 10, MINUTES, 200),
                 buildCache("animesCache", 5, MINUTES, 20),
                 buildCache("animeSearchCache", 5, MINUTES, 50),
                 buildCache("recommendationsCache", 2, HOURS, 5),

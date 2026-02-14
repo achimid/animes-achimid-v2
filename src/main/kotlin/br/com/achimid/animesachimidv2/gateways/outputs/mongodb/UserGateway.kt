@@ -20,4 +20,5 @@ class UserGateway(
             .let(repository::save)
             .let(mapper::fromDocument)
 
+    fun addFavorite(userId: String, animeId: String) = repository.addFavorite(userId, animeId)
 }

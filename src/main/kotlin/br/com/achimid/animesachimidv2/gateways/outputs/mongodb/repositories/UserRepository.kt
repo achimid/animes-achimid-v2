@@ -1,9 +1,16 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories
 
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.UserDocument
+import org.springframework.data.mongodb.repository.Query
+import org.springframework.data.mongodb.repository.Update
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
-interface UserRepository: CrudRepository<UserDocument, UUID>
+interface UserRepository: CrudRepository<UserDocument, String> {
+
+    @Query("{ 'id' : ?0 }")
+    @Update("{ '\$push' : { 'favorites' : ?1 } }")
+    fun addFavorite(userId: String, animeId: String)
+
+}
