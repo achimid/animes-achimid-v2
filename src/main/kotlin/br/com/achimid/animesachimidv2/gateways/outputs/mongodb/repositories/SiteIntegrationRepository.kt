@@ -1,56 +1,49 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories
 
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.SiteIntegrationDocument
-import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.core.io.ResourceLoader
+import br.com.achimid.animesachimidv2.domains.SiteIntegration
+import br.com.achimid.animesachimidv2.domains.SiteIntegrationType.*
 import org.springframework.stereotype.Component
-import java.nio.charset.StandardCharsets.UTF_8
+import java.io.InputStream
 
 @Component
-class SiteIntegrationRepository(
-    @Qualifier("webApplicationContext") val resourceLoader: ResourceLoader
-) {
+class SiteIntegrationRepository {
 
-    fun findAll(): List<SiteIntegrationDocument> = findSlow()
-        .plus(findMedium())
-        .plus(findFast())
-        .sortedByDescending { it.lastExecutionDate }
+    private val db = mutableListOf(
+//        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p%5D%5BMultiple+Subtitle%5D", getScript("erairaws-script.js")),
+//        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/", getScript("crunchyroll-script.js")),
+//        SiteIntegration(SLOW, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
+//        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js")),
+//        SiteIntegration(SLOW, "AnimesRoll", "https://www.anroll.net/lancamentos", getScript("animesroll-script.js")),
+//        SiteIntegration(SLOW, "Animes Games", "https://animesgames.cc/lancamentos", getScript("animesgames-script.js")),
+//        SiteIntegration(SLOW, "Animes Flix", "https://animesflix.net/", getScript("animesflix-script.js")),
+//        SiteIntegration(SLOW, "Animes Online CC", "https://animesonlinecc.to/episodio/", getScript("animesonlinecc-script.js")),
+//        SiteIntegration(SLOW, "Goyabu", "https://goyabu.to/lancamentos", getScript("goyabu-script.js")),
+//        SiteIntegration(SLOW, "Animes BR", "https://animesbr.tv/episodios/", getScript("animesbr-script.js")),
+//        SiteIntegration(SLOW, "Animes Online Red", "https://animesonline.red/", getScript("animesonline-red-script.js")),
+//        SiteIntegration(SLOW, "Hinata Soul", "https://www.hinatasoul.com/", getScript("hinata-soul.js")),
+//        SiteIntegration(SLOW, "Anime Q", "https://animeq.blog/", getScript("animeq-script.js")),
+//        SiteIntegration(SLOW, "Animes Online Cloud", "https://animesonline.cloud/", getScript("animesonlinecloud-script.js")),
+//        SiteIntegration(SLOW, "Animes Drive", "https://animesdrive.blog/", getScript("animesdrive-script.js")),
+//        SiteIntegration(SLOW, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js")),
+//        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", getScript("erairaws-script.js")),
+//        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
+//        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.org/", getScript("darkanimes-script.js")),
+//        SiteIntegration(FAST, "Go Animes", "https://www.goanimes.vip/", getScript("goanimes-script.js")),
+//        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
+        SiteIntegration(FAST, "Bakashi", "https://q1n.net/", getScript("bakashi-script.js")),
+    )
 
-        fun findSlow(): List<SiteIntegrationDocument> = listOf(
-                SiteIntegrationDocument("Crunchyroll", "https://www.crunchyroll.com/", lastExecutionDate = "30/01 22:00", lastExecutionSuccess = true),
-                SiteIntegrationDocument("Anitube VIP", "https://www.anitube.vip/", lastExecutionDate = "30/01 22:00"),
-                SiteIntegrationDocument("Central de Animes", "https://centraldeanimes.xyz/", ""),
-                SiteIntegrationDocument("AnimesRoll", "https://www.anroll.net/lancamentos", ""),
-                SiteIntegrationDocument("Animes Games", "https://animesgames.cc/lancamentos", ""),
-                SiteIntegrationDocument("Animes Flix", "https://animesflix.net/", ""),
-                SiteIntegrationDocument("Animes Online CC", "https://animesonlinecc.to/episodio/", ""),
-                SiteIntegrationDocument("Goyabu", "https://goyabu.to/lancamentos", ""),
-                SiteIntegrationDocument("Animes BR", "https://animesbr.tv/episodios/", ""),
-                SiteIntegrationDocument("Animes Online Red", "https://animesonline.red/", ""),
-                SiteIntegrationDocument("Hinata Soul", "https://www.hinatasoul.com/", "", lastExecutionSuccess = true),
-                SiteIntegrationDocument("Anime Q", "https://animeq.blog/", "", lastExecutionSuccess = true),
-                SiteIntegrationDocument("Animes Online Cloud", "https://animesonline.cloud/", "", lastExecutionSuccess = true),
-                SiteIntegrationDocument("Animes Drive", "https://animesdrive.blog/", lastExecutionDate = "30/01 22:00", lastExecutionSuccess = true),
-                SiteIntegrationDocument("Animes Up", "https://www.animesup.info/", lastExecutionDate = "30/01 22:00", lastExecutionSuccess = true),
+    fun findAll(): List<SiteIntegration> = db.sortedByDescending { it.lastExecutionDate }
+    fun findSlow(): List<SiteIntegration> = db.filter { it.type == SLOW }
+    fun findMedium(): List<SiteIntegration> = db.filter { it.type == MEDIUM }
+    fun findFast(): List<SiteIntegration> = db.filter { it.type == FAST }
 
-                SiteIntegrationDocument("Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", ""),
-                SiteIntegrationDocument("Subs Please (ENG)", "https://subsplease.org/", ""),
-                SiteIntegrationDocument("Dark Animes", "https://darkmahou.org/", "", enabled = false),
-                SiteIntegrationDocument("Go Animes", "https://www.goanimes.vip/", ""),
-                SiteIntegrationDocument("Anime Fire", "https://animefire.plus/", ""),
-                SiteIntegrationDocument("Bakashi", "https://q1n.net/", ""),
-        )
-        fun findMedium(): List<SiteIntegrationDocument> = listOf()
-        fun findFast(): List<SiteIntegrationDocument> = listOf(
-            SiteIntegrationDocument("Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p%5D%5BMultiple+Subtitle%5D",  getScript("erairaws-script.js")),
-        )
+    fun findByName(name: String) = db.first { it.name == name }
 
-    fun getScript(scriptName: String): String {
-        val resource = resourceLoader.getResource("classpath:scripts/$scriptName")
+    private fun getScript(scriptName: String): String {
+        val inputStream: InputStream? = object {}.javaClass.getResourceAsStream("/scripts/$scriptName")
 
-        resource.inputStream.use { inputStream ->
-            return String(inputStream.readAllBytes(), UTF_8)
-        }
+        return inputStream!!.bufferedReader().use { it.readText() }
     }
 
 }

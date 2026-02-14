@@ -1,22 +1,61 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegration
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.SiteIntegrationDocumentMapper
+import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackIntegrationExecutionResult
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.IntegrationEventDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.MirrorDataDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.MirrorDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.SiteIntegrationRepository
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.IntegrationEventRepository
+import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
+import java.time.Instant
 
 @Component
 class SiteIntegrationGateway(
-    val repository: SiteIntegrationRepository,
-    val mapper: SiteIntegrationDocumentMapper,
+    val siteIntegrationRepository: SiteIntegrationRepository,
+    val integrationEventRepository: IntegrationEventRepository
 ) {
 
-    fun findAll(): List<SiteIntegration> = repository.findAll().map(mapper::fromDocument)
+    val logger = LoggerFactory.getLogger(this.javaClass)
 
-    fun findSlow(): List<SiteIntegration> = repository.findSlow().map(mapper::fromDocument)
+    @Cacheable("sitesIntegrationCache")
+    fun findAll(): List<SiteIntegration> = siteIntegrationRepository.findAll()
 
-    fun findMedium(): List<SiteIntegration> = repository.findMedium().map(mapper::fromDocument)
+    fun findSlow(): List<SiteIntegration> = siteIntegrationRepository.findSlow()
 
-    fun findFast(): List<SiteIntegration> = repository.findFast().map(mapper::fromDocument)
+    fun findMedium(): List<SiteIntegration> = siteIntegrationRepository.findMedium()
 
+    fun findFast(): List<SiteIntegration> = siteIntegrationRepository.findFast()
+
+    @CacheEvict("sitesIntegrationCache")
+    fun updateByName(name: String, success: Boolean) {
+        siteIntegrationRepository.findByName(name).let {
+            it.lastExecutionSuccess = success
+            it.lastExecutionDate = Instant.now()
+        }
+    }
+
+    fun createEvenIntegration(result: CallbackIntegrationExecutionResult): Boolean {
+        val idt = result.getIdt()
+
+        val eventIntegration = integrationEventRepository.findByIdt(idt)
+        if (eventIntegration != null) return false
+
+        integrationEventRepository.save(IntegrationEventDocument(
+            idt = idt,
+            from = result.from,
+            url = result.url,
+            title = result.title,
+            anime = result.anime,
+            episode = result.episode,
+            data = MirrorDataDocument(result.data?.mirrors?.map { MirrorDocument(it.description, it.url) }),
+        ))
+
+        logger.info("New event integration saved: $idt")
+
+        return true
+    }
 }

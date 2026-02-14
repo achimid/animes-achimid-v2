@@ -6,4 +6,8 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface IntegrationEventRepository: CrudRepository<IntegrationEventDocument, ObjectId>
+interface IntegrationEventRepository: CrudRepository<IntegrationEventDocument, String> {
+
+    fun findByIdt(idt: String): IntegrationEventDocument?
+
+}

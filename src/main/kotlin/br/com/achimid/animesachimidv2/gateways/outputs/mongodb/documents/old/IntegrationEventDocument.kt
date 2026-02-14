@@ -1,6 +1,5 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old
 
-import org.bson.types.ObjectId
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
@@ -11,24 +10,24 @@ import java.time.Instant
 @Document(collection = "integration-events")
 data class IntegrationEventDocument(
     @Id
-    val id: ObjectId? = null,
+    val id: String? = null,
     @Indexed(unique = true)
     val idt: String,
     val from: String,
     val url: String,
     val title: String,
-    val anime: String,
-    val episode: String,
+    val anime: String? = null,
+    val episode: String? = null,
     val data: MirrorDataDocument? = null,
     @CreatedDate
     @Indexed(expireAfter = "3d")
-    val createdAt: Instant,
+    val createdAt: Instant? = null,
     @LastModifiedDate
-    val updatedAt: Instant,
+    val updatedAt: Instant? = null,
 )
 
 data class MirrorDataDocument(
-    val mirrors: List<MirrorDocument>
+    val mirrors: List<MirrorDocument>? = null
 )
 
 data class MirrorDocument(

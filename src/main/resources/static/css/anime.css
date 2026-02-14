@@ -556,3 +556,45 @@ footer {
     opacity: 1;
     transform: scale(1);
 }
+
+/* Ajuste para a lista de Últimos Lançamentos */
+.latest-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden; /* Garante que nada saia do card */
+}
+
+.latest-item span:not(.ep-tag) {
+    flex: 1;
+    white-space: nowrap;      /* Impede a quebra de linha */
+    overflow: hidden;         /* Esconde o excesso */
+    text-overflow: ellipsis;  /* Adiciona o "..." */
+    font-size: 0.9rem;
+}
+
+/* Ajuste para a lista de Recomendados */
+.rec-item {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.rec-title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;    /* Permite até 2 linhas antes de colocar "..." */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
+/* Garante que a div de info não empurre a sidebar */
+.rec-info {
+    flex: 1;
+    min-width: 0; /* Importante para o truncate funcionar em containers flex */
+}

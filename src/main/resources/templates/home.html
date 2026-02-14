@@ -61,7 +61,7 @@
             <section>
                 <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados</h2></div>
                 <div class="anime-grid">
-                    <a class="anime-card" th:each="recommended : ${recommendations}" th:href="@{/anime/${recommended.slug}}" >
+                    <a class="anime-card" th:each="recommended : ${recommendations}" th:href="|/anime/${recommended.slug}|" >
                         <div class="rating-badge">
                             ⭐ <span th:text="${recommended.score}"></span>
                         </div>
@@ -139,7 +139,7 @@
                         <a class="cal-name" th:text="${status.name}" th:href="${status.url}">Site Name</a>
                         <div class="cal-info">
                             <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
-                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDate != null}" th:text="${status.lastExecutionDate}">Date Status</span>
+                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDateFormatted != null}" th:text="${status.lastExecutionDateFormatted}">Date Status</span>
                         </div>
                     </div>
                 </div>

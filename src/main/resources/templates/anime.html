@@ -69,7 +69,7 @@
 
             <div class="rating">
                 ★ <div th:text="${anime.score}"></div>
-                <span>(Rank <span th:text="${anime.rank}"></span> Global MyAnimeList)</span>
+                <span>(Rank <span th:text="${anime.rank}"></span> Global no MyAnimeList)</span>
             </div>
 
             <div class="meta-tags">
@@ -106,6 +106,7 @@
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
+                <div class="description" th:if="${anime.episodes.isEmpty()}">Ainda não encontramos nenhum episódios desse anime!</div>
                 <div class="episode-container" th:each="episode : ${anime.episodes}" >
                     <article>
                         <div class="episode-item" onclick="toggleEpOptions(this)">

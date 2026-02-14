@@ -24,7 +24,7 @@ class PuppeteerAPIGateway(
                 ref = siteIntegration.name,
                 config = ExecutionConfig(true, siteIntegration.skipImage)
             )
-        ).let { logger.info("Executed puppeteer API for site ${siteIntegration.name} id: $${it.body?.id}",) }
+        ).let { logger.info("Executed puppeteer API for site ${siteIntegration.name}") }
     }
 
 }

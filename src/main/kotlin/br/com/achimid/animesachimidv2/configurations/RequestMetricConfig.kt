@@ -22,6 +22,6 @@ class RequestMetricConfig : Filter {
             chain.doFilter(request, response)
         }
 
-        logger.info("Request: [$method] $url - Completed in ${duration}ms")
+        logger.info("RequestCallbackIntegration: [$method] $url - Completed in ${duration}ms")
     }
 }

@@ -9,4 +9,4 @@ spring:
           cache-public: true
 #  docker:
 #    compose:
-#      enabled: true
+#      enabled: false
