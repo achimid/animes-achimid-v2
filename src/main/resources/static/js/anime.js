@@ -1,12 +1,3 @@
-document.querySelectorAll('.latest-item').forEach(item => {
-    const tooltip = item.querySelector('.anime-tooltip');
-
-    item.addEventListener('mousemove', (e) => {
-        tooltip.style.left = (e.clientX + 20) + 'px';
-        tooltip.style.top = (e.clientY + 20) + 'px';
-    });
-});
-
 function toggleEpOptions(element) {
     const options = element.nextElementSibling;
     const isVisible = options.style.display === "flex";
@@ -21,9 +12,7 @@ function toggleFavorite(element, animeId) {
     if (btnFavorite.innerText.includes("+")) {
         addFavorite(animeId)
     } else {
-        btnFavorite.innerText = "+ Minha Lista";
-        btnFavorite.style.borderColor = "var(--text-gray)";
-        btnFavorite.style.color = "var(--text-gray)";
+        removeFavorite(animeId)
     }
 }
 
@@ -36,6 +25,19 @@ function addFavorite(animeId) {
             btnFavorite.innerText = "✓ Na Lista";
             btnFavorite.style.borderColor = "var(--primary-green)";
             btnFavorite.style.color = "var(--primary-green)";
+        }
+    })
+}
+
+function removeFavorite(animeId) {
+    fetch(`/api/v1/anime/${animeId}/favorite`, {
+        method: 'DELETE',
+        headers: {'Content-Type': 'application/json'}
+    }).then(res => {
+        if (res.status === 204) {
+            btnFavorite.innerText = "+ Minha Lista";
+            btnFavorite.style.borderColor = "var(--text-gray)";
+            btnFavorite.style.color = "var(--text-gray)";
         }
     })
 }

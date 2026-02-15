@@ -13,7 +13,7 @@ data class UserDocument(
     val email: String? = null,
     val username: String? = null,
 
-    val favorites: List<String>? = null,
+    val favorites: Set<String>? = null,
 
     @CreatedDate
     val createdAt: Instant? = null,

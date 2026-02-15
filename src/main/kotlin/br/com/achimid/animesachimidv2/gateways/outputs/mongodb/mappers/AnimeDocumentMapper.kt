@@ -19,7 +19,8 @@ interface AnimeDocumentMapper {
     @Mapping(source = "synopsis", target = "synopsis", defaultValue = "Sem descrição no momento")
     @Mapping(source = "rank", target = "rank", defaultValue = "??")
     @Mapping(source = "popularity", target = "popularity", defaultValue = "??")
-    @Mapping(source = "score", target = "score", defaultValue = "0.1")
+    @Mapping(source = "score", target = "score", defaultValue = "6.8")
+    @Mapping(source = "status.description", target = "status")
     fun fromDocument(document: AnimeDocument): Anime
 
     @Mapping(source = "infoValue", target = "infoValue", defaultValue = "??")
@@ -38,22 +39,28 @@ interface AnimeDocumentMapper {
             slug = slug,
             name = jikan.title!!,
             type = AnimeTypeDocument.entries.firstOrNull { it.name == jikan.type } ?: TV,
-            status = if (jikan.airing == true) AIRING else COMPLETE,
+            status = if (jikan.aired?.to == null) AIRING else COMPLETE,
             episodes = emptyList(),
-            imageUrl = jikan.images?.webp?.imageUrl ?: jikan.images?.jpg?.imageUrl ?: jikan.images?.webp?.smallImageUrl
-            ?: jikan.images?.jpg?.imageUrl!!,
-            tags = jikan.genres?.map { it.name }?.filterNotNull(),
+            imageUrl = jikan.images?.webp?.imageUrl
+                ?: jikan.images?.jpg?.imageUrl
+                ?: jikan.images?.webp?.smallImageUrl
+                ?: jikan.images?.jpg?.imageUrl
+                ?: jikan.images?.jpg?.smallImageUrl
+                ?: jikan.images?.webp?.largeImageUrl
+                ?: jikan.images?.jpg?.largeImageUrl,
+            imageBackgroundUrl = jikan.images?.webp?.largeImageUrl ?: jikan.images?.jpg?.largeImageUrl,
+            tags = jikan.genres?.mapNotNull { it.name },
             description = jikan.synopsis,
             synopsis = jikan.synopsis,
             background = jikan.background,
             infoList = listOf(
-                AnimeDetailsInfoDocument("Source", jikan.source),
-                AnimeDetailsInfoDocument("Season", jikan.season),
-                AnimeDetailsInfoDocument("Year", jikan.year?.toString()),
-                AnimeDetailsInfoDocument("Episodes", jikan.episodes?.toString()),
-                AnimeDetailsInfoDocument("Duration", jikan.duration),
-                AnimeDetailsInfoDocument("Studios", jikan.studios?.map { it.name }?.filterNotNull()?.joinToString()),
-                AnimeDetailsInfoDocument("Released", jikan.aired?.string),
+                AnimeDetailsInfoDocument("Origem", jikan.source),
+                AnimeDetailsInfoDocument("Temporada", jikan.season),
+                AnimeDetailsInfoDocument("Lançamento", jikan.aired?.string),
+                AnimeDetailsInfoDocument("Episódios", jikan.episodes?.toString()),
+                AnimeDetailsInfoDocument("Duração", jikan.duration),
+                AnimeDetailsInfoDocument("Estúdio", jikan.studios?.mapNotNull { it.name }?.joinToString()),
+                AnimeDetailsInfoDocument("Ano", jikan.year?.toString()),
             ),
             rank = jikan.rank,
             score = jikan.score,

@@ -1,4 +1,4 @@
-
+/* --- 1. LAYOUT GLOBAL E ESTRUTURA --- */
 .main-wrapper {
     display: grid;
     grid-template-columns: 7fr 3fr;
@@ -12,6 +12,117 @@
     min-width: 0;
 }
 
+/* --- 2. SEÇÕES E CABEÇALHOS --- */
+.section-header {
+    border-left: 5px solid var(--primary-green);
+    padding-left: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-title {
+    font-family: var(--font-righteous);
+    font-size: 1.4rem;
+    text-transform: uppercase;
+}
+
+/* --- 3. GRID DE ANIMES E CARDS --- */
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.anime-card {
+    background: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #222;
+    position: relative;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    flex-direction: column;
+    aspect-ratio: 2/3;
+}
+
+.anime-card:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-green);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.6);
+    z-index: 10;
+}
+
+.anime-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Badges e Selos */
+.ep-badge, .rating-badge {
+    position: absolute;
+    top: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    z-index: 5;
+}
+
+.ep-badge {
+    left: 10px;
+    background: var(--primary-green);
+    color: #000;
+    font-size: 0.8rem;
+}
+
+.rating-badge {
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--accent-gold);
+    font-size: 0.75rem;
+    border: 1px solid var(--accent-gold);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Info e Título do Card */
+.anime-card-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 40px 10px 12px 10px;
+    background: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.8) 50%, transparent 100%);
+    pointer-events: none;
+    display: flex;
+    align-items: flex-end;
+    min-height: 80px;
+}
+
+.anime-card-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-white);
+    text-align: center;
+    width: 100%;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+    transition: 0.3s;
+    word-wrap: break-word;
+}
+
+.anime-card:hover .anime-card-title {
+    color: var(--primary-green);
+    transform: translateY(-2px);
+}
+
+/* --- 4. SIDEBAR E PESQUISA --- */
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -37,16 +148,20 @@
     letter-spacing: 1px;
 }
 
-/* BARRA DE PESQUISA DA SIDEBAR */
+.sidebar-search-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
 .sidebar-search {
     width: 100%;
-    padding: 8px 12px;
+    padding: 8px 35px 8px 12px;
     background: #0a0a0a;
     border: 1px solid #333;
     border-radius: 4px;
     color: white;
     font-size: 0.85rem;
-    margin-bottom: 15px;
     outline: none;
 }
 
@@ -54,20 +169,6 @@
     border-color: var(--primary-green);
 }
 
-/* Container para posicionar o ícone de limpar */
-.sidebar-search-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 15px;
-}
-
-/* Ajuste no padding do input para não sobrepor o ícone */
-.sidebar-search {
-    margin-bottom: 0 !important;
-    padding-right: 35px !important;
-}
-
-/* Estilo do ícone "X" */
 .btn-clear-sidebar {
     position: absolute;
     right: 12px;
@@ -76,7 +177,7 @@
     color: var(--text-gray);
     cursor: pointer;
     font-size: 1.2rem;
-    display: none; /* Oculto por padrão */
+    display: none;
     transition: 0.2s;
     line-height: 1;
 }
@@ -85,11 +186,10 @@
     color: var(--primary-green);
 }
 
-/* MODIFICAÇÕES NA LISTA DE EPISÓDIOS E ACCORDEON */
-.download-item-wrapper {
-    border-bottom: 1px solid #1a1a1a;
-}
+/* --- 5. COMPONENTES ESPECÍFICOS --- */
 
+/* Downloads e Accordion */
+.download-item-wrapper { border-bottom: 1px solid #1a1a1a; }
 .download-item {
     display: flex;
     justify-content: space-between;
@@ -98,12 +198,7 @@
     gap: 10px;
 }
 
-.download-name {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-white);
-    flex: 1;
-}
+.download-name { font-size: 0.9rem; font-weight: 600; color: var(--text-white); flex: 1; }
 
 .ep-tag-orange {
     background: var(--accent-orange);
@@ -113,7 +208,6 @@
     font-weight: 800;
     font-size: 0.75rem;
     margin-left: 5px;
-    display: inline-block;
 }
 
 .btn-download {
@@ -127,10 +221,7 @@
     font-weight: bold;
 }
 
-.btn-download.active {
-    background: var(--primary-green);
-    color: #000;
-}
+.btn-download.active { background: var(--primary-green); color: #000; }
 
 .download-options {
     max-height: 0;
@@ -140,15 +231,9 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    padding: 0 10px;
 }
 
-.download-options.show {
-    max-height: 500px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
-}
+.download-options.show { max-height: 500px; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
 
 .btn-server {
     background: #1a1a1a;
@@ -161,12 +246,9 @@
     transition: 0.2s;
 }
 
-.btn-server:hover {
-    border-color: var(--accent-orange);
-    color: var(--accent-orange);
-}
+.btn-server:hover { border-color: var(--accent-orange); color: var(--accent-orange); }
 
-
+/* Calendário */
 .calendar-item {
     display: flex;
     justify-content: space-between;
@@ -177,27 +259,9 @@
     margin: 0 -10px;
 }
 
-.calendar-item.released {
-    background: rgba(46, 248, 97, 0.05);
-    border-left: 4px solid var(--primary-green);
-}
-
-.cal-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    flex: 1;
-    color: var(--text-white);
-    line-height: 1.3;
-}
-
-.cal-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-    margin-top: 2px;
-}
-
+.calendar-item.released { background: rgba(46, 248, 97, 0.05); border-left: 4px solid var(--primary-green); }
+.cal-name { font-size: 0.95rem; font-weight: 600; flex: 1; color: var(--text-white); line-height: 1.3; }
+.cal-info { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-top: 2px; }
 .cal-time {
     background: #000;
     color: var(--accent-orange);
@@ -210,270 +274,18 @@
 
 .check-icon {
     color: var(--primary-green);
-    font-weight: bold;
     animation: pulseCheck 2s infinite ease-in-out;
 }
 
-.section-header {
-    border-left: 5px solid var(--primary-green);
-    padding-left: 15px;
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+/* Favoritos e Estatísticas */
+.fav-item { display: flex; gap: 12px; margin-bottom: 15px; align-items: center; }
+.fav-img { width: 45px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid #333; }
+.fav-name { font-size: 0.9rem; font-weight: 700; color: var(--text-white); display: block; margin-bottom: 4px; }
+.fav-progress-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; }
+.fav-progress-fill { height: 100%; background: var(--primary-green); border-radius: 10px; }
 
-.section-title {
-    font-family: var(--font-righteous);
-    font-size: 1.4rem;
-    text-transform: uppercase;
-}
-
-.anime-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.ep-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--primary-green);
-    color: #000;
-    font-size: 0.8rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 4px;
-    z-index: 5;
-}
-
-.rating-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--accent-gold);
-    font-size: 0.75rem;
-    font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--accent-gold);
-    display: flex;
-    align-items: center;
-    gap: 3px;
-}
-
-.load-more-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0 50px 0;
-}
-
-.btn-load-more {
-    background: transparent;
-    color: var(--primary-green);
-    border: 2px solid var(--primary-green);
-    padding: 10px 30px;
-    border-radius: 5px;
-    font-family: var(--font-righteous);
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: 0.3s;
-    font-size: 1rem;
-}
-
-.btn-load-more:hover {
-    background: var(--primary-green);
-    color: #000;
-}
-
-.fav-item {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 15px;
-    align-items: center;
-}
-
-.fav-img {
-    width: 45px;
-    height: 60px;
-    border-radius: 4px;
-    object-fit: cover;
-    border: 1px solid #333;
-}
-
-.fav-name {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--text-white);
-    display: block;
-    margin-bottom: 4px;
-}
-
-.fav-progress-bg {
-    width: 100%;
-    height: 6px;
-    background: #222;
-    border-radius: 10px;
-}
-
-.fav-progress-fill {
-    height: 100%;
-    background: var(--primary-green);
-    border-radius: 10px;
-}
-
-footer {
-    background: #000;
-    padding: 40px 5%;
-    text-align: center;
-    border-top: 1px solid #222;
-    margin-top: 50px;
-}
-
-.disclaimer {
-    font-size: 0.75rem;
-    color: #555;
-    margin-top: 15px;
-    font-style: italic;
-}
-
-@keyframes pulseCheck {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 0.8;
-    }
-    50% {
-        transform: scale(1.2);
-        opacity: 1;
-    }
-}
-
-@media (max-width: 1100px) {
-    .main-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .anime-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (max-width: 900px) {
-    .main-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .anime-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media (max-width: 600px) {
-    .main-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .anime-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 420px) {
-    .main-wrapper {
-        grid-template-columns: 1fr;
-    }
-
-    .anime-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
-}
-
-
-
-/* --- MELHORIA NA APRESENTAÇÃO DO NOME --- */
-
-.anime-card {
-    background: var(--bg-card);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid #222;
-    position: relative;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    flex-direction: column;
-    aspect-ratio: 2/3; /* Mantém proporção de poster */
-}
-
-/* Efeito de destaque no Card */
-.anime-card:hover {
-    transform: scale(1.05);
-    border-color: var(--primary-green);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.6);
-    z-index: 10;
-}
-
-.anime-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* Acende o nome no hover */
-.anime-card:hover .anime-card-title {
-    color: var(--primary-green);
-}
-
-
-/* --- MELHORIA PARA NOMES LONGOS --- */
-
-.anime-card-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    /* Aumentamos o padding e o gradiente para cobrir nomes maiores */
-    padding: 40px 10px 12px 10px;
-    background: linear-gradient(to top,
-    rgba(0,0,0,1) 0%,
-    rgba(0,0,0,0.8) 50%,
-    transparent 100%);
-    pointer-events: none;
-    display: flex;
-    align-items: flex-end; /* Garante que o texto comece da base */
-    min-height: 80px; /* Garante espaço mínimo para o gradiente */
-}
-
-.anime-card-title {
-    font-family: 'Inter', sans-serif;
-    font-size: 0.8rem; /* Reduzi levemente a fonte para caber mais palavras */
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--text-white);
-    text-align: center;
-    width: 100%;
-    display: block;
-    overflow: visible;
-    -webkit-line-clamp: unset;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-    transition: 0.3s;
-    word-wrap: break-word; /* Força quebra de palavras se necessário */
-}
-
-/* Destaque no Hover */
-.anime-card:hover .anime-card-title {
-    color: var(--primary-green);
-    transform: translateY(-2px); /* Pequeno pulo para dar vida */
-}
-
-
-/* --- ESTILO DE ACESSOS (SUGESTÃO ANTERIOR REFINADA) --- */
 .stats-box-single {
     display: block;
-    /*padding: 15px;*/
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid #222;
     border-radius: 8px;
@@ -489,7 +301,7 @@ footer {
 .stat-value-large {
     display: block;
     font-family: var(--font-righteous);
-    font-size: 1.6rem; /* Valor maior em destaque */
+    font-size: 1.6rem;
     color: var(--primary-green);
     text-shadow: 0 0 10px rgba(46, 248, 97, 0.3);
     line-height: 1;
@@ -503,4 +315,86 @@ footer {
     letter-spacing: 2px;
     margin-top: 8px;
     font-weight: 700;
+}
+
+/* --- 6. FOOTER E BOTÕES GERAIS --- */
+.load-more-container { display: flex; justify-content: center; margin: 20px 0 50px 0; }
+
+.btn-load-more {
+    background: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
+    padding: 10px 30px;
+    border-radius: 5px;
+    font-family: var(--font-righteous);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-load-more:hover { background: var(--primary-green); color: #000; }
+
+footer {
+    background: #000;
+    padding: 40px 5%;
+    text-align: center;
+    border-top: 1px solid #222;
+    margin-top: 50px;
+}
+
+.disclaimer { font-size: 0.75rem; color: #555; margin-top: 15px; font-style: italic; }
+
+/* --- 7. ANIMAÇÕES --- */
+@keyframes pulseCheck {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* --- 8. RESPONSIVIDADE (MEDIA QUERIES) --- */
+
+@media (max-width: 1100px) {
+    .main-wrapper { grid-template-columns: 1fr; }
+    .anime-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 900px) {
+    .anime-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .anime-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Resolução Mobile Refinada */
+@media (max-width: 420px) {
+    .main-wrapper {
+        padding: 1rem 3%;
+    }
+
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr); /* Mantém 2 colunas para evitar imagens gigantes */
+        gap: 12px;
+    }
+
+    .anime-card {
+        border-radius: 6px;
+    }
+
+    .anime-card-title {
+        font-size: 0.7rem;
+        padding: 5px;
+    }
+
+    .ep-badge, .rating-badge {
+        font-size: 0.65rem;
+        top: 5px;
+        left: 5px;
+        padding: 2px 5px;
+    }
+}
+
+@media (max-width: 340px) {
+    .anime-grid {
+        gap: 8px;
+    }
 }

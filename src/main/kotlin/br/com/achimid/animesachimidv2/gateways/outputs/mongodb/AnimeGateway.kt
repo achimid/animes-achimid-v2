@@ -4,6 +4,7 @@ import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.domains.AnimeComment
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocumentMapper
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.AnimeRepository
+import jakarta.annotation.PostConstruct
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -42,7 +43,7 @@ class AnimeGateway(
         return comment
     }
 
-    //    @PostConstruct
+//        @PostConstruct
     fun migrate() {
         val animes = animeRepository.findAll().map(mapper::mapper)
 

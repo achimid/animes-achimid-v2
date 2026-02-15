@@ -18,7 +18,7 @@ data class AnimeDocument(
     @Indexed(unique = true)
     val slug: String,
     val name: String,
-    val imageUrl: String,
+    val imageUrl: String? = null,
     val type: AnimeTypeDocument = TV,
     val status: AnimeStatusDocument = COMPLETE,
 
@@ -46,7 +46,13 @@ data class AnimeDocument(
     val updatedAt: Instant? = null,
 )
 
-enum class AnimeStatusDocument { COMPLETE, AIRING, WAITING, CANCELLED }
+enum class AnimeStatusDocument(val description: String) {
+    COMPLETE("Finalizado"),
+    AIRING("Em Exibição"),
+    WAITING("Aguardando"),
+    CANCELLED("Cancelado"),
+}
+
 enum class AnimeTypeDocument { TV, OVA, ONA, Movie, Music, Special, OTHERS }
 
 

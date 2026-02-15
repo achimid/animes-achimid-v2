@@ -23,4 +23,5 @@ data class ExecutionConfig(
     val defaultNavigationTimeout: Long? = null,
     val addScriptTagUrl: String? = null,
     val waitTime: Long? = null,
+    val disableJavaScript: Boolean? = null,
 )

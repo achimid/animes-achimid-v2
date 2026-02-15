@@ -3,7 +3,9 @@ package br.com.achimid.animesachimidv2.gateways.inputs.http.api
 import br.com.achimid.animesachimidv2.domains.AnimeComment
 import br.com.achimid.animesachimidv2.usecases.AddCommentUserCase
 import br.com.achimid.animesachimidv2.usecases.AddFavoriteUserCase
+import br.com.achimid.animesachimidv2.usecases.RemoveFavoriteUserCase
 import org.springframework.http.HttpStatus.CREATED
+import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.web.bind.annotation.*
 
 
@@ -11,7 +13,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/anime")
 class AnimeAPIController(
     val addCommentUserCase: AddCommentUserCase,
-    val addFavoriteUserCase: AddFavoriteUserCase
+    val addFavoriteUserCase: AddFavoriteUserCase,
+    val removeFavoriteUserCase: RemoveFavoriteUserCase
 ) {
 
     @ResponseStatus(CREATED)
@@ -30,6 +33,15 @@ class AnimeAPIController(
         @CookieValue(value = "user_id") userId: String
     ) {
         return addFavoriteUserCase.execute(id, userId)
+    }
+
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping("/{id}/favorite")
+    fun removeFavorite(
+        @PathVariable id: String,
+        @CookieValue(value = "user_id") userId: String
+    ) {
+        return removeFavoriteUserCase.execute(id, userId)
     }
 
 }

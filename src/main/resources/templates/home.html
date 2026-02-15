@@ -59,7 +59,7 @@
             </section>
 
             <section>
-                <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados</h2></div>
+                <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados Aleatóriamente</h2></div>
                 <div class="anime-grid">
                     <a class="anime-card" th:each="recommended : ${recommendations}" th:href="|/anime/${recommended.slug}|" >
                         <div class="rating-badge">
@@ -98,7 +98,8 @@
 
             <div class="sidebar-box">
                 <h3 class="sidebar-title">📅 Calendário</h3>
-                <div class="calendar-item" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.shouldBeReleased} ? 'released' : ''">
+                <div class="calendar-item anime-tooltip-div" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.shouldBeReleased} ? 'released' : ''">
+                    <img loading="lazy" th:src="${item.imageUrl }" th:alt="${item.title}" class="anime-tooltip">
                     <span class="cal-name" th:text="${item.title}"></span>
                     <div class="cal-info">
                         <span class="check-icon" th:if="${item.released}">✓</span>

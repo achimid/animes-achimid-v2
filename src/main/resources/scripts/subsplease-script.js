@@ -21,7 +21,6 @@ async function extract() {
 
         const mirrorTorrent = [...$episode.querySelectorAll('.badge-wrapper a')].filter(e => e.innerText == '1080p')[0].href
 
-        
         const post = {
             from: "Subs Please (ENG)",
             url,

@@ -20,7 +20,9 @@ class SiteIntegrationAPIController(
 
     @GetMapping
     @ResponseStatus(OK)
-    fun find(): SiteIntegrationResponse = SiteIntegrationResponse(retrieveSiteIntegrations.execute())
+    fun find(
+        @RequestParam(required = false) query: String? = null,
+    ): SiteIntegrationResponse = SiteIntegrationResponse(retrieveSiteIntegrations.execute(query))
 
     @ResponseStatus(OK)
     @PostMapping("/callback")

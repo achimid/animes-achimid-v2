@@ -3,6 +3,7 @@ package br.com.achimid.animesachimidv2.cron
 import br.com.achimid.animesachimidv2.gateways.outputs.http.PuppeteerAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.SiteIntegrationGateway
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component

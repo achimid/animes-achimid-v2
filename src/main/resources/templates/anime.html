@@ -180,7 +180,7 @@
             <div class="sidebar-card">
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Últimos Lançamentos</h3>
                 <div class="latest-list">
-                    <a th:href="|/anime/${release.animeSlug}|" class="latest-item" th:each="release : ${releases}">
+                    <a th:href="|/anime/${release.animeSlug}|" class="latest-item anime-tooltip-div" th:each="release : ${releases}">
                         <img loading="lazy" th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}" class="anime-tooltip">
                         <span th:text="${release.animeTitle}">Anime Release Title</span>
                         <span class="ep-tag" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Release Number</span>
@@ -189,7 +189,7 @@
             </div>
 
             <div class="sidebar-card" style="border-top-color: var(--accent-orange);">
-                <h3 style="color:var(--accent-orange); margin-bottom:15px;">Recomendados</h3>
+                <h3 style="color:var(--accent-orange); margin-bottom:15px;">Recomendados Aleatóriamente</h3>
                 <div class="recommended-list">
                     <a href="#" class="rec-item" th:each="recomendation : ${recommendations}" th:href="|/anime/${recomendation.slug}|">
                         <img class="rec-thumb" loading="lazy" th:src="${recomendation.imageUrl}" th:alt="|Poster do anime ${recomendation.title}|">

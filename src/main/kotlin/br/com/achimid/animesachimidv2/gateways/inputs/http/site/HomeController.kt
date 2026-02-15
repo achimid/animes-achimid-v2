@@ -4,6 +4,7 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.PageAccessGateway
 import br.com.achimid.animesachimidv2.usecases.*
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.concurrent.CompletableFuture.allOf
@@ -13,22 +14,22 @@ import java.util.concurrent.CompletableFuture.supplyAsync
 @Controller
 @RequestMapping("/")
 class HomeController(
-    val mockUseCase: MockUseCase,
     val pageAccessGateway: PageAccessGateway,
-    val findSiteIntegrationsUseCase: FindSiteIntegrationsUseCase,
-    val findRecommendationsUseCase: FindRecommendationsUseCase,
     val findReleasesUseCase: FindReleasesUseCase,
+    val findFallowingAnimesUseCase: FindFallowingAnimesUseCase,
+    val findRecommendationsUseCase: FindRecommendationsUseCase,
+    val findSiteIntegrationsUseCase: FindSiteIntegrationsUseCase,
     val findTodayCalendarReleaseUseCase: FindTodayCalendarReleaseUseCase
 ) {
 
     @GetMapping
-    fun homePage(model: Model): String {
+    fun homePage(@CookieValue(value = "user_id") userId: String, model: Model): String {
 
-        val releases = supplyAsync {findReleasesUseCase.execute(0, 20)}
-        val recommendations = supplyAsync {findRecommendationsUseCase.execute()}
-        val calendarRelease = supplyAsync {findTodayCalendarReleaseUseCase.execute()}
-        val fallowingList = supplyAsync {mockUseCase.getFallowing()}
-        val siteIntegrations = supplyAsync {findSiteIntegrationsUseCase.execute()}
+        val releases = supplyAsync { findReleasesUseCase.execute(0, 20) }
+        val recommendations = supplyAsync { findRecommendationsUseCase.execute() }
+        val calendarRelease = supplyAsync { findTodayCalendarReleaseUseCase.execute() }
+        val fallowingList = supplyAsync { findFallowingAnimesUseCase.execute(userId) }
+        val siteIntegrations = supplyAsync { findSiteIntegrationsUseCase.execute() }
         val pageAccess = supplyAsync { pageAccessGateway.getPageAccess() }
 
         allOf(releases, recommendations, calendarRelease, fallowingList, siteIntegrations, pageAccess).join()

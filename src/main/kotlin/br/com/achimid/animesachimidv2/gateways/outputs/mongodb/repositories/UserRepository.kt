@@ -13,4 +13,9 @@ interface UserRepository: CrudRepository<UserDocument, String> {
     @Update("{ '\$push' : { 'favorites' : ?1 } }")
     fun addFavorite(userId: String, animeId: String)
 
+    @Query("{ '_id' : ?0 }")
+    @Update("{ '\$pull' : { 'favorites' : ?1 } }")
+    fun removeFavorite(userId: String, animeId: String)
+
+
 }

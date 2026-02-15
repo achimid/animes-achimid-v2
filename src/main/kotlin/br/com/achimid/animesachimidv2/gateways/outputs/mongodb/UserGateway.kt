@@ -5,6 +5,7 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.UserDocum
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class UserGateway(
@@ -21,4 +22,8 @@ class UserGateway(
             .let(mapper::fromDocument)
 
     fun addFavorite(userId: String, animeId: String) = repository.addFavorite(userId, animeId)
+    fun removeFavorite(userId: String, animeId: String) = repository.removeFavorite(userId, animeId)
+
+
+    fun findById(id: String): User? = repository.findById(id).getOrNull()?.let(mapper::fromDocument)
 }

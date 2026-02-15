@@ -13,6 +13,7 @@ data class SiteIntegration(
     val script: String? = null,
     val enabled: Boolean = true,
     val skipImage: Boolean = true,
+    val disableJavaScript: Boolean? = null,
     var lastExecutionDate: Instant? = null,
     var lastExecutionSuccess: Boolean = false
 ) {

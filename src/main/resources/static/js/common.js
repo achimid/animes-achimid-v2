@@ -1,3 +1,13 @@
+document.querySelectorAll('.anime-tooltip-div').forEach(item => {
+    const tooltip = item.querySelector('.anime-tooltip');
+
+    item.addEventListener('mousemove', (e) => {
+        tooltip.style.left = (e.clientX + 20) + 'px';
+        tooltip.style.top = (e.clientY + 20) + 'px';
+    });
+});
+
+
 // LÓGICA DE PESQUISA (SUGESTÕES MODIFICADA COM OBJETOS)
 const animes = [
     { title: "Sousou no Frieren", year: "2023", eps: "28", img: "https://cdn.myanimelist.net/images/anime/1015/138006.jpg" },
@@ -19,7 +29,7 @@ function searchAnime() {
     const query = searchInput.value.toLowerCase();
     resultsBox.innerHTML = '';
 
-    fetch(`/api/v1/animes?query=${query}&pageSize=5`).then(res => res.json()).then(result => {
+    fetch(`/api/v1/animes?query=${query}&pageSize=8`).then(res => res.json()).then(result => {
         if (query.length > 0) {
             const filtered = result.content
             if (filtered.length > 0) {

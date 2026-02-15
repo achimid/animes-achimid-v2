@@ -1,20 +1,20 @@
 const posts = []
 
-const episodes = [...document.querySelectorAll('article')].reverse()
+const episodes = [...document.querySelectorAll('.video')].reverse()
 for (let i = 0; i < episodes.length; i++) {
     const $episode = episodes[i]
 
     const url = $episode.querySelector('a').href
-    const anime = $episode.querySelector('.title').innerText
-    const episode = parseInt($episode.querySelector('.ep-type-container').innerText.match(/\d+/g))
+    const anime = $episode.querySelector('h2').innerText.split('–')[0].trim()
+    const episode = parseInt($episode.querySelector('.video-ep').innerText.match(/\d+/g))
     const title = `${anime} - Episódio ${episode}`
 
     const languages = ['PT-BR']
-    const isDub = $episode.querySelector('.dublado') !== null
+    const isDub = $episode.querySelector('.selo-tipo').innerText.toLowerCase().indexOf('legendado') == -1
 
     
     const post = {
-        from: "Goyabu",
+        from: "Animes Online Red",
         url,
         title,
         anime,

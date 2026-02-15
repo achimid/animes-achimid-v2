@@ -12,13 +12,15 @@ const clearSiteBtn = document.getElementById('clearSiteSearch');
 
 btnLoad.addEventListener('click', showMoreButton);
 
+let searchSideBarTimeout = null
 sidebarSearch.addEventListener('keyup', (e) => {
     e.preventDefault();
-    if (e.key === "Enter") {
+    clearTimeout(searchSideBarTimeout)
+    searchSideBarTimeout = setTimeout(() => {
         const value = e.target.value;
         clearSidebar.style.display = value.length > 0 ? 'block' : 'none';
         filterAnimeReleaseEpisode(value);
-    }
+    }, 300)
 });
 
 clearSidebar.addEventListener('click', () => {
@@ -28,13 +30,15 @@ clearSidebar.addEventListener('click', () => {
     sidebarSearch.focus();
 });
 
+let searchSiteTimeout = null
 siteSearch.addEventListener('keyup', (e) => {
     e.preventDefault();
-    if (e.key === "Enter") {
+    clearTimeout(searchSiteTimeout)
+    searchSiteTimeout = setTimeout(() => {
         const val = e.target.value;
         clearSiteBtn.style.display = val.length > 0 ? 'block' : 'none';
         filterSites(val);
-    }
+    }, 300)
 });
 
 clearSiteBtn.addEventListener('click', () => {

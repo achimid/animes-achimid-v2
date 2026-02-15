@@ -3,7 +3,6 @@ package br.com.achimid.animesachimidv2.gateways.inputs.http.site
 import br.com.achimid.animesachimidv2.usecases.FindAnimeUseCase
 import br.com.achimid.animesachimidv2.usecases.FindRecommendationsUseCase
 import br.com.achimid.animesachimidv2.usecases.FindReleasesUseCase
-import br.com.achimid.animesachimidv2.usecases.MockUseCase
 import br.com.achimid.animesachimidv2.usecases.RegisterAnimeVisitUseCase
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -17,7 +16,6 @@ import java.util.concurrent.CompletableFuture.supplyAsync
 @Controller
 @RequestMapping("/anime")
 class AnimeController(
-    val mockUseCase: MockUseCase,
     val findAnimeUseCase: FindAnimeUseCase,
     val findReleasesUseCase: FindReleasesUseCase,
     val registerAnimeVisitUseCase: RegisterAnimeVisitUseCase,

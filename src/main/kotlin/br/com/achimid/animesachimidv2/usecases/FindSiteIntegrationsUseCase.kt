@@ -9,6 +9,11 @@ class FindSiteIntegrationsUseCase(
     private val siteIntegrationGateway: SiteIntegrationGateway
 ) {
 
-    fun execute() : List<SiteIntegration> = siteIntegrationGateway.findAll()
+    fun execute(query: String? = null): List<SiteIntegration> {
+
+        if (query.isNullOrEmpty()) return siteIntegrationGateway.findAll()
+
+        return siteIntegrationGateway.findAll().filter { it.name.contains(query, ignoreCase = true) }
+    }
 
 }

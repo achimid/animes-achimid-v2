@@ -22,7 +22,11 @@ class PuppeteerAPIGateway(
                 script = siteIntegration.script!!,
                 callbackUrl = "https://local.achimid.com.br/api/v1/site/integration/callback",
                 ref = siteIntegration.name,
-                config = ExecutionConfig(true, siteIntegration.skipImage)
+                config = ExecutionConfig(
+                    bypassCSP = true,
+                    skipImage = siteIntegration.skipImage,
+                    disableJavaScript = siteIntegration.disableJavaScript
+                )
             )
         ).let { logger.info("Executed puppeteer API for site ${siteIntegration.name}") }
     }

@@ -1,12 +1,14 @@
 const searchField = document.getElementById('animeSearchList');
 const animeContainer = document.getElementById('animeContainer');
 
+let searchFieldTimeout = null
 searchField.addEventListener('keyup', (e) => {
     e.preventDefault();
-    if (e.key === "Enter") {
+    clearTimeout(searchFieldTimeout)
+    searchFieldTimeout = setTimeout(() => {
         const value = e.target.value;
         filterAnimes(value);
-    }
+    }, 300)
 });
 
 
