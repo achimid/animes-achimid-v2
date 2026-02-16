@@ -14,21 +14,21 @@ class ExtractionTask(
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
-//    @Scheduled(fixedRate = 1000 * 60 * 3)
+    @Scheduled(fixedRate = 1000 * 60 * 3)
     fun executeFastQueueMonitoring() {
         logger.info("Executing fast queue monitoring")
 
         siteIntegrationGateway.findFast().forEach(puppeteerAPIGateway::execute)
     }
 
-//    @Scheduled(fixedRate = 1000 * 60 * 7)
+    @Scheduled(fixedRate = 1000 * 60 * 7)
     fun executeMediumQueueMonitoring() {
         logger.info("Executing medium queue monitoring")
 
         siteIntegrationGateway.findMedium().forEach(puppeteerAPIGateway::execute)
     }
 
-//    @Scheduled(fixedRate = 1000 * 60 * 12)
+    @Scheduled(fixedRate = 1000 * 60 * 12)
     fun executeSlowQueueMonitoring() {
         logger.info("Executing slow queue monitoring")
 

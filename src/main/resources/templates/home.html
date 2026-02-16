@@ -46,10 +46,10 @@
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
                 <div class="anime-grid" id="recent-grid">
                     <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
-                        <span class="ep-badge" th:text="|${release.animeType}: ${release.animeNumber}|">Episode Number</span>
-                        <img th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}" fetchpriority="high">
+                        <span class="ep-badge" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
+                        <img th:src="${release.animeImageUrl}" th:alt="${release.animeName}" fetchpriority="high">
                         <div class="anime-card-info">
-                            <span class="anime-card-title" th:text="${release.animeTitle}"></span>
+                            <span class="anime-card-title" th:text="${release.animeName}"></span>
                         </div>
                     </a>
                 </div>
@@ -85,9 +85,9 @@
                     <div class="download-item-wrapper" th:each="release : ${releasesEpisodes}">
                         <div class="download-item">
                             <a th:href="|/anime/${release.animeSlug}|">
-                                <span class="download-name" th:text="${release.animeTitle}">Anime Name</span>
+                                <span class="download-name" th:text="${release.animeName}">Anime Name</span>
                             </a>
-                            <button class="btn-download" onclick="toggleAccordion(this)" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Episode</button>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
                         </div>
                         <div class="download-options">
                             <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}">Site Name</a>
@@ -118,6 +118,7 @@
 
             <div class="sidebar-box">
                 <h3 class="sidebar-title">❤️ Acompanhando</h3>
+                <span class="fav-name" style="text-align: center;" th:if="${fallowingList.isEmpty()}">Você não esta acompanhando nenhum anime!</span>
                 <div class="fav-item" th:each="fallow : ${fallowingList}">
                     <img th:src="${fallow.imageUrl}" class="fav-img" th:alt="${fallow.name}"  loading="lazy">
                     <div style="flex:1">

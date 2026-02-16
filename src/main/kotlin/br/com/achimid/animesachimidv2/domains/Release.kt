@@ -1,15 +1,14 @@
 package br.com.achimid.animesachimidv2.domains
 
-import java.util.*
-
 data class Release(
-    val id: UUID? = null,
-    val animeSlug: String = "sousou-no-frieren", // TODO: Corrigir esse default
-    val animeTitle: String,
-    val animeType: String? = "Episódio",
-    val animeNumber: String? = null,
+    val id: String? = null,
+    val title: String? = null,
     val animeId: String? = null,
+    val animeSlug: String? = null,
+    val animeName: String? = null,
+    val animeType: String? = null,
+    val animeEpisode: String? = null,
     val animeImageUrl: String? = null,
-    val options: List<EpisodeLinkOptions>? = emptyList()
+    val options: MutableList<EpisodeLinkOptions>? = mutableListOf()
 )
 

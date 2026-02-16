@@ -1,4 +1,4 @@
-package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old
+package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
@@ -11,7 +11,8 @@ import java.time.Instant
 data class IntegrationEventDocument(
     @Id
     val id: String? = null,
-    @Indexed(unique = true)
+//    @Indexed(unique = true)
+//    @Indexed
     val idt: String,
     val from: String,
     val url: String,

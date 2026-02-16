@@ -7,6 +7,8 @@ import br.com.achimid.animesachimidv2.usecases.ProcessIntegrationCallbackUserCas
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus.OK
 import org.springframework.web.bind.annotation.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CompletableFuture.runAsync
 
 
 @RestController
@@ -27,6 +29,6 @@ class SiteIntegrationAPIController(
     @ResponseStatus(OK)
     @PostMapping("/callback")
     fun callbackIntegration(@RequestBody callbackIntegration: CallbackIntegration) {
-        processIntegrationCallbackUserCase.execute(callbackIntegration)
+        runAsync { processIntegrationCallbackUserCase.execute(callbackIntegration) }
     }
 }

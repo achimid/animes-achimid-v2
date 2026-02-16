@@ -9,7 +9,6 @@ import java.io.InputStream
 class SiteIntegrationRepository {
 
     private val db = mutableListOf(
-        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p%5D%5BMultiple+Subtitle%5D", getScript("erairaws-script.js")),
 //        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/", getScript("crunchyroll-script.js")),
 //        SiteIntegration(SLOW, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
 //        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js")),
@@ -24,11 +23,11 @@ class SiteIntegrationRepository {
 //        SiteIntegration(SLOW, "Animes Online Cloud", "https://animesonline.cloud/", getScript("animesonlinecloud-script.js")),
 //        SiteIntegration(SLOW, "Animes Drive", "https://animesdrive.online/episodio", getScript("animesdrive-script.js")),
 //        SiteIntegration(SLOW, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js"), disableJavaScript = true),
-//        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", getScript("erairaws-script.js")),
-//        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
-//        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.org/", getScript("darkanimes-script.js")),
-//        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
-//        SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
+        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", getScript("erairaws-script.js")),
+        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
+        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.org/", getScript("darkanimes-script.js")),
+        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
+        SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
     )
 
 //        SiteIntegration(SLOW, "Animes Flix", "https://animesflix.net/", getScript("animesflix-script.js")),

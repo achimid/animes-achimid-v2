@@ -10,6 +10,9 @@ spring:
       enabled: true
   mongodb:
     uri: ${MONGODB_URI}
+  data:
+    mongodb:
+      auto-index-creation: true
 
 server:
   port: ${PORT:8080}
@@ -40,5 +43,7 @@ external:
     url: "https://puppeteer-executor.achimid.com.br/api/v1"
   subsplease:
     url: "https://subsplease.org/api"
+  jikan:
+    url: "https://api.jikan.moe"
 
 

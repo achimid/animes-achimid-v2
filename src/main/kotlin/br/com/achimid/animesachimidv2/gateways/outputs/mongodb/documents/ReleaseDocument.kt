@@ -1,4 +1,4 @@
-package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old
+package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
@@ -22,12 +22,12 @@ data class ReleaseDocument(
 
     val anime: ReleaseAnimeDocument? = null,
     val mirrors: List<MirrorDocument>? = emptyList(),
-    val sources: List<ReleaseSourceDocument> = emptyList(),
+    val sources: List<ReleaseSourceDocument>? = emptyList(),
 
     @CreatedDate
-    val createdAt: Instant,
+    val createdAt: Instant? = null,
     @LastModifiedDate
-    val updatedAt: Instant
+    val updatedAt: Instant? = null,
 )
 
 data class ReleaseSourceDocument(

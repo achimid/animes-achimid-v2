@@ -15,19 +15,22 @@ class ProcessIntegrationCallbackUserCase(
     val logger = LoggerFactory.getLogger(this.javaClass)
 
     fun execute(callbackIntegration: CallbackIntegration) {
-        runAsync {
+        try {
             val siteName = callbackIntegration.request.ref
 
             if (callbackIntegration.execution == null || callbackIntegration.execution.result == null) {
                 logger.error("[$siteName] Execution failed", callbackIntegration)
-                return@runAsync siteIntegrationGateway.updateByName(siteName, false)
+                return siteIntegrationGateway.updateByName(siteName, false)
             }
 
             siteIntegrationGateway.updateByName(siteName, true)
 
             callbackIntegration.execution.result
                 .filter(siteIntegrationGateway::createEvenIntegration)
-                .map(createReleaseUserCase::execute)
+                .forEach(createReleaseUserCase::execute)
+        } catch (ex: RuntimeException) {
+            logger.error("Error on process release: {}", callbackIntegration, ex)
+            throw ex
         }
     }
 

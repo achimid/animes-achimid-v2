@@ -35,7 +35,7 @@ class HomeController(
         allOf(releases, recommendations, calendarRelease, fallowingList, siteIntegrations, pageAccess).join()
 
         model.addAttribute("releases", releases.join())
-        model.addAttribute("releasesEpisodes", releases.join().toList().slice(0..5))
+        model.addAttribute("releasesEpisodes", releases.join().toList().take(5))
         model.addAttribute("recommendations", recommendations.join())
         model.addAttribute("calendarRelease", calendarRelease.join())
         model.addAttribute("fallowingList", fallowingList.join())

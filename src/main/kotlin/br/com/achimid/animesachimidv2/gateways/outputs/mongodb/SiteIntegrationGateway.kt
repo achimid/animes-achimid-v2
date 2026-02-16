@@ -2,9 +2,9 @@ package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegration
 import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackIntegrationExecutionResult
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.IntegrationEventDocument
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.MirrorDataDocument
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.MirrorDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.IntegrationEventDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.MirrorDataDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.MirrorDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.SiteIntegrationRepository
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.IntegrationEventRepository
 import org.slf4j.LoggerFactory

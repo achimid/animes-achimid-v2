@@ -1,5 +1,6 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old
 
+import br.com.achimid.animesachimidv2.domains.Jikan
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
@@ -25,5 +26,5 @@ data class AnimeOldDocument(
 )
 
 data class SourceWrapper(
-    val jikan: JikanDataDocument? = null,
+    val jikan: Jikan? = null,
 )

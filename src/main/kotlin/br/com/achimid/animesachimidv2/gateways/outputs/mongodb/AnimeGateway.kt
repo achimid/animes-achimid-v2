@@ -2,9 +2,12 @@ package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.domains.AnimeComment
+import br.com.achimid.animesachimidv2.domains.Jikan
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.NameDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocumentMapper
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.AnimeRepository
-import jakarta.annotation.PostConstruct
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -14,8 +17,15 @@ import org.springframework.stereotype.Component
 @Component
 class AnimeGateway(
     val animeRepository: AnimeRepository,
+    val namesRepository: NamesRepository,
     val mapper: AnimeDocumentMapper
 ) {
+
+    fun saveAll(animes: List<Jikan>): List<Anime> = animes
+        .map(mapper::toDocument)
+        .let(animeRepository::saveAll)
+        .also { getAllNames(it).forEach(namesRepository::save) }
+        .map(mapper::fromDocument)
 
     @Cacheable("animesCache")
     fun findAll(pageRequest: PageRequest): Page<Anime> {
@@ -43,10 +53,38 @@ class AnimeGateway(
         return comment
     }
 
-//        @PostConstruct
-    fun migrate() {
-        val animes = animeRepository.findAll().map(mapper::mapper)
+    fun getAllNames(animes: List<AnimeDocument>): List<NameDocument> {
+        return animes.flatMap {
+            val jikan = it.sources!!.jikan!!
 
-        animeRepository.saveAll(animes)
+            val names = mutableSetOf(
+                NameDocument(jikan.title, it.id!!),
+                NameDocument(jikan.titleEnglish ?: "", it.id),
+                NameDocument(jikan.titleJapanese ?: "", it.id),
+            )
+
+            names.addAll(jikan.titles?.map { title ->
+                return@map try {
+                    NameDocument((title as HashMap<String, String>).get("title") ?: "", it.id)
+                } catch (ex: Exception) {
+                    try {
+                        NameDocument((title as HashMap<String, String>).get("title") ?: "", it.id)
+                    } catch (ex: Exception) {
+                        NameDocument((title as String ?: ""), it.id)
+                    }
+
+                }
+            } ?: emptyList())
+            names.addAll(jikan.titleSynonyms?.map { title -> NameDocument(title, it.id) } ?: emptyList())
+
+            return@flatMap names
+        }.filter { it.name != "" }
+    }
+
+    //        @PostConstruct
+    fun migrate() {
+//        val animes = animeRepository.findAll().map(mapper::toDocument)
+//
+//        animeRepository.saveAll(animes)
     }
 }

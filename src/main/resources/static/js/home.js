@@ -65,10 +65,10 @@ function showMoreButton() {
         result.content.forEach((anime, index) => {
             grid.innerHTML += `
                 <a class="anime-card" href="/anime/${anime.animeSlug}">
-                    <span class="ep-badge">${anime.animeType}: ${anime.animeNumber}</span>
-                    <img src="${anime.animeImageUrl}" alt="${anime.animeTitle}">
+                    <span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>
+                    <img src="${anime.animeImageUrl}" alt="${anime.animeName}">
                     <div class="anime-card-info">
-                        <span class="anime-card-title">${anime.animeTitle}</span>
+                        <span class="anime-card-title">${anime.animeName}</span>
                     </div>
                 </a>
             `

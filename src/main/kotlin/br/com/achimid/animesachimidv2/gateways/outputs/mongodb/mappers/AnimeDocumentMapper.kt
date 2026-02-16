@@ -3,10 +3,11 @@ package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers
 import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.domains.AnimeComment
 import br.com.achimid.animesachimidv2.domains.AnimeDetailsInfo
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.*
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.AnimeStatusDocument.AIRING
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.AnimeStatusDocument.COMPLETE
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.AnimeTypeDocument.TV
+import br.com.achimid.animesachimidv2.domains.Jikan
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.*
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeStatusDocument.AIRING
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeStatusDocument.COMPLETE
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeTypeDocument.TV
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.MappingConstants.ComponentModel.SPRING
@@ -23,21 +24,23 @@ interface AnimeDocumentMapper {
     @Mapping(source = "status.description", target = "status")
     fun fromDocument(document: AnimeDocument): Anime
 
+    fun toDocument(domain: Anime): AnimeDocument
+
     @Mapping(source = "infoValue", target = "infoValue", defaultValue = "??")
     fun fromDocument(document: AnimeDetailsInfoDocument): AnimeDetailsInfo
 
     fun toDocument(domain: AnimeComment): AnimeCommentDocument
     fun fromDocument(document: AnimeCommentDocument): AnimeComment
 
-    fun mapper(old: AnimeDocument): AnimeDocument {
-        val jikan = old.sources!!.jikan!!
+    fun toDomain(jikan: Jikan): Anime = toDocument(jikan).let(this::fromDocument)
 
-        val slug = jikan.url!!.split("/").last().lowercase()
+    fun toDocument(jikan: Jikan): AnimeDocument {
+        val slug = jikan.url.split("/").last().lowercase()
 
         return AnimeDocument(
             id = jikan.malId.toString(),
             slug = slug,
-            name = jikan.title!!,
+            name = jikan.title,
             type = AnimeTypeDocument.entries.firstOrNull { it.name == jikan.type } ?: TV,
             status = if (jikan.aired?.to == null) AIRING else COMPLETE,
             episodes = emptyList(),

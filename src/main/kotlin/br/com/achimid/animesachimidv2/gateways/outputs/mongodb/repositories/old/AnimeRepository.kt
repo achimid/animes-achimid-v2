@@ -1,7 +1,7 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old
 
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.AnimeCommentDocument
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.old.AnimeDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeCommentDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeDocument
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.repository.MongoRepository

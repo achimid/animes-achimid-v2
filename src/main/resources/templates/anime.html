@@ -111,7 +111,7 @@
                     <article>
                         <div class="episode-item" onclick="toggleEpOptions(this)">
                             <div class="ep-info">
-                                <span class="ep-num" th:text="|${episode.type}: ${episode.number}|"></span>
+                                <span class="ep-num" th:text="|${episode.typeDescription}: ${episode.number}|"></span>
                                 <span class="ep-title" th:text="${episode.title}"></span></div>
                             <div class="ep-play-btn">Visualizar ▼</div>
                         </div>
@@ -181,9 +181,9 @@
                 <h3 style="color:var(--primary-green); margin-bottom:15px;">Últimos Lançamentos</h3>
                 <div class="latest-list">
                     <a th:href="|/anime/${release.animeSlug}|" class="latest-item anime-tooltip-div" th:each="release : ${releases}">
-                        <img loading="lazy" th:src="${release.animeImageUrl}" th:alt="${release.animeTitle}" class="anime-tooltip">
-                        <span th:text="${release.animeTitle}">Anime Release Title</span>
-                        <span class="ep-tag" th:text="|${release.animeType}: ${release.animeNumber}|">Anime Release Number</span>
+                        <img loading="lazy" th:src="${release.animeImageUrl}" th:alt="${release.animeName}" class="anime-tooltip">
+                        <span th:text="${release.animeName}">Anime Release Title</span>
+                        <span class="ep-tag" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Release Number</span>
                     </a>
                 </div>
             </div>

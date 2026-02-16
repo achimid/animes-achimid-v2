@@ -39,7 +39,12 @@ data class EpisodeInfo(
     val title: String? = null,
     val type: String? = null,
     val options: List<EpisodeLinkOptions>? = null,
-)
+) {
+    fun getTypeDescription(): String? {
+        if (type == "TV") return "Episódio"
+        return type
+    }
+}
 
 data class EpisodeLinkOptions(
     val url: String,

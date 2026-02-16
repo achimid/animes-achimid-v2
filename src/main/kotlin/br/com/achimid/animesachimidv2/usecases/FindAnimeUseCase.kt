@@ -19,8 +19,8 @@ class FindAnimeUseCase(
 
         val episodes = anime.id.let(releaseGateway::findByAnimeIdOrderByEpisodeDesc).map {
             return@map EpisodeInfo(
-                number = it.animeNumber,
-                title = it.animeTitle,
+                number = it.animeEpisode,
+                title = it.animeName,
                 options = it.options,
                 type = anime.getTypeDescription()
             )
