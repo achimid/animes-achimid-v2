@@ -21,7 +21,6 @@ class SiteIntegrationGateway(
 
     val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @Cacheable("sitesIntegrationCache")
     fun findAll(): List<SiteIntegration> = siteIntegrationRepository.findAll()
 
     fun findSlow(): List<SiteIntegration> = siteIntegrationRepository.findSlow()
@@ -30,7 +29,6 @@ class SiteIntegrationGateway(
 
     fun findFast(): List<SiteIntegration> = siteIntegrationRepository.findFast()
 
-    @CacheEvict("sitesIntegrationCache")
     fun updateByName(name: String, success: Boolean) {
         siteIntegrationRepository.findByName(name).let {
             it.lastExecutionSuccess = success

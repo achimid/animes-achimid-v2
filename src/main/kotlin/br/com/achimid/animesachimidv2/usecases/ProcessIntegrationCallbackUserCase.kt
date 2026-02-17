@@ -18,8 +18,9 @@ class ProcessIntegrationCallbackUserCase(
     fun execute(callbackIntegration: CallbackIntegration) {
         try {
             val siteName = callbackIntegration.request.ref
+            logger.info("Process release site $siteName")
 
-            if (callbackIntegration.execution == null || callbackIntegration.execution.result == null) {
+            if (callbackIntegration.execution == null || callbackIntegration.execution.result.isNullOrEmpty()) {
                 logger.error("[$siteName] Execution failed", callbackIntegration)
                 return siteIntegrationGateway.updateByName(siteName, false)
             }

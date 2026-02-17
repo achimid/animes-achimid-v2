@@ -9,12 +9,11 @@ import java.io.InputStream
 class SiteIntegrationRepository {
 
     private val db = mutableListOf(
-//        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/", getScript("crunchyroll-script.js")),
-//        SiteIntegration(SLOW, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
-//        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js")),
-//        SiteIntegration(SLOW, "AnimesRoll", "https://www.anroll.net/lancamentos", getScript("animesroll-script.js")),
-//        SiteIntegration(SLOW, "Animes Games", "https://animesgames.cc/lancamentos", getScript("animesgames-script.js")),
 //        SiteIntegration(SLOW, "Animes 365", "https://animes365.net/", getScript("animes365-script.js")),
+//        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/", getScript("crunchyroll-script.js")),
+        SiteIntegration(SLOW, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
+        SiteIntegration(SLOW, "AnimesRoll", "https://anroll.tv/", getScript("animesroll-script.js"), disableJavaScript = true),
+        SiteIntegration(SLOW, "Animes HD", "https://animeshd.to/", getScript("animeshd-to-script.js"), disableJavaScript = true),
         SiteIntegration(SLOW, "Animes Online CC", "https://animesonlinecc.to/episodio/", getScript("animesonlinecc-script.js")),
         SiteIntegration(SLOW, "Goyabu", "https://goyabu.to/lancamentos", getScript("goyabu-script.js"), disableJavaScript = true),
         SiteIntegration(SLOW, "Animes Online FHD", "https://animesonlinefhd.vip/", getScript("animesonlinefhd-script.js")),
@@ -30,6 +29,8 @@ class SiteIntegrationRepository {
         SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
     )
 
+    //        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js"), disableJavaScript = true),
+//    SiteIntegration(SLOW, "Animes Games", "https://animesgames.cc/lancamentos", getScript("animesgames-script.js")),
 //        SiteIntegration(SLOW, "Animes Flix", "https://animesflix.net/", getScript("animesflix-script.js")),
 //        SiteIntegration(SLOW, "Animes BR", "https://animesbr.tv/episodios/", getScript("animesbr-script.js")),
 //        SiteIntegration(SLOW, "Animes Online Red", "https://animesonline.red/", getScript("animesonline-red-script.js")),
