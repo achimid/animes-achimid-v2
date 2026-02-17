@@ -1,5 +1,6 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 
+import lombok.Data
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
@@ -35,7 +36,25 @@ data class ReleaseDocument(
 data class ReleaseSourceDocument(
     val title: String,
     val url: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ReleaseSourceDocument
+
+        if (title != other.title) return false
+        if (url != other.url) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + url.hashCode()
+        return result
+    }
+}
 
 data class ReleaseAnimeDocument(
     val _id: String? = null,

@@ -1,10 +1,10 @@
 package br.com.achimid.animesachimidv2.gateways.inputs.http.site
 
-import br.com.achimid.animesachimidv2.domains.exception.AnimeNotFoundException
 import br.com.achimid.animesachimidv2.usecases.FindAnimeUseCase
 import br.com.achimid.animesachimidv2.usecases.FindRecommendationsUseCase
 import br.com.achimid.animesachimidv2.usecases.FindReleasesUseCase
 import br.com.achimid.animesachimidv2.usecases.RegisterAnimeVisitUseCase
+import org.bson.types.ObjectId
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.concurrent.CompletableFuture.allOf
 import java.util.concurrent.CompletableFuture.supplyAsync
-import java.util.concurrent.CompletionException
 
 
 @Controller
@@ -26,26 +25,23 @@ class AnimeController(
 
     @GetMapping("/{idOrSlug}")
     fun animePage(model: Model, @PathVariable idOrSlug: String): String {
-        try {
-            val animeSupply = supplyAsync { findAnimeUseCase.execute(idOrSlug) }
-            val releasesSupply = supplyAsync { findReleasesUseCase.execute(0, 5) }
-            val recommendationsSupply = supplyAsync { findRecommendationsUseCase.execute(3) }
+        if (ObjectId.isValid(idOrSlug)) return "redirect:/"
 
-            allOf(animeSupply, releasesSupply, recommendationsSupply).join()
+        val animeSupply = supplyAsync { findAnimeUseCase.execute(idOrSlug) }
+        val releasesSupply = supplyAsync { findReleasesUseCase.execute(0, 5) }
+        val recommendationsSupply = supplyAsync { findRecommendationsUseCase.execute(3) }
 
-            val anime = animeSupply.join()
+        allOf(animeSupply, releasesSupply, recommendationsSupply).join()
 
-            model.addAttribute("anime", anime)
-            model.addAttribute("releases", releasesSupply.join())
-            model.addAttribute("recommendations", recommendationsSupply.join())
+        val anime = animeSupply.join()
 
-            registerAnimeVisitUseCase.execute(anime.id)
+        model.addAttribute("anime", anime)
+        model.addAttribute("releases", releasesSupply.join())
+        model.addAttribute("recommendations", recommendationsSupply.join())
 
-            return "anime"
-        } catch (ex: CompletionException) {
-            if (ex.cause is AnimeNotFoundException) return "redirect:/"
-            throw ex
-        }
+        registerAnimeVisitUseCase.execute(anime.id)
+
+        return "anime"
     }
 
 }

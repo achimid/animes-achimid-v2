@@ -4,7 +4,7 @@ import br.com.achimid.animesachimidv2.domains.SiteIntegrationType.SLOW
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ofPattern
-import java.util.*
+import java.util.Locale.of
 
 data class SiteIntegration(
     val type: SiteIntegrationType = SLOW,
@@ -20,7 +20,7 @@ data class SiteIntegration(
     fun lastExecutionDateFormatted(): String? {
         return lastExecutionDate
             ?.atZone(ZoneId.systemDefault())
-            ?.format(ofPattern("dd-MM-yyyy HH:mm", Locale.getDefault()))
+            ?.format(ofPattern("dd-MM-yyyy HH:mm", of("pt", "BR")))
     }
 }
 

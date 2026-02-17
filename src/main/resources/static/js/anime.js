@@ -108,3 +108,6 @@ function getCookie(name) {
     }
     return null;
 }
+
+let firstEpisode = document.querySelector('.ep-title')
+if (firstEpisode != null) firstEpisode.click()

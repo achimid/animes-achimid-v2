@@ -5,12 +5,13 @@ import br.com.achimid.animesachimidv2.domains.Release
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.ReleaseDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.ReleaseSourceDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.ReleaseRepository
+import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.event.EventListener
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.util.*
 
 @Component
 class ReleaseGateway(
@@ -29,7 +30,7 @@ class ReleaseGateway(
     }
 
     fun findByAnimeIdOrderByEpisodeDesc(animeId: String): List<Release> {
-        return repository.findByAnimeIdOrderByTitleDesc(animeId).map(this::fromDocument)
+        return repository.findByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
     }
 
     fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
@@ -67,19 +68,8 @@ class ReleaseGateway(
         )
     }
 
-//    @EventListener(ApplicationReadyEvent::class)
-//    fun migrate() {
-//        val documents = repository.findAll()
-//
-//        documents.map { anime ->
-//            val releasesDuplicates = documents.parallelStream().filter { it.animeName == anime.animeName && it.animeEpisode == anime.animeEpisode }
-//
-//            if (releasesDuplicates.count() > 1) {
-//                println("[${anime.animeName} ${anime.animeEpisode} ] This anime has more de one release per episode")
-//            }
-//        }
-//
-////        repository.saveAll(documents)
-//    }
+    @EventListener(ApplicationReadyEvent::class)
+    fun migrate() {
+    }
 
 }
