@@ -19,8 +19,8 @@ data class SiteIntegration(
 ) {
     fun lastExecutionDateFormatted(): String? {
         return lastExecutionDate
-            ?.atZone(ZoneId.systemDefault())
-            ?.format(ofPattern("dd-MM-yyyy HH:mm", of("pt", "BR")))
+            ?.atZone(ZoneId.of("America/Sao_Paulo"))
+            ?.format(ofPattern("dd-MM-yyyy HH:mm"))
     }
 }
 

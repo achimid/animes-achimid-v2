@@ -11,8 +11,7 @@ import java.time.Instant
 data class IntegrationEventDocument(
     @Id
     val id: String? = null,
-//    @Indexed(unique = true)
-//    @Indexed
+    @Indexed
     val idt: String,
     val from: String,
     val url: String,

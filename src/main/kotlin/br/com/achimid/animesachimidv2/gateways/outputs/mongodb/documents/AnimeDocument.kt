@@ -14,8 +14,7 @@ data class AnimeDocument(
     @Id
     val id: String? = null,
 
-//    @Indexed(unique = true)
-//    @Indexed
+    @Indexed(unique = true)
     val slug: String,
     val name: String,
     val imageUrl: String? = null,
