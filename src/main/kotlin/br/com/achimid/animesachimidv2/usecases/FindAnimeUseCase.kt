@@ -2,6 +2,7 @@ package br.com.achimid.animesachimidv2.usecases
 
 import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.domains.EpisodeInfo
+import br.com.achimid.animesachimidv2.domains.exception.AnimeNotFoundException
 import br.com.achimid.animesachimidv2.gateways.outputs.http.JikanAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.ReleaseGateway
@@ -16,7 +17,7 @@ class FindAnimeUseCase(
 ) {
 
     @Cacheable("animeCache")
-    fun execute(idOrSlug: String) : Anime {
+    fun execute(idOrSlug: String): Anime {
         val anime = animeGateway.findBySlug(idOrSlug)
             ?: animeGateway.findById(idOrSlug)
             ?: fallback(idOrSlug)
@@ -35,7 +36,11 @@ class FindAnimeUseCase(
 
     fun fallback(idOrSlug: String): Anime {
         val possibleName = idOrSlug.replace("_", " ")
-        return jikanGateway.search(possibleName).let(animeGateway::saveAll).first()
+        val animeJikan = jikanGateway.search(possibleName)
+            .let(animeGateway::saveAll)
+            .firstOrNull() ?: throw AnimeNotFoundException()
+
+        return animeJikan
     }
 
 }
