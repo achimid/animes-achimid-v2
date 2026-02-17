@@ -46,4 +46,5 @@ external:
   jikan:
     url: "https://api.jikan.moe"
 
-
+integration:
+  callbackUrl: ${CALLBACK_URL}

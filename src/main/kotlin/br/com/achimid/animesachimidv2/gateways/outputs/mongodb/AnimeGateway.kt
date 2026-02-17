@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.PageRequest.of
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class AnimeGateway(
@@ -46,7 +47,7 @@ class AnimeGateway(
 
     fun findBySlug(slug: String): Anime? = animeRepository.findBySlug(slug)?.let(mapper::fromDocument)
 
-    fun findById(id: String): Anime? = animeRepository.findById(id).get().let(mapper::fromDocument)
+    fun findById(id: String): Anime? = animeRepository.findById(id).getOrNull()?.let(mapper::fromDocument)
 
     fun addComment(id: String, comment: AnimeComment): AnimeComment {
         animeRepository.addComment(id, mapper.toDocument(comment))
@@ -66,13 +67,8 @@ class AnimeGateway(
             names.addAll(jikan.titles?.map { title ->
                 return@map try {
                     NameDocument((title as HashMap<String, String>).get("title") ?: "", it.id)
-                } catch (ex: Exception) {
-                    try {
-                        NameDocument((title as HashMap<String, String>).get("title") ?: "", it.id)
-                    } catch (ex: Exception) {
-                        NameDocument((title as String ?: ""), it.id)
-                    }
-
+                } catch (_: Exception) {
+                    NameDocument((title as String), it.id)
                 }
             } ?: emptyList())
             names.addAll(jikan.titleSynonyms?.map { title -> NameDocument(title, it.id) } ?: emptyList())
@@ -81,10 +77,4 @@ class AnimeGateway(
         }.filter { it.name != "" }
     }
 
-    //        @PostConstruct
-    fun migrate() {
-//        val animes = animeRepository.findAll().map(mapper::toDocument)
-//
-//        animeRepository.saveAll(animes)
-    }
 }

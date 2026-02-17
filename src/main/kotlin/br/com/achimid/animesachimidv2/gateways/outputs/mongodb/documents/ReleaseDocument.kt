@@ -19,7 +19,9 @@ data class ReleaseDocument(
     val animeName: String? = null,
     val animeType: String? = null,
     val animeImage: String? = null,
+    val animeEpisode: String? = null,
 
+    @Transient
     val anime: ReleaseAnimeDocument? = null,
     val mirrors: List<MirrorDocument>? = emptyList(),
     val sources: List<ReleaseSourceDocument>? = emptyList(),

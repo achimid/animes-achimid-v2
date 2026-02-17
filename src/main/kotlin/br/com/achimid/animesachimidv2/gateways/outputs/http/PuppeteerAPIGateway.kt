@@ -5,11 +5,13 @@ import br.com.achimid.animesachimidv2.gateways.outputs.http.puppeteer.PuppeteerA
 import br.com.achimid.animesachimidv2.gateways.outputs.http.puppeteer.request.ExecutionConfig
 import br.com.achimid.animesachimidv2.gateways.outputs.http.puppeteer.request.ExecutionRequest
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class PuppeteerAPIGateway(
-    val puppeteerAPIClient: PuppeteerAPIClient
+    val puppeteerAPIClient: PuppeteerAPIClient,
+    @Value("\${integration.callbackUrl}") private val callbackUrl: String,
 ) {
     val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -20,7 +22,7 @@ class PuppeteerAPIGateway(
             ExecutionRequest(
                 url = siteIntegration.url,
                 script = siteIntegration.script!!,
-                callbackUrl = "https://local.achimid.com.br/api/v1/site/integration/callback",
+                callbackUrl = callbackUrl,
                 ref = siteIntegration.name,
                 config = ExecutionConfig(
                     bypassCSP = true,

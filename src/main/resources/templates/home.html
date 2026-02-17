@@ -46,7 +46,8 @@
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
                 <div class="anime-grid" id="recent-grid">
                     <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
-                        <span class="ep-badge" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
+                        <span class="ep-badge" th:if="${release.animeEpisode == null || release.animeEpisode.isEmpty()}" th:text="${release.animeType}">Episode Number</span>
+                        <span class="ep-badge" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
                         <img th:src="${release.animeImageUrl}" th:alt="${release.animeName}" fetchpriority="high">
                         <div class="anime-card-info">
                             <span class="anime-card-title" th:text="${release.animeName}"></span>
@@ -87,7 +88,8 @@
                             <a th:href="|/anime/${release.animeSlug}|">
                                 <span class="download-name" th:text="${release.animeName}">Anime Name</span>
                             </a>
-                            <button class="btn-download" onclick="toggleAccordion(this)" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${release.animeEpisode == null || release.animeEpisode.isEmpty()}" th:text="|${release.animeType}|">Anime Episode</button>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
                         </div>
                         <div class="download-options">
                             <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}">Site Name</a>

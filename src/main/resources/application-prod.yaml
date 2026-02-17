@@ -7,6 +7,9 @@ spring:
         cachecontrol:
           max-age: 2592000
           cache-public: true
+integration:
+  callbackUrl: ${CALLBACK_URL:"https://animes.achimid.com.br/api/v1/site/integration/callback"}
+#  callbackUrl: "https://local.achimid.com.br/api/v1/site/integration/callback"
 #  docker:
 #    compose:
 #      enabled: false

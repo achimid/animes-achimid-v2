@@ -65,7 +65,11 @@ function showMoreButton() {
         result.content.forEach((anime, index) => {
             grid.innerHTML += `
                 <a class="anime-card" href="/anime/${anime.animeSlug}">
-                    <span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>
+                    ${anime.animeEpisode == null || anime.animeEpisode === '' ? `
+                        <span class="ep-badge">${anime.animeType}</span>
+                    ` : `
+                        <span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>
+                    `}                    
                     <img src="${anime.animeImageUrl}" alt="${anime.animeName}">
                     <div class="anime-card-info">
                         <span class="anime-card-title">${anime.animeName}</span>
@@ -85,9 +89,13 @@ function filterAnimeReleaseEpisode(query) {
                 <div class="download-item-wrapper">
                     <div class="download-item">
                         <a href="/anime/${anime.animeSlug}">
-                            <span class="download-name">${anime.animeTitle}</span>
+                            <span class="download-name">${anime.animeName}</span>
                         </a>
-                        <button class="btn-download" onclick="toggleAccordion(this)">${anime.animeType}: ${anime.animeNumber}</button>
+                          ${anime.animeEpisode == null || anime.animeEpisode === '' ? `
+                            <button class="btn-download" onclick="toggleAccordion(this)">${anime.animeType}</button>  
+                          ` : `
+                            <button class="btn-download" onclick="toggleAccordion(this)">${anime.animeType}: ${anime.animeEpisode}</button>
+                          `}                        
                     </div>
                     <div class="download-options">
                         ${anime.options.map(item => {

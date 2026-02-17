@@ -24,17 +24,15 @@ class CreateReleaseUserCase(
         logger.info("Search: ${result.anime} -> Found: ${anime.name}")
 
         val release = releaseGateway.findByAnimeIdAndEpisodeNumber(anime.id, result.episode!!)
-            .orElse(
-                Release(
-                    title = result.title,
-                    animeId = anime.id,
-                    animeSlug = anime.slug,
-                    animeName = anime.name,
-                    animeType = anime.getTypeDescription(),
-                    animeEpisode = result.episode,
-                    animeImageUrl = anime.imageUrl,
-                )
-            )
+            .firstOrNull() ?: Release(
+            title = result.title,
+            animeId = anime.id,
+            animeSlug = anime.slug,
+            animeName = anime.name,
+            animeType = anime.getTypeDescription(),
+            animeEpisode = result.episode,
+            animeImageUrl = anime.imageUrl,
+        )
 
         if (release.options!!.any { it.name == result.from }) return
 

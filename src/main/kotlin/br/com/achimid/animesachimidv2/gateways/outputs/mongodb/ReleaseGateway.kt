@@ -32,7 +32,7 @@ class ReleaseGateway(
         return repository.findByAnimeIdOrderByTitleDesc(animeId).map(this::fromDocument)
     }
 
-    fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): Optional<Release> {
+    fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
         return repository.findByAnimeIdAndEpisode(animeId, episodeNumber).map(this::fromDocument)
     }
 
@@ -46,6 +46,7 @@ class ReleaseGateway(
             animeName = release.animeName,
             animeType = release.animeType,
             animeImage = release.animeImageUrl,
+            animeEpisode = release.animeEpisode,
             sources = release.options?.map { ReleaseSourceDocument(it.name, it.url) },
             createdAt = Instant.now(),
             updatedAt = Instant.now(),
@@ -58,30 +59,27 @@ class ReleaseGateway(
             title = document.title,
             animeSlug = document.animeSlug ?: document.anime?.source?.jikan?.url!!.split("/").last().lowercase(),
             animeName = document.animeName ?: document.anime?.name ?: "",
-            animeEpisode = document.episode,
-            animeType = document.animeType,
+            animeEpisode = document.animeEpisode ?: document.episode,
+            animeType = if (document.animeType == "TV") "Episódio" else (document.animeType ?: "Episódio"),
             animeImageUrl = document.animeImage ?: document.anime?.image,
             animeId = document.animeId,
             options = document.sources!!.map { EpisodeLinkOptions(it.url, it.title) }.toMutableList(),
         )
     }
 
-    //        @PostConstruct
-    fun migrate() {
-        val documents = repository.findAll().filter { it.animeId == null }.map {
-            val jikan = it.anime!!.source.jikan!!
-            val slug = jikan.url.split("/").last().lowercase()
-
-            return@map it.copy(
-                animeId = jikan.malId.toString(),
-                animeSlug = slug,
-                animeType = it.anime.type,
-                animeName = it.anime.name,
-                animeImage = it.anime.image,
-            )
-        }.toList()
-
-        repository.saveAll(documents)
-    }
+//    @EventListener(ApplicationReadyEvent::class)
+//    fun migrate() {
+//        val documents = repository.findAll()
+//
+//        documents.map { anime ->
+//            val releasesDuplicates = documents.parallelStream().filter { it.animeName == anime.animeName && it.animeEpisode == anime.animeEpisode }
+//
+//            if (releasesDuplicates.count() > 1) {
+//                println("[${anime.animeName} ${anime.animeEpisode} ] This anime has more de one release per episode")
+//            }
+//        }
+//
+////        repository.saveAll(documents)
+//    }
 
 }

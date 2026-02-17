@@ -23,7 +23,10 @@ class HomeController(
 ) {
 
     @GetMapping
-    fun homePage(@CookieValue(value = "user_id") userId: String, model: Model): String {
+    fun homePage(
+        @CookieValue(value = "user_id", required = false) userId: String? = null,
+        model: Model
+    ): String {
 
         val releases = supplyAsync { findReleasesUseCase.execute(0, 20) }
         val recommendations = supplyAsync { findRecommendationsUseCase.execute() }

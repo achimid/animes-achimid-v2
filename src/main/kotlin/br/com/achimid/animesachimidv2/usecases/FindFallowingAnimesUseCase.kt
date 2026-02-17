@@ -15,7 +15,9 @@ class FindFallowingAnimesUseCase(
 ) {
 
     @Cacheable("fallowingAnimes")
-    fun execute(userId: String): List<Fallowing> {
+    fun execute(userId: String? = null): List<Fallowing> {
+        if (userId.isNullOrEmpty()) return emptyList()
+
         return userGateway.findById(userId)?.favorites?.take(3).orEmpty()
             .mapNotNull(animeGateway::findById)
             .map { Fallowing(it.name, it.imageUrl) }

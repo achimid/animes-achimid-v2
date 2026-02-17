@@ -14,5 +14,5 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
 
     fun findByAnimeIdOrderByTitleDesc(animeId: String): List<ReleaseDocument>
 
-    fun findByAnimeIdAndEpisode(animeId: String, episodeNumber: String): Optional<ReleaseDocument>
+    fun findByAnimeIdAndEpisode(animeId: String, episodeNumber: String): List<ReleaseDocument>
 }
