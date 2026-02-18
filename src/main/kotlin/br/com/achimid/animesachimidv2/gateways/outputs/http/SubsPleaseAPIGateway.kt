@@ -1,6 +1,6 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.http
 
-import br.com.achimid.animesachimidv2.domains.Schedule
+import br.com.achimid.animesachimidv2.domains.Calendar
 import br.com.achimid.animesachimidv2.gateways.outputs.http.subsplease.SubsPleaseAPIClient
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
@@ -16,11 +16,11 @@ class SubsPleaseAPIGateway(
     val logger = LoggerFactory.getLogger(this::class.java)
 
     @Cacheable("scheduleCache")
-    fun findFullSchedule(): Schedule {
+    fun findFullSchedule(): Calendar {
         logger.info("Searching for all schedules")
 
         val schedulers = subsPleaseAPIClient.findFullSchedule()
-        val schedulerTyped = objectMapper.readValue<Schedule>(schedulers.body.toString())
+        val schedulerTyped = objectMapper.readValue<Calendar>(schedulers.body.toString())
 
         return schedulerTyped
     }

@@ -470,21 +470,6 @@
     transform: scale(1.1);
 }
 
-/* --- FOOTER --- */
-footer {
-    background: #000;
-    padding: 40px 5%;
-    text-align: center;
-    border-top: 1px solid #222;
-    margin-top: 50px;
-}
-
-.disclaimer {
-    font-size: 0.75rem;
-    color: #555;
-    margin-top: 15px;
-    font-style: italic;
-}
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 900px) {

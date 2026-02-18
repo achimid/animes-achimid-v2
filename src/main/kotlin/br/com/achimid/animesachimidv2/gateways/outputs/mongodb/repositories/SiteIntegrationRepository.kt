@@ -32,6 +32,9 @@ class SiteIntegrationRepository {
     // https://worldfansub.xyz/
     // https://packs.ansktracker.com/
     // https://animesonline.io/
+//    https://animeflix.team/
+//    https://animesdigital.org/home/
+//    https://chia-anime.su/
 
 
     //        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js"), disableJavaScript = true),

@@ -132,7 +132,7 @@
 .sidebar-box {
     background: var(--bg-card);
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px;
     border: 1px solid #222;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
@@ -194,7 +194,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    padding: 7px 0;
     gap: 10px;
 }
 
@@ -333,16 +333,6 @@
 }
 
 .btn-load-more:hover { background: var(--primary-green); color: #000; }
-
-footer {
-    background: #000;
-    padding: 40px 5%;
-    text-align: center;
-    border-top: 1px solid #222;
-    margin-top: 50px;
-}
-
-.disclaimer { font-size: 0.75rem; color: #555; margin-top: 15px; font-style: italic; }
 
 /* --- 7. ANIMAÇÕES --- */
 @keyframes pulseCheck {
@@ -496,4 +486,38 @@ footer {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- AJUSTE PARA NOMES LONGOS NA SIDEBAR --- */
+
+/* Alvo: Nomes na "Lista de Episódios" */
+.download-item .download-name,
+    /* Alvo: Nomes no "Calendário" da sidebar */
+.calendar-item .cal-name {
+    display: block;           /* Garante que o elemento se comporte como bloco */
+    white-space: nowrap;      /* Impede que o texto quebre para a segunda linha */
+    overflow: hidden;         /* Esconde o texto que ultrapassar o limite */
+    text-overflow: ellipsis;  /* Adiciona os três pontinhos (...) */
+    max-width: 300px;         /* Define um limite de largura para forçar o corte */
+}
+
+/* Ajuste específico para o Calendário (onde o nome divide espaço com o horário) */
+.calendar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.calendar-item .cal-name {
+    flex: 1;                  /* Faz o nome ocupar o espaço disponível */
+}
+
+/* No mobile, podemos permitir um pouco mais de largura se necessário */
+@media (max-width: 480px) {
+    .download-item .download-name,
+    .calendar-item .cal-name {
+        max-width: 275px;
+    }
 }

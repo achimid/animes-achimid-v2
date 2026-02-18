@@ -7,19 +7,21 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ofPattern
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class Schedule(
+data class Calendar(
     val tz: String,
-    val schedule: Map<String, List<ScheduleItem>>
+    val schedule: Map<String, List<CalendarItem>>
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ScheduleItem(
+data class CalendarItem(
     val title: String,
     val time: String,
     val released: Boolean = false,
     @JsonProperty("image_url")
     val image: String? = null,
     val imageUrl: String? = "https://subsplease.org$image",
+    var anime: Anime? = null,
+    var dayIndex: Int? = null,
 ) {
     fun shouldBeReleased(): Boolean {
         val zone = ZoneId.of("America/Sao_Paulo")
@@ -30,5 +32,5 @@ data class ScheduleItem(
 }
 
 data class CalendarRelease (
-    val releasesToday: List<ScheduleItem> = emptyList(),
+    val releasesToday: List<CalendarItem> = emptyList(),
 )

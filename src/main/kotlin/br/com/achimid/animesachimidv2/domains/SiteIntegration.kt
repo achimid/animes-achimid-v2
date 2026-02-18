@@ -1,10 +1,10 @@
 package br.com.achimid.animesachimidv2.domains
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegrationType.SLOW
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ofPattern
-import java.util.Locale.of
 
 data class SiteIntegration(
     val type: SiteIntegrationType = SLOW,
@@ -17,10 +17,11 @@ data class SiteIntegration(
     var lastExecutionDate: Instant? = null,
     var lastExecutionSuccess: Boolean = false
 ) {
+    @JsonProperty("lastExecutionDateFormatted")
     fun lastExecutionDateFormatted(): String? {
         return lastExecutionDate
             ?.atZone(ZoneId.of("America/Sao_Paulo"))
-            ?.format(ofPattern("dd-MM-yyyy HH:mm"))
+            ?.format(ofPattern("dd/MM/yyyy HH:mm"))
     }
 }
 

@@ -127,7 +127,9 @@
                 <h3 class="sidebar-title">📅 Calendário</h3>
                 <div class="calendar-item anime-tooltip-div" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.shouldBeReleased} ? 'released' : ''">
                     <img loading="lazy" th:src="${item.imageUrl }" th:alt="${item.title}" class="anime-tooltip">
-                    <span class="cal-name" th:text="${item.title}"></span>
+                    <a th:href="|/anime/${item.anime.slug}|">
+                        <span class="cal-name" th:text="${item.title}"></span>
+                    </a>
                     <div class="cal-info">
                         <span class="check-icon" th:if="${item.released}">✓</span>
                         <span class="cal-time" th:text="${item.time}"></span>

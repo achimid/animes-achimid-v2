@@ -49,15 +49,14 @@ clearSiteBtn.addEventListener('click', () => {
 });
 
 
-
-
 function toggleAccordion(btn) {
     const options = btn.parentElement.nextElementSibling;
     btn.classList.toggle('active');
     options.classList.toggle('show');
 }
 
-setTimeout(autoReload, 1000 * 60 * 5)
+setInterval(autoReload, 1000 * 60 * 5)
+
 function autoReload() {
     releasesPageNumber = 0
     grid.innerHTML = ''
@@ -108,8 +107,8 @@ function filterAnimeReleaseEpisode(query) {
                     </div>
                     <div class="download-options">
                         ${anime.options.map(item => {
-                            return `<a class="btn-server" href="${item.url}">${item.name}</a>`    
-                        }).join('')}                                                
+                return `<a class="btn-server" href="${item.url}">${item.name}</a>`
+            }).join('')}                                                
                     </div>
                 </div>
             `
@@ -126,7 +125,7 @@ function filterSites(query) {
                 <div class="calendar-item ${site.enabled ? 'released' : ''}">
                     <a class="cal-name" href="${site.url}">${site.name}</a>
                     <div class="cal-info">
-                        ${site.lastExecutionDate != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDate}</span>` : ''}
+                        ${site.lastExecutionDate != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDateFormatted}</span>` : ''}
                         ${site.lastExecutionSuccess === true ? '<span class="check-icon">✓</span>' : ''}
                     </div>
                 </div>
@@ -136,7 +135,7 @@ function filterSites(query) {
 }
 
 
-document.getElementById('btnSendSuggestion').addEventListener('click', function() {
+document.getElementById('btnSendSuggestion').addEventListener('click', function () {
     const input = document.getElementById('siteSuggestion');
     const message = document.getElementById('suggestionMessage');
     const button = this;
@@ -163,6 +162,11 @@ document.getElementById('btnSendSuggestion').addEventListener('click', function(
     } else {
         input.focus();
         input.style.borderColor = "var(--accent-orange)";
-        setTimeout(() => { input.style.borderColor = "#333"; }, 2000);
+        setTimeout(() => {
+            input.style.borderColor = "#333";
+        }, 2000);
     }
 });
+
+
+document.querySelector('.btn-download').click()

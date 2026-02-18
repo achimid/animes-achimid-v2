@@ -40,8 +40,10 @@ class RequestCookieConfig(
     }
 
     private fun isBrowserRequest(userAgent: String?): Boolean {
-        return userAgent != null && (
-                userAgent.contains("Chrome", ignoreCase = true) ||
+        return userAgent != null &&
+                !userAgent.contains("bot/", ignoreCase = true) &&
+                (
+                        userAgent.contains("Chrome", ignoreCase = true) ||
                         userAgent.contains("Safari", ignoreCase = true) ||
                         userAgent.contains("Firefox", ignoreCase = true) ||
                         userAgent.contains("Edg", ignoreCase = true) ||

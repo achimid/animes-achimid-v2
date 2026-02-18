@@ -128,15 +128,6 @@ nav ul li a:hover {
 .page-item { padding: 10px 18px; background: #1a1a1a; border: 1px solid #333; border-radius: 6px; font-family: 'Righteous', cursive; cursor: pointer; transition: 0.3s; }
 .page-item:hover, .page-item.active { background: var(--primary-green); color: black; border-color: var(--primary-green); }
 
-/* --- FOOTER (ORIGINAL) --- */
-footer {
-    background: #000;
-    padding: 40px 5%;
-    text-align: center;
-    border-top: 1px solid #222;
-    margin-top: 50px;
-}
-.disclaimer { font-size: 0.75rem; color: #555; margin-top: 15px; font-style: italic; }
 
 /* RESPONSIVIDADE */
 @media (max-width: 900px) {
