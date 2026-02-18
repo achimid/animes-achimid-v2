@@ -12,10 +12,22 @@
     <meta name="description" content="Encontre informações e lançamentos de animes no Animes Achimid">
     <meta name="keywords" content="Anime, Lançamento, Temporada, Fansub, Grátis">
     <meta property="og:title" content="Animes Achimid - Sua central de animes">
-    <meta property="og:description" content="Encontre informações e lançamentos de animes no Animes Achimid">
+    <meta property="og:description" content="Acompanhe os últimos lançamentos, calendários e informações da temporada de animes.">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content="Animes Achimid" />
+    <meta property="og:url" content="https://animes.achimid.com.br/">
+
+    <meta property="og:image" content="https://animes.achimid.com.br/img/banner-small.png">
+    <meta property="og:image:secure_url" content="https://animes.achimid.com.br/img/banner-small.png">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1033">
+    <meta property="og:image:height" content="486">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Animes Achimid">
+    <meta name="twitter:description" content="Sua central de animes feita de fã para fã.">
+    <meta name="twitter:image" content="https://animes.achimid.com.br/img/banner-small.png">
 
     <link rel="canonical" href="https://animes.achimid.com.br" />
 
@@ -42,6 +54,8 @@
 
     <div class="main-wrapper">
         <main class="content-area">
+
+
             <section id="releases-section">
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
                 <div class="anime-grid" id="recent-grid">
@@ -73,9 +87,20 @@
                     </a>
                 </div>
             </section>
+
+            <section class="welcome-banner">
+                <div class="banner-overlay">
+                    <div class="banner-text">
+                        <h1>Sua Central de Animes</h1>
+                        <p>De fã para fã.</p>
+                    </div>
+                </div>
+            </section>
         </main>
 
         <aside class="sidebar">
+
+
             <div class="sidebar-box">
                 <h3 class="sidebar-title">📥 Lista de Episódios</h3>
                 <div class="sidebar-search-wrapper">
@@ -148,6 +173,22 @@
                     </div>
                 </div>
             </div>
+
+            <div class="sidebar-box suggestion-box">
+                <h3 class="sidebar-title">💡 Sugestões</h3>
+                <p class="suggestion-text">Sentiu falta de algum site ou quer deixar uma sugestão?</p>
+
+                <div class="suggestion-form">
+                    <input type="text" id="siteSuggestion" class="sidebar-search" placeholder="Sugestão ou URL do site..." autocomplete="off">
+                    <button id="btnSendSuggestion" class="btn-download" style="width: 100%; margin-top: 10px;">ENVIAR SUGESTÃO</button>
+                </div>
+
+                <div id="suggestionMessage" class="success-message">
+                    ✅ Sugestão enviada com sucesso!
+                </div>
+            </div>
+
+
         </aside>
     </div>
 

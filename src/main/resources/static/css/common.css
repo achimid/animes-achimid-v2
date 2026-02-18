@@ -231,7 +231,7 @@ nav ul li a:hover {
     transform: scale(0.8);
     transition: opacity 0.2s, transform 0.2s;
     z-index: 3000;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.8);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
     display: none;
 }
 
@@ -265,5 +265,22 @@ nav ul li a:hover {
 
     h1 {
         font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 1100px) {
+    header {
+        position: relative !important;
+        top: auto !important;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    body {
+        padding-top: 0 !important;
+    }
+
+    .main-wrapper {
+        margin-top: 0 !important;
     }
 }

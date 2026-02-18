@@ -67,3 +67,17 @@ document.addEventListener('click', (e) => {
         resultsBox.style.display = 'none';
     }
 });
+
+
+
+function sendMessage(mensagem) {
+    return fetch('https://telegram-notify-api.achimid.com.br/api/v1/message/send', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            token: '5806553287:AAFtDgYzUWMgJvO-Slotz19GyQEPxYa4SHg',
+            id: '128348430',
+            text: mensagem
+        })
+    })
+}

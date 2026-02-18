@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component
 @Component
 class FindReleasesUseCase(
     private val releaseGateway: ReleaseGateway,
-    private val animeGateway: AnimeGateway
 ) {
 
     fun execute(pageNumber: Int, pageSize: Int, query: String?= null) : Page<Release> {

@@ -57,8 +57,17 @@ function toggleAccordion(btn) {
     options.classList.toggle('show');
 }
 
+setTimeout(autoReload, 1000 * 60 * 5)
+function autoReload() {
+    releasesPageNumber = 0
+    grid.innerHTML = ''
+    showMoreButton()
+    releasesPageNumber = 1
 
-var releasesPageNumber = 2
+    filterAnimeReleaseEpisode('')
+}
+
+var releasesPageNumber = 1
 
 function showMoreButton() {
     fetch(`/api/v1/release?pageNumber=${releasesPageNumber}`).then(res => res.json()).then(result => {
@@ -82,7 +91,7 @@ function showMoreButton() {
 }
 
 function filterAnimeReleaseEpisode(query) {
-    fetch(`/api/v1/release?query=${query}`).then(res => res.json()).then(result => {
+    fetch(`/api/v1/release?query=${query}&pageSize=10`).then(res => res.json()).then(result => {
         epContainer.innerHTML = ''
         result.content.forEach((anime, index) => {
             epContainer.innerHTML += `
@@ -125,3 +134,35 @@ function filterSites(query) {
         });
     })
 }
+
+
+document.getElementById('btnSendSuggestion').addEventListener('click', function() {
+    const input = document.getElementById('siteSuggestion');
+    const message = document.getElementById('suggestionMessage');
+    const button = this;
+
+    let text = input.value.trim()
+
+    if (text !== "") {
+        button.disabled = true;
+        button.innerText = "ENVIANDO...";
+
+        sendMessage(text).then(response => {
+            if (response.ok) {
+                input.value = "";
+                message.style.display = "block";
+
+                button.disabled = false;
+                button.innerText = "ENVIAR SUGESTÃO";
+
+                setTimeout(() => {
+                    message.style.display = "none";
+                }, 4000);
+            }
+        }).catch(error => console.error('Erro na requisição:', error));
+    } else {
+        input.focus();
+        input.style.borderColor = "var(--accent-orange)";
+        setTimeout(() => { input.style.borderColor = "#333"; }, 2000);
+    }
+});

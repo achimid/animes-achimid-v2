@@ -29,6 +29,11 @@ class SiteIntegrationRepository {
         SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
     )
 
+    // https://worldfansub.xyz/
+    // https://packs.ansktracker.com/
+    // https://animesonline.io/
+
+
     //        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js"), disableJavaScript = true),
 //    SiteIntegration(SLOW, "Animes Games", "https://animesgames.cc/lancamentos", getScript("animesgames-script.js")),
 //        SiteIntegration(SLOW, "Animes Flix", "https://animesflix.net/", getScript("animesflix-script.js")),
