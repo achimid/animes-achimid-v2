@@ -1,0 +1,319 @@
+/* --- FILTRO DE DIAS (CHIPS) --- */
+.day-filter {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    overflow-x: auto;
+    padding: 5px 2px;
+}
+
+.chip {
+    background: #151515;
+    border: 1px solid #333;
+    color: var(--text-gray);
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.chip.active {
+    background: var(--primary-green);
+    color: #000;
+    border-color: var(--primary-green);
+    box-shadow: 0 4px 12px rgba(46, 248, 97, 0.2);
+}
+
+/* --- ITEM DA LISTA --- */
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 12px;
+    text-decoration: none;
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+}
+
+.list-item:hover {
+    border-color: var(--primary-green);
+    transform: translateX(10px);
+    background: #1a1a1a;
+}
+
+/* Imagem lateral */
+.list-img {
+    width: 80px;
+    height: 110px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 20px;
+    border: 1px solid #333;
+}
+
+/* Conteúdo central */
+.list-content {
+    flex: 1;
+}
+
+.list-time {
+    display: inline-block;
+    color: var(--primary-green);
+    font-family: var(--font-righteous);
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.list-title {
+    display: block;
+    color: var(--text-white);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.list-tags {
+    display: flex;
+    gap: 8px;
+}
+
+.tag-epi {
+    font-size: 0.7rem;
+    background: #222;
+    color: var(--accent-orange);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Seta lateral indicativa */
+.list-arrow {
+    color: #444;
+    font-size: 1.5rem;
+    padding: 0 10px;
+}
+
+.list-item:hover .list-arrow {
+    color: var(--primary-green);
+}
+
+/* Mobile */
+@media (max-width: 500px) {
+    .list-img { width: 60px; height: 85px; margin-right: 15px; }
+    .list-time { font-size: 1rem; }
+    .list-title { font-size: 0.95rem; }
+}
+
+/* --- CONTAINER CENTRALIZADOR --- */
+.calendar-centralized-wrapper {
+    max-width: 800px; /* Largura ideal para leitura de listas */
+    margin: 0 auto;   /* Centraliza horizontalmente */
+    padding: 20px 0;
+}
+
+/* --- FILTRO DE DIAS (CHIPS CENTRALIZADOS) --- */
+.day-filter {
+    display: flex;
+    justify-content: center; /* Centraliza os botões de dias */
+    gap: 8px;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+}
+
+.chip {
+    background: #111;
+    border: 1px solid #222;
+    color: var(--text-gray);
+    padding: 10px 18px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.chip.active {
+    background: var(--primary-green);
+    color: #000;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 15px rgba(46, 248, 97, 0.3);
+}
+
+/* --- LISTA DE ITENS --- */
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.list-item {
+    display: flex;
+    align-items: center;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 10px 15px;
+    text-decoration: none;
+    transition: 0.2s ease-in-out;
+}
+
+.list-item:hover {
+    border-color: var(--primary-green);
+    background: #121212;
+    transform: scale(1.02); /* Leve zoom em vez de mover para o lado */
+}
+
+.list-img {
+    width: 55px;
+    height: 75px;
+    border-radius: 6px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.list-content {
+    flex: 1;
+}
+
+.list-time {
+    color: var(--primary-green);
+    font-family: var(--font-righteous);
+    font-size: 1rem;
+    display: block;
+}
+
+.list-title {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.tag-epi {
+    font-size: 0.65rem;
+    color: var(--accent-orange);
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .calendar-centralized-wrapper {
+        padding: 10px 5%;
+    }
+    .day-filter {
+        justify-content: flex-start; /* No mobile, volta para o início para scroll */
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+}
+
+/* --- CABEÇALHO DA PÁGINA DE CALENDÁRIO --- */
+.calendar-centralized-wrapper .section-header {
+    text-align: center;      /* Centraliza o texto e elementos filhos */
+    margin-bottom: 40px;     /* Espaço generoso abaixo do título */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calendar-centralized-wrapper .section-title {
+    display: inline-block;
+    font-size: 2rem;
+    color: var(--text-white);
+    padding-bottom: 15px;    /* Espaço entre o texto e a borda */
+    border-bottom: 4px solid var(--primary-green); /* Borda mais grossa e verde */
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-family: var(--font-righteous); /* Mantendo o padrão Achimid */
+}
+
+/* --- ITEM DA LISTA AMPLIADO --- */
+.list-item {
+    display: flex;
+    align-items: stretch; /* Estica a imagem e o conteúdo igualmente */
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 15px;
+    text-decoration: none;
+    transition: 0.2s ease-in-out;
+    margin-bottom: 10px;
+}
+
+.list-item:hover {
+    border-color: var(--primary-green);
+    background: #121212;
+    transform: scale(1.01);
+}
+
+.list-img {
+    width: 100px; /* Tamanho aumentado */
+    height: 140px; /* Proporção mantida */
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.list-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza as infos verticalmente ao lado da foto */
+    flex: 1;
+}
+
+.list-time {
+    color: var(--primary-green);
+    font-family: var(--font-righteous);
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+}
+
+.list-title {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+/* Novas Informações */
+.list-meta {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 8px;
+}
+
+.list-tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.tag-epi {
+    font-size: 0.65rem;
+    background: rgba(255, 102, 0, 0.1);
+    color: var(--accent-orange);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 800;
+    border: 1px solid rgba(255, 102, 0, 0.2);
+}
+
+.tag-genre {
+    font-size: 0.65rem;
+    background: #222;
+    color: #ccc;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
