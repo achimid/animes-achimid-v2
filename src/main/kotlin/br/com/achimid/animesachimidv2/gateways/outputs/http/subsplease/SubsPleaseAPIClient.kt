@@ -15,4 +15,12 @@ interface SubsPleaseAPIClient {
         @RequestParam("tz") tz: String = "America/Sao_Paulo",
     ): ResponseEntity<String>
 
+
+    @GetMapping("/", consumes = [TEXT_HTML_VALUE])
+    fun findTodaySchedule(
+        @RequestParam("f") f: String = "schedule",
+        @RequestParam("h") h: Boolean = true,
+        @RequestParam("tz") tz: String = "America/Sao_Paulo",
+    ): ResponseEntity<String>
+
 }

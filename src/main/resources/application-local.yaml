@@ -5,6 +5,3 @@ spring:
     uri: mongodb://root:password@localhost:27027/animes-achimid
 integration:
   callbackUrl: "https://local.achimid.com.br/api/v1/site/integration/callback"
-  devtools:
-    restart:
-      exclude: static/**,public/**,resources/**,templates/**

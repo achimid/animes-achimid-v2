@@ -59,22 +59,27 @@ class AnimeGateway(
             val jikan = it.sources!!.jikan!!
 
             val names = mutableSetOf(
-                NameDocument(jikan.title, it.id!!),
-                NameDocument(jikan.titleEnglish ?: "", it.id),
-                NameDocument(jikan.titleJapanese ?: "", it.id),
+                NameDocument(name = jikan.title, animeId = it.id!!),
+                NameDocument(name = jikan.titleEnglish ?: "", animeId = it.id),
+                NameDocument(name = jikan.titleJapanese ?: "", animeId = it.id),
             )
 
             names.addAll(jikan.titles?.map { title ->
                 return@map try {
-                    NameDocument((title as HashMap<String, String>).get("title") ?: "", it.id)
+                    NameDocument(name = (title as HashMap<String, String>).get("title") ?: "", animeId = it.id)
                 } catch (_: Exception) {
-                    NameDocument((title as String), it.id)
+                    NameDocument(name = (title as String), animeId = it.id)
                 }
             } ?: emptyList())
-            names.addAll(jikan.titleSynonyms?.map { title -> NameDocument(title, it.id) } ?: emptyList())
+            names.addAll(jikan.titleSynonyms?.map { title -> NameDocument(name = title, animeId = it.id) }
+                ?: emptyList())
 
             return@flatMap names
         }.filter { it.name != "" }
+    }
+
+//        @EventListener(ApplicationReadyEvent::class)
+    fun migrate() {
     }
 
 }

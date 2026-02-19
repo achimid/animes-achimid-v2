@@ -13,6 +13,12 @@ data class Calendar(
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+data class CalendarToday(
+    val tz: String,
+    val schedule: List<CalendarItem>
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class CalendarItem(
     val title: String,
     val time: String,

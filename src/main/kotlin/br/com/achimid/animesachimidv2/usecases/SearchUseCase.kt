@@ -3,6 +3,7 @@ package br.com.achimid.animesachimidv2.usecases
 import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.gateways.outputs.http.JikanAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.NameDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import org.slf4j.LoggerFactory
@@ -21,7 +22,7 @@ class SearchUseCase(
         val rawPossibilities = namesRepository.searchByProximity(text)
 
         val scoredPossibilities =
-            FuzzySearch.extractSorted(text, rawPossibilities.map { it.name }).filter { it.score >= 95 }
+            FuzzySearch.extractSorted(text, rawPossibilities.map { it.name }).filter { it.score >= 97 }
 
         if (scoredPossibilities.isNotEmpty()) return rawPossibilities
             .filter { possibility -> scoredPossibilities.any { it.string == possibility.name } }
@@ -30,16 +31,21 @@ class SearchUseCase(
         val animesJikan = jikanAPIGateway.search(text).let(animeGateway::saveAll)
 
         val scoredPossibilitiesJikan =
-            FuzzySearch.extractSorted(text, animesJikan.map { it.name }).filter { it.score > 97 }
+            FuzzySearch.extractSorted(text, animesJikan.map { it.name }).filter { it.score >= 95 }
 
         if (scoredPossibilitiesJikan.isNotEmpty()) return animesJikan
             .filter { possibility -> scoredPossibilitiesJikan.any { it.string == possibility.name } }
-
-        logger.info("No perfect match found, return all matches")
+            .map { this.saveNameAsPossibility(text, it) }
 
         if (animesJikan.isNotEmpty()) return animesJikan
 
         return listOf(animeGateway.findById(rawPossibilities.first().animeId)!!)
+    }
+
+    fun saveNameAsPossibility(text:String, anime: Anime): Anime {
+        namesRepository.save(NameDocument(name=text, animeId = anime.id, potential = true, animeName = anime.name))
+
+        return anime
     }
 
 }

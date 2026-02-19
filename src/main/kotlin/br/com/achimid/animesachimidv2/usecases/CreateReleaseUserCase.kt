@@ -38,7 +38,7 @@ class CreateReleaseUserCase(
 
         release.options.add(EpisodeLinkOptions(result.url, result.from))
 
-        releaseGateway.save(release).let { logger.info("Released created with success: $release") }
+        releaseGateway.save(release).let { logger.info("Released created with success: [${release.title}]") }
     }
 
 }
