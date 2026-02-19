@@ -1,4 +1,10 @@
-/* --- 1. LAYOUT GLOBAL E ESTRUTURA --- */
+/* ==========================================================================
+   1. LAYOUT GLOBAL E ESTRUTURA
+   ========================================================================== */
+:root {
+    /* Assumindo que estas variáveis já existem no seu :root principal */
+}
+
 .main-wrapper {
     display: grid;
     grid-template-columns: 7fr 3fr;
@@ -12,7 +18,9 @@
     min-width: 0;
 }
 
-/* --- 2. SEÇÕES E CABEÇALHOS --- */
+/* ==========================================================================
+   2. SEÇÕES E CABEÇALHOS
+   ========================================================================== */
 .section-header {
     border-left: 5px solid var(--primary-green);
     padding-left: 15px;
@@ -28,7 +36,9 @@
     text-transform: uppercase;
 }
 
-/* --- 3. GRID DE ANIMES E CARDS --- */
+/* ==========================================================================
+   3. GRID DE ANIMES E CARDS (HOME)
+   ========================================================================== */
 .anime-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -90,7 +100,6 @@
     gap: 3px;
 }
 
-/* Info e Título do Card */
 .anime-card-info {
     position: absolute;
     bottom: 0;
@@ -122,7 +131,9 @@
     transform: translateY(-2px);
 }
 
-/* --- 4. SIDEBAR E PESQUISA --- */
+/* ==========================================================================
+   4. SIDEBAR - ESTRUTURA E PESQUISA
+   ========================================================================== */
 .sidebar {
     display: flex;
     flex-direction: column;
@@ -165,9 +176,7 @@
     outline: none;
 }
 
-.sidebar-search:focus {
-    border-color: var(--primary-green);
-}
+.sidebar-search:focus { border-color: var(--primary-green); }
 
 .btn-clear-sidebar {
     position: absolute;
@@ -182,13 +191,24 @@
     line-height: 1;
 }
 
-.btn-clear-sidebar:hover {
-    color: var(--primary-green);
+.btn-clear-sidebar:hover { color: var(--primary-green); }
+
+/* ==========================================================================
+   5. COMPONENTES DA SIDEBAR (LISTAS E CALENDÁRIO)
+   ========================================================================== */
+
+/* Truncamento Universal para Sidebar */
+.download-item .download-name,
+.calendar-item .cal-name,
+.site-item .cal-name {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
 }
 
-/* --- 5. COMPONENTES ESPECÍFICOS --- */
-
-/* Downloads e Accordion */
+/* Download e Episódios */
 .download-item-wrapper { border-bottom: 1px solid #1a1a1a; }
 .download-item {
     display: flex;
@@ -199,16 +219,6 @@
 }
 
 .download-name { font-size: 0.9rem; font-weight: 600; color: var(--text-white); flex: 1; }
-
-.ep-tag-orange {
-    background: var(--accent-orange);
-    color: #000;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 800;
-    font-size: 0.75rem;
-    margin-left: 5px;
-}
 
 .btn-download {
     background: #1a1a1a;
@@ -248,20 +258,36 @@
 
 .btn-server:hover { border-color: var(--accent-orange); color: var(--accent-orange); }
 
-/* Calendário */
+/* Calendário e Sites */
 .calendar-item {
     display: flex;
+    align-items: center;
     justify-content: space-between;
-    align-items: flex-start;
+    padding: 0px 10px;
+    border-bottom: 1px solid #1a1a1a;
+    gap: 10px;
+    margin: 0 -10px;
+}
+
+.site-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 8px 10px;
     border-bottom: 1px solid #1a1a1a;
     gap: 10px;
     margin: 0 -10px;
 }
 
-.calendar-item.released { background: rgba(46, 248, 97, 0.05); border-left: 4px solid var(--primary-green); }
+.calendar-item.released, .site-item.released {
+    background: rgba(46, 248, 97, 0.05);
+    border-left: 4px solid var(--primary-green);
+}
+
 .cal-name { font-size: 0.95rem; font-weight: 600; flex: 1; color: var(--text-white); line-height: 1.3; }
-.cal-info { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-top: 2px; }
+
+.cal-info { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
 .cal-time {
     background: #000;
     color: var(--accent-orange);
@@ -270,11 +296,6 @@
     border-radius: 4px;
     border: 1px solid #333;
     font-weight: 700;
-}
-
-.check-icon {
-    color: var(--primary-green);
-    animation: pulseCheck 2s infinite ease-in-out;
 }
 
 /* Favoritos e Estatísticas */
@@ -291,6 +312,7 @@
     border-radius: 8px;
     text-align: center;
     transition: 0.3s ease;
+    padding: 10px;
 }
 
 .stats-box-single:hover {
@@ -317,7 +339,29 @@
     font-weight: 700;
 }
 
-/* --- 6. FOOTER E BOTÕES GERAIS --- */
+/* ==========================================================================
+   6. COMPONENTES EXTRA (BANNER, SUGESTÕES, BOTÕES)
+   ========================================================================== */
+.welcome-banner {
+    width: 100%;
+    height: 320px;
+    background: url('/img/banner-small.png') no-repeat center center;
+    background-size: contain;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    border: 1px solid #222;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.banner-overlay {
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex; align-items: center; justify-content: center;
+}
+
+.banner-text { display: none; text-align: center; }
+
 .load-more-container { display: flex; justify-content: center; margin: 20px 0 50px 0; }
 
 .btn-load-more {
@@ -334,143 +378,14 @@
 
 .btn-load-more:hover { background: var(--primary-green); color: #000; }
 
-/* --- 7. ANIMAÇÕES --- */
-@keyframes pulseCheck {
-    0%, 100% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.2); opacity: 1; }
-}
-
-/* --- 8. RESPONSIVIDADE (MEDIA QUERIES) --- */
-
-@media (max-width: 1100px) {
-    .main-wrapper { grid-template-columns: 1fr; }
-    .anime-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-@media (max-width: 900px) {
-    .anime-grid { grid-template-columns: repeat(3, 1fr); }
-}
-
-@media (max-width: 600px) {
-    .anime-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-/* Resolução Mobile Refinada */
-@media (max-width: 420px) {
-    .main-wrapper {
-        padding: 1rem 3%;
-    }
-
-    .anime-grid {
-        grid-template-columns: repeat(2, 1fr); /* Mantém 2 colunas para evitar imagens gigantes */
-        gap: 12px;
-    }
-
-    .anime-card {
-        border-radius: 6px;
-    }
-
-    .anime-card-title {
-        font-size: 0.7rem;
-        padding: 5px;
-    }
-
-    .ep-badge, .rating-badge {
-        font-size: 0.65rem;
-        top: 5px;
-        left: 5px;
-        padding: 2px 5px;
-    }
-}
-
-@media (max-width: 340px) {
-    .anime-grid {
-        gap: 8px;
-    }
-}
-
-/* --- BANNER DE BOAS-VINDAS --- */
-.welcome-banner {
-    width: 100%;
-    height: 320px; /* Altura desejada */
-    background: url('/img/banner-small.png') no-repeat center center;
-    background-position: center center;
-    background-size: contain; /* Garante que a imagem apareça inteira e centralizada */
-    border-radius: 12px;
-    margin-bottom: 30px;
-    border: 1px solid #222;
-    overflow: hidden;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* Overlay escuro para dar profundidade (opcional) */
-.banner-overlay {
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.3); /* Escurece levemente a imagem */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Esconde o texto em telas grandes se você quiser usar apenas a arte da imagem */
-.banner-text {
-    display: none; /* Mude para 'block' se quiser texto por cima da imagem */
-    text-align: center;
-}
-
-/* Responsividade do Banner */
-@media (max-width: 768px) {
-    .welcome-banner {
-        height: 200px; /* Reduz a altura em tablets */
-    }
-}
-
-@media (max-width: 420px) {
-    .welcome-banner {
-        height: 150px; /* Reduz a altura em celulares */
-        border-radius: 8px;
-    }
-}
-
-
-/* --- ESTILO DA SEÇÃO DE SUGESTÕES --- */
-.suggestion-box {
-    border-top: 2px solid var(--primary-green); /* Destaque para diferenciar */
-}
-
-.suggestion-text {
-    font-size: 0.8rem;
-    color: var(--text-gray);
-    margin-bottom: 15px;
-    line-height: 1.4;
-}
-
-.suggestion-form {
-    display: flex;
-    flex-direction: column;
-}
-
-/* Pequeno ajuste no input para não herdar o padding do ícone X da pesquisa */
-#siteSuggestion {
-    padding-right: 12px !important;
-    margin-bottom: 0;
-}
-
-/* Feedback de sucesso */
-#suggestionMessage.show {
-    display: block !important;
-    animation: fadeIn 0.5s ease-in;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+/* Sugestões */
+.suggestion-box { border-top: 2px solid var(--primary-green); }
+.suggestion-text { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 15px; line-height: 1.4; }
+.suggestion-form { display: flex; flex-direction: column; }
+#siteSuggestion { padding-right: 12px !important; margin-bottom: 0; }
 
 .success-message {
-    display: none; /* Escondido por padrão */
+    display: none;
     color: var(--primary-green);
     text-align: center;
     margin-top: 15px;
@@ -483,41 +398,90 @@
     animation: fadeIn 0.4s ease-out;
 }
 
+/* ==========================================================================
+   7. ANIMAÇÕES
+   ========================================================================== */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-
-/* --- AJUSTE PARA NOMES LONGOS NA SIDEBAR --- */
-
-/* Alvo: Nomes na "Lista de Episódios" */
-.download-item .download-name,
-    /* Alvo: Nomes no "Calendário" da sidebar */
-.calendar-item .cal-name {
-    display: block;           /* Garante que o elemento se comporte como bloco */
-    white-space: nowrap;      /* Impede que o texto quebre para a segunda linha */
-    overflow: hidden;         /* Esconde o texto que ultrapassar o limite */
-    text-overflow: ellipsis;  /* Adiciona os três pontinhos (...) */
-    max-width: 300px;         /* Define um limite de largura para forçar o corte */
+@keyframes pulseCheck {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
 }
 
-/* Ajuste específico para o Calendário (onde o nome divide espaço com o horário) */
-.calendar-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+/* ==========================================================================
+   8. RESPONSIVIDADE (MEDIA QUERIES)
+   ========================================================================== */
+@media (max-width: 1100px) {
+    .main-wrapper { grid-template-columns: 1fr; }
+    .anime-grid { grid-template-columns: repeat(4, 1fr); }
 }
 
-.calendar-item .cal-name {
-    flex: 1;                  /* Faz o nome ocupar o espaço disponível */
+@media (max-width: 900px) {
+    .anime-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
-/* No mobile, podemos permitir um pouco mais de largura se necessário */
+@media (max-width: 768px) {
+    .welcome-banner { height: 200px; }
+}
+
+@media (max-width: 600px) {
+    .anime-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 480px) {
     .download-item .download-name,
-    .calendar-item .cal-name {
-        max-width: 275px;
-    }
+    .calendar-item .cal-name { max-width: 275px; }
+}
+
+@media (max-width: 420px) {
+    .main-wrapper { padding: 1rem 3%; }
+    .anime-grid { gap: 12px; }
+    .anime-card-title { font-size: 0.7rem; }
+    .ep-badge, .rating-badge { font-size: 0.65rem; top: 5px; left: 5px; }
+    .welcome-banner { height: 150px; }
+}
+
+
+/* Estilo Base do Botão */
+.btn-quick-search {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px; /* Quadrado levemente arredondado fica mais moderno */
+    background: rgba(0, 0, 0, 0.4); /* Bem transparente */
+    backdrop-filter: blur(4px); /* Efeito de vidro fosco */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0; /* Invisível por padrão */
+    transform: translateY(-5px); /* Deslocado para efeito de entrada */
+}
+
+/* Efeito ao passar o mouse no CARD */
+.anime-card:hover .btn-quick-search {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Efeito ao passar o mouse no BOTÃO */
+.btn-quick-search:hover {
+    background: var(--primary-green);
+    color: #000;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 15px rgba(46, 248, 97, 0.4);
+}
+
+/* Ícone do Font Awesome */
+.btn-quick-search i {
+    font-size: 0.9rem;
 }

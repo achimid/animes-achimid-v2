@@ -1,5 +1,6 @@
 package br.com.achimid.animesachimidv2.domains
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.Instant
 import java.util.*
 
@@ -13,7 +14,9 @@ data class Anime(
 
     val accessCounter: Long = 0,
 
+    @JsonIgnore
     val episodes: List<EpisodeInfo>? = null,
+    @JsonIgnore
     val comments: List<AnimeComment>? = null,
 
     val description: String? = null,
@@ -55,7 +58,6 @@ data class AnimeDetailsInfo(
     val infoName: String,
     val infoValue: String? = null
 )
-
 
 data class AnimeComment(
     val id: String? = UUID.randomUUID().toString(),

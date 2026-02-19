@@ -317,3 +317,161 @@
     padding: 4px 10px;
     border-radius: 4px;
 }
+
+/* --- CONTAINER EXPANDIDO --- */
+.calendar-centralized-wrapper {
+    max-width: 1400px; /* Largura maior para acomodar 5 colunas sem apertar */
+    margin: 0 auto;
+    padding: 20px 2%;
+}
+
+/* --- GRID DE 5 COLUNAS --- */
+.list-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas iguais */
+    gap: 12px; /* Espaçamento reduzido para otimizar espaço */
+    align-items: stretch;
+}
+
+/* --- CARD ESTILO POSTER --- */
+.list-item {
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    padding: 10px;
+    text-decoration: none;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    height: 100%;
+}
+
+.list-item:hover {
+    border-color: var(--primary-green);
+    transform: translateY(-5px);
+    z-index: 10;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* --- IMAGEM (MAIS ALTA PARA ESTILO ANIME) --- */
+.list-img {
+    width: 100%;
+    height: 240px; /* Altura ideal para o formato 5 colunas */
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+/* --- CONTEÚDO --- */
+.list-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.list-time {
+    color: var(--primary-green);
+    font-family: var(--font-righteous);
+    font-size: 0.9rem; /* Fonte levemente menor */
+    margin-bottom: 4px;
+    display: block;
+}
+
+.list-title {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 0.85rem; /* Fonte compacta para evitar quebras excessivas */
+    line-height: 1.2;
+    margin-bottom: 6px;
+
+    /* Truncamento rigoroso em 2 linhas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.4em;
+}
+
+.list-meta {
+    font-size: 0.65rem;
+    color: #555;
+    margin-top: auto; /* Joga para o final do card */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- RESPONSIVIDADE ADAPTATIVA --- */
+@media (max-width: 1300px) {
+    .list-container { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 1000px) {
+    .list-container { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .list-container { grid-template-columns: repeat(2, 1fr); }
+    .calendar-centralized-wrapper    { padding: 10px 4%; }
+}
+
+@media (max-width: 480px) {
+    .list-container { grid-template-columns: 1fr; }
+}
+
+/* --- IMAGEM COM LARGURA REDUZIDA --- */
+.list-img {
+    width: 80%;           /* Largura menor que o card (antes era 100%) */
+    max-width: 120px;     /* Limite físico para não esticar em telas grandes */
+    height: 160px;        /* Altura proporcional à nova largura */
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 0 auto 12px;  /* O 'auto' nas laterais centraliza a imagem */
+    display: block;       /* Garante que o margin auto funcione */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4); /* Sombra para dar destaque */
+}
+
+/* --- AJUSTE DO CARD PARA CENTRALIZAÇÃO --- */
+.list-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    /* Centraliza o texto em relação à imagem */
+    background: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 15px 10px;
+    text-decoration: none;
+    transition: 0.3s ease;
+    height: 100%;
+    text-align: center;     /* Garante que o texto fique centralizado */
+}
+
+.list-item:hover {
+    border-color: var(--primary-green);
+    background: #121212;
+    transform: translateY(-5px);
+}
+
+.list-title {
+    color: var(--text-white);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    width: 100%;
+
+    /* Truncamento em 2 linhas centralizado */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.4em;
+}
+
+.list-time {
+    color: var(--primary-green);
+    font-family: var(--font-righteous);
+    font-size: 0.9rem;
+}

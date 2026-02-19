@@ -312,3 +312,8 @@ footer p {
     font-style: italic;
     display: block;
 }
+
+.check-icon {
+    color: var(--primary-green);
+    animation: pulseCheck 2s infinite ease-in-out;
+}

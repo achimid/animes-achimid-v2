@@ -28,7 +28,7 @@ class ExtractionTask(
         siteIntegrationGateway.findMedium().forEach(puppeteerAPIGateway::execute)
     }
 
-    @Scheduled(fixedRate = 1000 * 60 * 15)
+//    @Scheduled(fixedRate = 1000 * 60 * 15)
     fun executeSlowQueueMonitoring() {
         logger.info("Executing slow queue monitoring")
 

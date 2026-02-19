@@ -48,6 +48,9 @@
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/home.css}" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" media="none" onload="if(media!=='all')media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
 </head>
 <body>
     <header th:replace="~{fragments/layout :: header}"></header>
@@ -62,6 +65,11 @@
                     <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
                         <span class="ep-badge" th:if="${release.animeEpisode == null || release.animeEpisode.isEmpty()}" th:text="${release.animeType}">Episode Number</span>
                         <span class="ep-badge" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
+
+                        <button class="btn-quick-search" onclick="selectAnimeEpisodes(event)">
+                            <i class="fas fa-search"></i>
+                        </button>
+
                         <img th:src="${release.animeImageUrl}" th:alt="${release.animeName}" fetchpriority="high">
                         <div class="anime-card-info">
                             <span class="anime-card-title" th:text="${release.animeName}"></span>
@@ -117,7 +125,7 @@
                             <button class="btn-download" onclick="toggleAccordion(this)" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
                         </div>
                         <div class="download-options">
-                            <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}">Site Name</a>
+                            <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}" target="_blank" rel="noopener">Site Name</a>
                         </div>
                     </div>
                 </div>
@@ -166,8 +174,8 @@
                     <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>
                 </div>
                 <div id="sidebar-sites">
-                    <div class="calendar-item" th:each="status : ${siteIntegrations}"  th:classappend="${status.enabled} ? 'released' : ''">
-                        <a class="cal-name" th:text="${status.name}" th:href="${status.url}">Site Name</a>
+                    <div class="site-item" th:each="status : ${siteIntegrations}"  th:classappend="${status.enabled} ? 'released' : ''">
+                        <a class="cal-name" th:text="${status.name}" th:href="${status.url}" target="_blank" rel="noopener">Site Name</a>
                         <div class="cal-info">
                             <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
                             <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDateFormatted != null}" th:text="${status.lastExecutionDateFormatted}">Date Status</span>

@@ -107,7 +107,7 @@ function filterAnimeReleaseEpisode(query) {
                     </div>
                     <div class="download-options">
                         ${anime.options.map(item => {
-                return `<a class="btn-server" href="${item.url}">${item.name}</a>`
+                return `<a class="btn-server" href="${item.url}" target="_blank" rel="noopener">${item.name}</a>`
             }).join('')}                                                
                     </div>
                 </div>
@@ -122,8 +122,8 @@ function filterSites(query) {
         siteContainer.innerHTML = ''
         result.sites.forEach((site, index) => {
             siteContainer.innerHTML += `
-                <div class="calendar-item ${site.enabled ? 'released' : ''}">
-                    <a class="cal-name" href="${site.url}">${site.name}</a>
+                <div class="site-item ${site.enabled ? 'released' : ''}">
+                    <a class="cal-name" href="${site.url}" target="_blank" rel="noopener">${site.name}</a>
                     <div class="cal-info">
                         ${site.lastExecutionDate != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDateFormatted}</span>` : ''}
                         ${site.lastExecutionSuccess === true ? '<span class="check-icon">✓</span>' : ''}
@@ -168,5 +168,18 @@ document.getElementById('btnSendSuggestion').addEventListener('click', function 
     }
 });
 
+function selectAnimeEpisodes(e) {
+    e.preventDefault()
+
+    let animeName = e.target.parentElement.parentElement.querySelector('.anime-card-title').textContent
+
+    sidebarSearch.value = animeName;
+    filterAnimeReleaseEpisode(animeName);
+
+    sidebarSearch.focus();
+}
+
 
 document.querySelector('.btn-download').click()
+
+

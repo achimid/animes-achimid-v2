@@ -1,19 +1,20 @@
 package br.com.achimid.animesachimidv2.domains
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegrationType.SLOW
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter.ofPattern
 
 data class SiteIntegration(
-    val type: SiteIntegrationType = SLOW,
+    @JsonIgnore val type: SiteIntegrationType = SLOW,
     val name: String,
     val url: String,
-    val script: String? = null,
-    val enabled: Boolean = true,
-    val skipImage: Boolean = true,
-    val disableJavaScript: Boolean? = null,
+    @JsonIgnore val script: String? = null,
+    @JsonIgnore val enabled: Boolean = true,
+    @JsonIgnore val skipImage: Boolean = true,
+    @JsonIgnore val disableJavaScript: Boolean? = null,
     var lastExecutionDate: Instant? = null,
     var lastExecutionSuccess: Boolean = false
 ) {

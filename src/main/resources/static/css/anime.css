@@ -514,3 +514,23 @@
         right: 10px;
     }
 }
+
+.episodes-disclaimer {
+    background: rgba(255, 255, 255, 0.05); /* Fundo levemente claro */
+    border-left: 3px solid var(--accent-orange); /* Borda laranja para destaque */
+    padding: 5px 15px;
+    margin-bottom: 5px;
+    font-size: 0.85rem;
+    color: #bbb;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Opcional: ícone se você usar FontAwesome, senão pode remover */
+.episodes-disclaimer::before {
+    content: "ⓘ";
+    color: var(--accent-orange);
+    font-weight: bold;
+}

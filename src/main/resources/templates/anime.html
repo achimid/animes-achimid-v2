@@ -106,6 +106,9 @@
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
+                <p class="episodes-disclaimer">
+                    <i class="fas fa-info-circle"></i> Pode ser que haja alguma confusão de episódios devido a forma que os sites nomeiam o anime e os episódios
+                </p>
                 <div class="description" th:if="${anime.episodes.isEmpty()}">Ainda não encontramos nenhum episódios desse anime!</div>
                 <div class="episode-container" th:each="episode : ${anime.episodes}" >
                     <article>
@@ -120,6 +123,10 @@
                         </div>
                     </article>
                 </div>
+
+                <p class="episodes-disclaimer">
+                    <i class="fas fa-info-circle"></i> Com o tempo os sites podem ter sidos desativados
+                </p>
             </div>
 
             <section class="comments-section">

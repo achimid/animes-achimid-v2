@@ -18,8 +18,9 @@ function renderDay(day) {
                     <a href="/anime/${item.anime.slug}" class="list-item">
                         <img src="${item.imageUrl}" class="list-img" alt="${item.title}">
                         <div class="list-content">
-                            <span class="list-time">${item.time}</span>
+                            <span class="list-time">${item.time} ${item.released ? `✓` : ``}</span>
                             <span class="list-title">${item.title}</span>
+                            <span class="tag-epi">★ ${item.anime.score}</span>
                             <div class="list-meta">
                                 <span> • ${item.anime.tags.join(', ')}</span><span></span>
                             </div>
@@ -28,7 +29,6 @@ function renderDay(day) {
                                 <span class="tag-genre">${item.anime.status}</span>
                             </div>
                         </div>
-                        <div class="list-arrow">›</div>
                     </a>
                 `;
             });
