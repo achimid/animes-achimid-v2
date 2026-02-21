@@ -17,8 +17,27 @@ class JikanAPIGateway(
         return try {
             jikanAPIClient.searchAnime(text).data
         } catch (ex: RuntimeException) {
-            logger.error("Error on integrate with Jikan", ex)
+            logError(ex)
             emptyList()
+        }
+    }
+
+
+    fun findById(id: String): Jikan? {
+        logger.info("Find anime on Jikan by id: $id")
+        return try {
+            jikanAPIClient.findById(id).data
+        } catch (ex: RuntimeException) {
+            logError(ex)
+            null
+        }
+    }
+
+    fun logError(ex: RuntimeException) {
+        if (!ex.message!!.contains("[429 Too Many Requests]")) {
+            logger.error("Error on integrate with Jikan", ex)
+        } else {
+            logger.error("Integrate with Jikan limited")
         }
     }
 

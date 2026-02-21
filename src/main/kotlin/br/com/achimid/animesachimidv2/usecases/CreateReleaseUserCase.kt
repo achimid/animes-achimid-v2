@@ -32,6 +32,7 @@ class CreateReleaseUserCase(
             animeType = anime.getTypeDescription(),
             animeEpisode = result.episode,
             animeImageUrl = anime.imageUrl,
+            animeStreamUrl = anime.streamingUrl,
         )
 
         if (release.options!!.any { it.name == result.from }) return

@@ -5,7 +5,6 @@ import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackI
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.SiteIntegrationGateway
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.util.concurrent.CompletableFuture.runAsync
 
 @Component
 class ProcessIntegrationCallbackUserCase(
@@ -29,7 +28,7 @@ class ProcessIntegrationCallbackUserCase(
 
             callbackIntegration.execution.result
                 .filter(this::createEventIntegration)
-                .forEach(this::createRelease)
+                .forEach { this.createRelease(it, siteName) }
         } catch (ex: RuntimeException) {
             logger.error("Error on process release: {}", callbackIntegration, ex)
             throw ex
@@ -44,11 +43,13 @@ class ProcessIntegrationCallbackUserCase(
         }
     }
 
-    fun createRelease(result: CallbackIntegrationExecutionResult) {
+    fun createRelease(result: CallbackIntegrationExecutionResult, siteName: String) {
         try {
             createReleaseUserCase.execute(result)
+            siteIntegrationGateway.updateByName(siteName, true, true)
         } catch (ex: RuntimeException) {
             logger.error("Error on create release: {}", result, ex)
+            siteIntegrationGateway.updateByName(siteName, false, false)
         }
     }
 

@@ -70,6 +70,10 @@
                             <i class="fas fa-search"></i>
                         </button>
 
+                        <button class="btn-quick-play" th:if="${release.animeStreamUrl != null}" th:onclick="event.preventDefault(); window.location.href=[[${release.animeStreamUrl}]]">
+                            <i class="fas fa-play"></i>
+                        </button>
+
                         <img th:src="${release.animeImageUrl}" th:alt="${release.animeName}" fetchpriority="high">
                         <div class="anime-card-info">
                             <span class="anime-card-title" th:text="${release.animeName}"></span>
@@ -177,8 +181,8 @@
                     <div class="site-item" th:each="status : ${siteIntegrations}"  th:classappend="${status.enabled} ? 'released' : ''">
                         <a class="cal-name" th:text="${status.name}" th:href="${status.url}" target="_blank" rel="noopener">Site Name</a>
                         <div class="cal-info">
-                            <span class="check-icon" th:if="${status.lastExecutionSuccess}">✓</span>
-                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDateFormatted != null}" th:text="${status.lastExecutionDateFormatted}">Date Status</span>
+                            <span class="cal-time" style="font-size: 0.7rem;" th:if="${status.lastExecutionDateWithReleaseSuccessFormatted != null}" th:text="${status.lastExecutionDateWithReleaseSuccessFormatted}">Date Status</span>
+                            <span class="check-icon" th:if="${status.lastExecutionSuccess}" th:title="${status.lastExecutionDateFormatted}">✓</span>
                         </div>
                     </div>
                 </div>

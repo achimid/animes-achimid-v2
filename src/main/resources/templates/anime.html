@@ -79,7 +79,8 @@
             <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;" th:text="${anime.description}"> Anime Description </p>
 
             <div class="action-container">
-                <button class="btn btn-primary">► Assistir Agora</button>
+                <button class="btn btn-primary" th:if="${anime.streamingUrl != null}" th:onclick="window.location.href=[[${anime.streamingUrl}]]">► Assistir Agora</button>
+                <button class="btn btn-primary" th:if="${anime.streamingUrl == null}">► Assistir Agora</button>
 
                 <button class="btn btn-secondary" id="fav-btn" th:onclick="toggleFavorite(this, [[${anime.id}]])">+ Minha Lista</button>
 

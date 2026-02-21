@@ -41,9 +41,17 @@ interface AnimeDocumentMapper {
             id = jikan.malId.toString(),
             slug = slug,
             name = jikan.title,
+            episodes = emptyList(),
+            createdAt = Instant.now(),
+            updatedAt = Instant.now(),
+        ).let { merge(it, jikan) }
+    }
+
+    fun merge(anime: AnimeDocument, jikan: Jikan): AnimeDocument {
+        return anime.copy(
             type = AnimeTypeDocument.entries.firstOrNull { it.name == jikan.type } ?: TV,
             status = if (jikan.aired?.to == null) AIRING else COMPLETE,
-            episodes = emptyList(),
+            episodesCount = jikan.episodes,
             imageUrl = jikan.images?.webp?.imageUrl
                 ?: jikan.images?.jpg?.imageUrl
                 ?: jikan.images?.webp?.smallImageUrl
@@ -68,8 +76,8 @@ interface AnimeDocumentMapper {
             rank = jikan.rank,
             score = jikan.score,
             popularity = jikan.popularity,
+            streamingUrl = jikan.streaming?.firstOrNull()?.url,
             sources = SourceWrapperDocument(jikan = jikan),
-            createdAt = Instant.now(),
             updatedAt = Instant.now(),
         )
     }

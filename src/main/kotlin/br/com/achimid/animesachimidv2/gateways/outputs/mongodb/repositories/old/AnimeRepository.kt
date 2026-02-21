@@ -24,4 +24,6 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
     @Update("{ '\$push' : { 'comments' : ?1 } }")
     fun addComment(id: String, comment: AnimeCommentDocument)
 
+    fun findTop4ByOrderByUpdatedAtAsc(): List<AnimeDocument>
+
 }

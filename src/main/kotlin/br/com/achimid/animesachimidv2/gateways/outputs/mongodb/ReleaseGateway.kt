@@ -48,6 +48,7 @@ class ReleaseGateway(
             animeType = release.animeType,
             animeImage = release.animeImageUrl,
             animeEpisode = release.animeEpisode,
+            animeStreamUrl = release.animeStreamUrl,
             sources = release.options?.map { ReleaseSourceDocument(it.name, it.url) },
             createdAt = Instant.now(),
             updatedAt = Instant.now(),
@@ -63,6 +64,7 @@ class ReleaseGateway(
             animeEpisode = document.animeEpisode ?: document.episode,
             animeType = if (document.animeType == "TV") "Episódio" else (document.animeType ?: "Episódio"),
             animeImageUrl = document.animeImage ?: document.anime?.image,
+            animeStreamUrl = document.animeStreamUrl,
             animeId = document.animeId,
             options = document.sources!!.map { EpisodeLinkOptions(it.url, it.title) }.toMutableList(),
         )

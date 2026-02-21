@@ -16,11 +16,19 @@ data class SiteIntegration(
     @JsonIgnore val skipImage: Boolean = true,
     @JsonIgnore val disableJavaScript: Boolean? = null,
     var lastExecutionDate: Instant? = null,
-    var lastExecutionSuccess: Boolean = false
+    var lastExecutionSuccess: Boolean = false,
+    var lastExecutionDateWithReleaseSuccess: Instant? = null
 ) {
     @JsonProperty("lastExecutionDateFormatted")
     fun lastExecutionDateFormatted(): String? {
         return lastExecutionDate
+            ?.atZone(ZoneId.of("America/Sao_Paulo"))
+            ?.format(ofPattern("dd/MM/yyyy HH:mm"))
+    }
+
+    @JsonProperty("lastExecutionDateWithReleaseSuccess")
+    fun lastExecutionDateWithReleaseSuccessFormatted(): String? {
+        return lastExecutionDateWithReleaseSuccess
             ?.atZone(ZoneId.of("America/Sao_Paulo"))
             ?.format(ofPattern("dd/MM/yyyy HH:mm"))
     }

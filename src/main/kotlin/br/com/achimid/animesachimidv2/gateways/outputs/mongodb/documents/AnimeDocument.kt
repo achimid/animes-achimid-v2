@@ -29,6 +29,7 @@ data class AnimeDocument(
     val description: String? = null,
     val synopsis: String? = null,
     val background: String? = null,
+    val episodesCount: Int? = null,
     val imageBackgroundUrl: String? = null,
     val nameSecondary: String? = null,
     val tags: List<String>? = null,
@@ -36,6 +37,7 @@ data class AnimeDocument(
     val score: Double? = null,
     val popularity: String? = null,
     val rank: String? = null,
+    val streamingUrl: String? = null,
 
     val sources: SourceWrapperDocument? = null,
 

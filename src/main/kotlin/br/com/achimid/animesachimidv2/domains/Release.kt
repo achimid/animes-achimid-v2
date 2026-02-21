@@ -9,6 +9,7 @@ data class Release(
     val animeType: String? = null,
     val animeEpisode: String? = null,
     val animeImageUrl: String? = null,
+    val animeStreamUrl: String? = null,
     val options: MutableList<EpisodeLinkOptions>? = mutableListOf()
 )
 

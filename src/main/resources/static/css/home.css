@@ -485,3 +485,61 @@
 .btn-quick-search i {
     font-size: 0.9rem;
 }
+
+
+/* Estilo comum para ambos os botões dinâmicos */
+.btn-quick-search, .btn-quick-play {
+    position: absolute;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    cursor: pointer;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    opacity: 0; /* Invisível por padrão */
+}
+
+/* Posicionamento Individual */
+.btn-quick-search {
+    top: 10px; /* Busca em cima */
+    transform: translateX(10px);
+}
+
+.btn-quick-play {
+    top: 48px; /* Player logo abaixo da busca */
+    transform: translateX(10px);
+}
+
+/* Aparecer no Hover do Card */
+.anime-card:hover .btn-quick-search,
+.anime-card:hover .btn-quick-play {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Hover específico nos botões */
+.btn-quick-play:hover {
+    background: var(--accent-orange); /* Ou var(--primary-green) */
+    color: #000;
+    border-color: var(--accent-orange);
+}
+
+.btn-quick-search:hover {
+    background: var(--primary-green);
+    color: #000;
+    border-color: var(--primary-green);
+}
+
+/* Ajuste no ícone de play para centralizar melhor visualmente */
+.btn-quick-play i {
+    font-size: 0.8rem;
+    margin-left: 2px; /* Correção óptica para o triângulo do play */
+}

@@ -29,10 +29,11 @@ class SiteIntegrationGateway(
 
     fun findFast(): List<SiteIntegration> = siteIntegrationRepository.findFast()
 
-    fun updateByName(name: String, success: Boolean) {
+    fun updateByName(name: String, success: Boolean, withRelease: Boolean = false) {
         siteIntegrationRepository.findByName(name).let {
             it.lastExecutionSuccess = success
             it.lastExecutionDate = Instant.now()
+            if (withRelease) it.lastExecutionDateWithReleaseSuccess = Instant.now()
         }
     }
 

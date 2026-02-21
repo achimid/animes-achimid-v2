@@ -22,6 +22,7 @@ data class CalendarToday(
 data class CalendarItem(
     val title: String,
     val time: String,
+    @JsonProperty("aired")
     val released: Boolean = false,
     @JsonProperty("image_url")
     val image: String? = null,

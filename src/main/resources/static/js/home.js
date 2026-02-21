@@ -63,7 +63,9 @@ function autoReload() {
     showMoreButton()
     releasesPageNumber = 1
 
-    filterAnimeReleaseEpisode('')
+    filterAnimeReleaseEpisode('').then(() => {
+        document.querySelector('.btn-download').click()
+    })
 }
 
 var releasesPageNumber = 1
@@ -90,7 +92,7 @@ function showMoreButton() {
 }
 
 function filterAnimeReleaseEpisode(query) {
-    fetch(`/api/v1/release?query=${query}&pageSize=10`).then(res => res.json()).then(result => {
+    return fetch(`/api/v1/release?query=${query}&pageSize=10`).then(res => res.json()).then(result => {
         epContainer.innerHTML = ''
         result.content.forEach((anime, index) => {
             epContainer.innerHTML += `
@@ -125,8 +127,8 @@ function filterSites(query) {
                 <div class="site-item ${site.enabled ? 'released' : ''}">
                     <a class="cal-name" href="${site.url}" target="_blank" rel="noopener">${site.name}</a>
                     <div class="cal-info">
-                        ${site.lastExecutionDate != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDateFormatted}</span>` : ''}
-                        ${site.lastExecutionSuccess === true ? '<span class="check-icon">✓</span>' : ''}
+                        ${site.lastExecutionDateWithReleaseSuccessFormatted != null ? `<span class="cal-time" style="font-size: 0.7rem;">${site.lastExecutionDateFormatted}</span>` : ''}
+                        ${site.lastExecutionSuccess === true ? `<span class="check-icon" title="${site.lastExecutionDateFormatted}">✓</span>` : ''}
                     </div>
                 </div>
             `

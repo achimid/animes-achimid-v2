@@ -1,11 +1,18 @@
 package br.com.achimid.animesachimidv2.domains
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.mongodb.core.mapping.Field
+import java.time.Instant
 
 data class JikanApiResponse(
     val data: List<Jikan>
 )
+
+data class JikanApiSingleResponse(
+    val data: Jikan
+)
+
 
 data class Jikan(
     @Field("mal_id")
@@ -56,6 +63,25 @@ data class Jikan(
     val explicitGenres: List<JikanEntityInfo>? = null,
     val themes: List<JikanEntityInfo>? = null,
     val demographics: List<JikanEntityInfo>? = null,
+    val relations: List<JikanRelation>? = null,
+    val theme: JikanThemeMusic? = null,
+    val external: List<JikanResourceLink>? = null,
+    val streaming: List<JikanResourceLink>? = null,
+)
+
+data class JikanRelation(
+    val relation: String? = null,
+    val entry: List<JikanEntityInfo>? = null
+)
+
+data class JikanThemeMusic(
+    val openings: List<String>? = null,
+    val endings: List<String>? = null
+)
+
+data class JikanResourceLink(
+    val name: String? = null,
+    val url: String? = null
 )
 
 data class JikanAnimeImages(

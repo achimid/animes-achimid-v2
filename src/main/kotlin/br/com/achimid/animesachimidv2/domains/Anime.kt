@@ -29,6 +29,7 @@ data class Anime(
     val score: Double? = null,
     val popularity: String? = null,
     val rank: String? = null,
+    val streamingUrl: String? = null,
 ) {
 
     fun getTypeDescription(): String {

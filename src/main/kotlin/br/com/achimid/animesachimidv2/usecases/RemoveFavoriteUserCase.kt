@@ -9,7 +9,7 @@ class RemoveFavoriteUserCase(
     private val userGateway: UserGateway
 ) {
 
-    @CacheEvict("fallowingAnimes")
+    @CacheEvict("fallowingAnimes", key = "#userId")
     fun execute(animeId: String, userId: String) = userGateway.removeFavorite(userId, animeId)
 
 }
