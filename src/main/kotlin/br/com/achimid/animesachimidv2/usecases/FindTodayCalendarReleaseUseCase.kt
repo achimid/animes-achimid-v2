@@ -18,7 +18,7 @@ class FindTodayCalendarReleaseUseCase(
 
     @EventListener(ApplicationReadyEvent::class)
     @Cacheable("todayCalendarCache")
-    fun execute(): CalendarRelease? {
+    fun execute(): CalendarRelease {
         try {
             val fullSchedule = subsPleaseAPIGateway.findTodaySchedule()
 
@@ -29,7 +29,7 @@ class FindTodayCalendarReleaseUseCase(
             return CalendarRelease(fullSchedule.schedule)
         } catch (ex: RuntimeException) {
             logger.error("Error while fetching schedule info", ex)
-            return null
+            return CalendarRelease()
         }
     }
 

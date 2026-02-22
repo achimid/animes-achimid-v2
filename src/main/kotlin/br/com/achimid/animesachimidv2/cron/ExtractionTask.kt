@@ -18,17 +18,17 @@ class ExtractionTask(
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
-//        @Scheduled(fixedRate = 1000 * 60 * 15)
+        @Scheduled(fixedRate = 1000 * 60 * 15)
     fun executeFastQueueMonitoring() {
         siteIntegrationGateway.findFast().forEach(puppeteerAPIGateway::execute)
     }
 
-    //    @Scheduled(fixedRate = 1000 * 60 * 30)
+        @Scheduled(fixedRate = 1000 * 60 * 30)
     fun executeMediumQueueMonitoring() {
         siteIntegrationGateway.findMedium().forEach(puppeteerAPIGateway::execute)
     }
 
-    //    @Scheduled(fixedRate = 1000 * 60 * 60)
+        @Scheduled(fixedRate = 1000 * 60 * 60)
     fun executeSlowQueueMonitoring() {
         siteIntegrationGateway.findSlow().forEach(puppeteerAPIGateway::execute)
     }
@@ -42,7 +42,7 @@ class ExtractionTask(
         val currentHourMinutePlus2 = now().minusMinutes(2).format(pattern)
         val currentHourMinutePlus5 = now().minusMinutes(5).format(pattern)
 
-        todayCalendar?.releasesToday?.firstOrNull {
+        todayCalendar.releasesToday.firstOrNull {
             it.time == currentHourMinute || it.time == currentHourMinutePlus2 || it.time == currentHourMinutePlus5
         }?.let {
             siteIntegrationGateway.findFast().forEach(puppeteerAPIGateway::execute)

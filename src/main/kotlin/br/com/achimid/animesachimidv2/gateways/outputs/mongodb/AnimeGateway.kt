@@ -43,7 +43,7 @@ class AnimeGateway(
         return animeRepository.findByNameContainingIgnoreCase(query, pageRequest).map(mapper::fromDocument)
     }
 
-    fun findLastSlugs(): List<String> = animeRepository.findAll().map { it.slug }
+    fun findAllSlugs(): List<String> = animeRepository.findAllSlugs()
 
     fun findBySlug(slug: String): Anime? = animeRepository.findBySlug(slug)?.let(mapper::fromDocument)
 

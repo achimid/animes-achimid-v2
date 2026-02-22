@@ -79,7 +79,18 @@ function showMoreButton() {
                         <span class="ep-badge">${anime.animeType}</span>
                     ` : `
                         <span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>
-                    `}                    
+                    `}           
+                    
+                    <button class="btn-quick-search" onclick="selectAnimeEpisodes(event)">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+                    ${anime.animeStreamUrl == null ? '': `
+                        <button class="btn-quick-play" onclick="event.preventDefault(); window.location.href=${anime.animeStreamUrl}">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    `}                   
+                             
                     <img src="${anime.animeImageUrl}" alt="${anime.animeName}">
                     <div class="anime-card-info">
                         <span class="anime-card-title">${anime.animeName}</span>

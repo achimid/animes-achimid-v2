@@ -26,4 +26,7 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
 
     fun findTop4ByOrderByUpdatedAtAsc(): List<AnimeDocument>
 
+    @Query(value = "{}", fields = "{ '_id': 0, 'slug': 1 }")
+    fun findAllSlugs(): List<String>
+
 }
