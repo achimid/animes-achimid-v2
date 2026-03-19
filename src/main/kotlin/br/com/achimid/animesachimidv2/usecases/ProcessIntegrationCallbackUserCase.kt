@@ -46,10 +46,10 @@ class ProcessIntegrationCallbackUserCase(
     fun createRelease(result: CallbackIntegrationExecutionResult, siteName: String) {
         try {
             createReleaseUserCase.execute(result)
-            siteIntegrationGateway.updateByName(siteName, true, true)
+            siteIntegrationGateway.updateByName(siteName, success = true, withRelease = true)
         } catch (ex: RuntimeException) {
             logger.error("Error on create release: {}", result, ex)
-            siteIntegrationGateway.updateByName(siteName, false, false)
+            siteIntegrationGateway.updateByName(siteName, success = false, withRelease = false)
         }
     }
 

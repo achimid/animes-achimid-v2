@@ -1,12 +1,12 @@
 const posts = []
 
-const episodes = [...document.querySelectorAll('.releases li')].reverse().slice(20)
+const episodes = [...document.querySelectorAll('tr')].slice(2, 22).reverse()
 for (let i = 0; i < episodes.length; i++) {
     const $episode = episodes[i]
 
-    const url = $episode.querySelector('a').href
-    const anime = $episode.querySelector('.season-name').innerText.trim()
-    const episode = parseInt($episode.querySelector('.available-episode-link').innerText.match(/\d+/g))
+    const url = window.location.href
+    const anime = $episode.querySelector('td:nth-child(1)').innerText.trim()
+    const episode = parseInt($episode.querySelector('td:nth-child(2)').innerText.split(' ')[0].match(/\d+/g))
     const title = `${anime} - Episódio ${episode}`
 
     if (!episode) continue;
@@ -15,7 +15,7 @@ for (let i = 0; i < episodes.length; i++) {
     const isDub = false
     
     const post = {
-        from: "Crunchyroll",
+        from: "Anime NSK",
         url,
         title,
         anime,

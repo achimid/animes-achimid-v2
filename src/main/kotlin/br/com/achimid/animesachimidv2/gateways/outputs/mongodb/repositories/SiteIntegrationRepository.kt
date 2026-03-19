@@ -10,7 +10,7 @@ class SiteIntegrationRepository {
 
     private val db = mutableListOf(
 //        SiteIntegration(SLOW, "Animes 365", "https://animes365.net/", getScript("animes365-script.js")),
-//        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/", getScript("crunchyroll-script.js")),
+        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/pt-br/simulcastcalendar?filter=premium", getScript("crunchyroll-script.js")),
         SiteIntegration(MEDIUM, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
         SiteIntegration(MEDIUM, "AnimesRoll", "https://anroll.tv/", getScript("animesroll-script.js"), disableJavaScript = true),
         SiteIntegration(MEDIUM, "Animes HD", "https://animeshd.to/", getScript("animeshd-to-script.js"), disableJavaScript = true),
@@ -24,16 +24,16 @@ class SiteIntegrationRepository {
         SiteIntegration(MEDIUM, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js"), disableJavaScript = true),
         SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", getScript("erairaws-script.js")),
         SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
-        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.org/", getScript("darkanimes-script.js")),
+        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.io", getScript("darkanimes-script.js")),
         SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
         SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
+        SiteIntegration(SLOW, "World Fansub", "https://worldfansub.xyz/", getScript("worldfansub-script.js")),
+        SiteIntegration(MEDIUM, "AnimeFlix (ENG)", "https://animeflix.team/", getScript("animeflix-script.js"), disableJavaScript = true),
+        SiteIntegration(SLOW, "Anime NSK", "https://packs.ansktracker.com/", getScript("animensk-script.js")),
+        SiteIntegration(MEDIUM, "Animes Digital", "https://animesdigital.org/lancamentos", getScript("animesdigital-script.js")),
     )
 
-    // https://worldfansub.xyz/
-    // https://packs.ansktracker.com/
     // https://animesonline.io/
-//    https://animeflix.team/
-//    https://animesdigital.org/home/
 //    https://chia-anime.su/
 
 

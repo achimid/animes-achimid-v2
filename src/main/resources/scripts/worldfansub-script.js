@@ -1,21 +1,21 @@
 const posts = []
 
-const episodes = [...document.querySelectorAll('.releases li')].reverse().slice(20)
+const episodes = [...document.querySelectorAll('.anime-grid article')].reverse()
 for (let i = 0; i < episodes.length; i++) {
     const $episode = episodes[i]
 
     const url = $episode.querySelector('a').href
-    const anime = $episode.querySelector('.season-name').innerText.trim()
-    const episode = parseInt($episode.querySelector('.available-episode-link').innerText.match(/\d+/g))
+    const anime = $episode.querySelector('.card-title').innerText.split(' – ')[0]
+    const episode = parseInt($episode.querySelector('.card-title').innerText.split(' – ')[1].match(/\d+/g))
     const title = `${anime} - Episódio ${episode}`
 
     if (!episode) continue;
 
     const languages = ['PT-BR']
-    const isDub = false
+    const isDub = $episode.querySelector('.card-title').innerText.indexOf('[DUAL]') >= 0
     
     const post = {
-        from: "Crunchyroll",
+        from: "World Fansub",
         url,
         title,
         anime,
