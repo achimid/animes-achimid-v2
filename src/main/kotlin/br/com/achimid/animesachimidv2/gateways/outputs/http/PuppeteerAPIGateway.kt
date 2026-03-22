@@ -18,19 +18,24 @@ class PuppeteerAPIGateway(
     fun execute(siteIntegration: SiteIntegration) {
         logger.info("Executing puppeteer API for site: ${siteIntegration.name}")
 
-        puppeteerAPIClient.execute(
-            ExecutionRequest(
-                url = siteIntegration.url,
-                script = siteIntegration.script!!,
-                callbackUrl = callbackUrl,
-                ref = siteIntegration.name,
-                config = ExecutionConfig(
-                    bypassCSP = true,
-                    skipImage = siteIntegration.skipImage,
-                    disableJavaScript = siteIntegration.disableJavaScript
-                )
-            )
-        ).let { logger.info("Executed puppeteer API for site ${siteIntegration.name}") }
+        try {
+            puppeteerAPIClient.execute(createRequest(siteIntegration))
+                .let { logger.info("Executed puppeteer API for site ${siteIntegration.name}") }
+        } catch (e: Exception) {
+            logger.error("Exception occurred while executing puppeteer api", e)
+        }
     }
+
+   private fun createRequest(siteIntegration: SiteIntegration) =  ExecutionRequest(
+        url = siteIntegration.url,
+        script = siteIntegration.script!!,
+        callbackUrl = callbackUrl,
+        ref = siteIntegration.name,
+        config = ExecutionConfig(
+            bypassCSP = true,
+            skipImage = siteIntegration.skipImage,
+            disableJavaScript = siteIntegration.disableJavaScript
+        )
+    )
 
 }

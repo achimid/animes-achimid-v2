@@ -4,7 +4,6 @@ import br.com.achimid.animesachimidv2.domains.EpisodeLinkOptions
 import br.com.achimid.animesachimidv2.domains.Release
 import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackIntegrationExecutionResult
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.ReleaseGateway
-import me.xdrop.fuzzywuzzy.FuzzySearch
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.stereotype.Component

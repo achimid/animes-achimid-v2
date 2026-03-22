@@ -5,8 +5,8 @@ for (let i = 0; i < episodes.length; i++) {
     const $episode = episodes[i]
 
     const url = $episode.querySelector('a').href
-    const anime = $episode.querySelector('.card-title').innerText.split(' – ')[0]
-    const episode = parseInt($episode.querySelector('.card-title').innerText.split(' – ')[1].match(/\d+/g))
+    const anime = $episode.querySelector('.card-title').innerText.split(' – ').slice(0, -1).join(' ')
+    const episode = parseInt($episode.querySelector('.card-title').innerText.split(' – ').slice(-1).join(' ').match(/\d+/g))
     const title = `${anime} - Episódio ${episode}`
 
     if (!episode) continue;

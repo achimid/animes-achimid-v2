@@ -2,6 +2,6 @@ spring:
   main:
     lazy-initialization: false
   mongodb:
-    uri: mongodb://root:password@localhost:27027/animes-achimid
+    uri: mongodb://root:password@localhost:27027/animes-achimid?authSource=admin
 integration:
   callbackUrl: "https://local.achimid.com.br/api/v1/site/integration/callback"

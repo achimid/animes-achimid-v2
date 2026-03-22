@@ -1,4 +1,4 @@
-package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old
+package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories
 
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.IntegrationEventDocument
 import org.springframework.data.repository.CrudRepository

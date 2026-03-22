@@ -7,7 +7,7 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeDo
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.NameDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocumentMapper
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.AnimeRepository
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.AnimeRepository
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest

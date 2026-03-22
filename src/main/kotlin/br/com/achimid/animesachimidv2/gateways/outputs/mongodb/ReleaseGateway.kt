@@ -4,10 +4,10 @@ import br.com.achimid.animesachimidv2.domains.EpisodeLinkOptions
 import br.com.achimid.animesachimidv2.domains.Release
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.ReleaseDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.ReleaseSourceDocument
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.ReleaseRepository
-import org.springframework.boot.context.event.ApplicationReadyEvent
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.ReleaseRepository
+import br.com.achimid.animesachimidv2.utils.padLeft
+import br.com.achimid.animesachimidv2.utils.unpadLeft
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.context.event.EventListener
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
@@ -34,20 +34,20 @@ class ReleaseGateway(
     }
 
     fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
-        return repository.findByAnimeIdAndEpisode(animeId, episodeNumber).map(this::fromDocument)
+        return repository.findByAnimeIdAndEpisode(animeId, episodeNumber.padLeft()!!).map(this::fromDocument)
     }
 
     fun toDocument(release: Release): ReleaseDocument {
         return ReleaseDocument(
             id = release.id,
             title = release.title,
-            episode = release.animeEpisode,
+            episode = release.animeEpisode.padLeft(),
             animeId = release.animeId,
             animeSlug = release.animeSlug,
             animeName = release.animeName,
             animeType = release.animeType,
             animeImage = release.animeImageUrl,
-            animeEpisode = release.animeEpisode,
+            animeEpisode = release.animeEpisode.padLeft(),
             animeStreamUrl = release.animeStreamUrl,
             sources = release.options?.map { ReleaseSourceDocument(it.name, it.url) },
             createdAt = Instant.now(),
@@ -61,7 +61,7 @@ class ReleaseGateway(
             title = document.title,
             animeSlug = document.animeSlug ?: document.anime?.source?.jikan?.url!!.split("/").last().lowercase(),
             animeName = document.animeName ?: document.anime?.name ?: "",
-            animeEpisode = document.animeEpisode ?: document.episode,
+            animeEpisode = document.animeEpisode.unpadLeft() ?: document.episode.unpadLeft(),
             animeType = if (document.animeType == "TV") "Episódio" else (document.animeType ?: "Episódio"),
             animeImageUrl = document.animeImage ?: document.anime?.image,
             animeStreamUrl = document.animeStreamUrl,
@@ -70,7 +70,7 @@ class ReleaseGateway(
         )
     }
 
-    @EventListener(ApplicationReadyEvent::class)
+//    @EventListener(ApplicationReadyEvent::class)
     fun migrate() {
     }
 

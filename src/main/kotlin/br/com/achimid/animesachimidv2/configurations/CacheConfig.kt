@@ -23,7 +23,7 @@ class CacheConfig {
                 buildCache("animesCache", 5, MINUTES, 100),
                 buildCache("animeSearchCache", 5, MINUTES, 50),
                 buildCache("recommendationsCache", 2, HOURS, 5),
-                buildCache("calendarCache", 1, DAYS, 1),
+                buildCache("calendarCache", 3, DAYS, 1),
                 buildCache("todayCalendarCache", 15, MINUTES, 1),
                 buildCache("fallowingAnimes", 10, MINUTES, 100),
                 buildCache("jikanIntegrationCache", 60, MINUTES, 200),

@@ -6,10 +6,8 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.Integra
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.MirrorDataDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.MirrorDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.SiteIntegrationRepository
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.old.IntegrationEventRepository
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.IntegrationEventRepository
 import org.slf4j.LoggerFactory
-import org.springframework.cache.annotation.CacheEvict
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import java.time.Instant
 
