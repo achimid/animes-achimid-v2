@@ -60,7 +60,7 @@ Estes sites foram monitorados no passado mas estão desabilitados atualmente:
 O projeto segue a **arquitetura limpa (Clean Architecture)** em Kotlin com Spring Boot:
 
 - **Domínios**: Entidades como `Anime`, `Release`, `SiteIntegration`.
-- **Casos de Uso**: Lógica de negócio (ex.: `FindAnimesUseCase`).
+- **Casos de Uso**: Lógica de negócio.
 - **Gateways**: Interfaces externas, incluindo controladores REST e clientes Feign.
 - **Cron**: Tarefas agendadas para scraping e sincronização.
 - **Infraestrutura**: MongoDB para persistência, Thymeleaf para templates web.
@@ -72,7 +72,6 @@ Fluxo de dados: Jobs cron triggam casos de uso para buscar de APIs externas ou e
 Integrações externas:
 - **Jikan API**: Dados do MyAnimeList.
 - **Subsplease API**: Informações de releases.
-- **Google Gemini**: Potencial para tradução automática.
 
 ## 🤝 Contribuição
 
@@ -85,7 +84,6 @@ Contribuições são bem-vindas! Siga estes passos:
 5. Abra um Pull Request.
 
 ### Diretrizes
-- Siga as convenções do projeto (veja `AGENTS.md`).
 - Adicione testes para novas funcionalidades.
 - Atualize a documentação conforme necessário.
 
