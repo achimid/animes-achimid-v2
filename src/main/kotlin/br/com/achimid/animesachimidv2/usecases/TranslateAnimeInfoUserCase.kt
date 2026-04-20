@@ -4,6 +4,8 @@ import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.gateways.outputs.http.TranslateAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
 import org.slf4j.LoggerFactory
+import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import kotlin.time.measureTimedValue
 
@@ -14,7 +16,7 @@ class TranslateAnimeInfoUserCase(
 ) {
     val logger = LoggerFactory.getLogger(this.javaClass)
 
-//    @EventListener(ApplicationReadyEvent::class)
+    @EventListener(ApplicationReadyEvent::class)
     fun processAnimeWithoutTranslation() {
         val animeWithoutTranslation = animeGateway.findAllWithoutTranslation()
 
