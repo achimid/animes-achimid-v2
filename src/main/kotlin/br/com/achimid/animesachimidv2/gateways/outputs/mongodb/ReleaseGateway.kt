@@ -70,8 +70,4 @@ class ReleaseGateway(
         )
     }
 
-//    @EventListener(ApplicationReadyEvent::class)
-    fun migrate() {
-    }
-
 }

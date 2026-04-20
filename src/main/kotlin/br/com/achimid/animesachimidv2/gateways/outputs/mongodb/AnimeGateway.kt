@@ -6,8 +6,8 @@ import br.com.achimid.animesachimidv2.domains.Jikan
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.NameDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocumentMapper
-import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.AnimeRepository
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
@@ -17,16 +17,24 @@ import kotlin.jvm.optionals.getOrNull
 
 @Component
 class AnimeGateway(
+    val mapper: AnimeDocumentMapper,
     val animeRepository: AnimeRepository,
     val namesRepository: NamesRepository,
-    val mapper: AnimeDocumentMapper
 ) {
 
     fun saveAll(animes: List<Jikan>): List<Anime> = animes
-        .map(mapper::toDocument)
-        .let(animeRepository::saveAll)
+        .map {
+            val anime = animeRepository.findById(it.malId.toString()).getOrNull() ?: mapper.toDocument(it)
+
+            return@map animeRepository.save(mapper.merge(anime, it))
+        }
         .also { getAllNames(it).forEach(namesRepository::save) }
         .map(mapper::fromDocument)
+
+    fun save(anime: Anime): Anime = anime
+        .let(mapper::toDocument)
+        .let(animeRepository::save)
+        .let(mapper::fromDocument)
 
     @Cacheable("animesCache")
     fun findAll(pageRequest: PageRequest): Page<Anime> {
@@ -78,8 +86,6 @@ class AnimeGateway(
         }.filter { it.name != "" }
     }
 
-//        @EventListener(ApplicationReadyEvent::class)
-    fun migrate() {
-    }
+    fun findAllWithoutTranslation(): List<Anime> = animeRepository.findAllWithoutTranslation().map(mapper::fromDocument)
 
 }

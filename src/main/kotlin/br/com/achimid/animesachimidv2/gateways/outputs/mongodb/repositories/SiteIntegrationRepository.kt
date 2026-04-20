@@ -10,31 +10,43 @@ class SiteIntegrationRepository {
 
     private val db = mutableListOf(
 //        SiteIntegration(SLOW, "Animes 365", "https://animes365.net/", getScript("animes365-script.js")),
-//        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/pt-br/simulcastcalendar?filter=premium", getScript("crunchyroll-script.js")),
-//        SiteIntegration(MEDIUM, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
-//        SiteIntegration(MEDIUM, "AnimesRoll", "https://anroll.tv/", getScript("animesroll-script.js"), disableJavaScript = true),
-//        SiteIntegration(MEDIUM, "Animes HD", "https://animeshd.to/", getScript("animeshd-to-script.js"), disableJavaScript = true),
-//        SiteIntegration(MEDIUM, "Animes Online CC", "https://animesonlinecc.to/episodio/", getScript("animesonlinecc-script.js")),
-//        SiteIntegration(MEDIUM, "Goyabu", "https://goyabu.to/lancamentos", getScript("goyabu-script.js"), disableJavaScript = true),
-//        SiteIntegration(MEDIUM, "Animes Online FHD", "https://animesonlinefhd.vip/", getScript("animesonlinefhd-script.js")),
-//        SiteIntegration(MEDIUM, "Hinata Soul", "https://www.hinatasoul.com/", getScript("hinata-soul.js")),
-//        SiteIntegration(MEDIUM, "Anime Q", "https://animeq.blog/", getScript("animeq-script.js")),
-//        SiteIntegration(MEDIUM, "Animes Online Cloud", "https://animesonline.cloud/", getScript("animesonlinecloud-script.js")),
-//        SiteIntegration(MEDIUM, "Animes Drive", "https://animesdrive.online/episodio", getScript("animesdrive-script.js")),
-//        SiteIntegration(MEDIUM, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js"), disableJavaScript = true),
-        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p+CR+WEB-DL", getScript("erairaws-script.js")),
-//        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
-//        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.io", getScript("darkanimes-script.js")),
-//        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
-//        SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
-//        SiteIntegration(SLOW, "World Fansub", "https://worldfansub.xyz/#lancamentos ", getScript("worldfansub-script.js"), disableJavaScript = true),
-//        SiteIntegration(MEDIUM, "AnimeFlix (ENG)", "https://animeflix.team/", getScript("animeflix-script.js"), disableJavaScript = true),
-//        SiteIntegration(SLOW, "Anime NSK", "https://packs.ansktracker.com/", getScript("animensk-script.js")),
-//        SiteIntegration(MEDIUM, "Animes Digital", "https://animesdigital.org/lancamentos", getScript("animesdigital-script.js")),
+        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/pt-br/simulcastcalendar?filter=premium", getScript("crunchyroll-script.js")),
+        SiteIntegration(MEDIUM, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
+        SiteIntegration(MEDIUM, "AnimesRoll", "https://anroll.tv/", getScript("animesroll-script.js"), disableJavaScript = true),
+        SiteIntegration(MEDIUM, "Animes HD", "https://animeshd.to/", getScript("animeshd-to-script.js"), disableJavaScript = true),
+        SiteIntegration(MEDIUM, "Animes Online CC", "https://animesonlinecc.to/episodio/", getScript("animesonlinecc-script.js")),
+        SiteIntegration(MEDIUM, "Goyabu", "https://goyabu.to/lancamentos", getScript("goyabu-script.js"), disableJavaScript = true),
+        SiteIntegration(MEDIUM, "Animes Online FHD", "https://animesonlinefhd.vip/", getScript("animesonlinefhd-script.js")),
+        SiteIntegration(MEDIUM, "Hinata Soul", "https://www.hinatasoul.com/", getScript("hinata-soul.js")),
+        SiteIntegration(MEDIUM, "Anime Q", "https://animeq.net/", getScript("animeq-script.js")),
+        SiteIntegration(MEDIUM, "Animes Online Cloud", "https://animesonline.cloud/", getScript("animesonlinecloud-script.js")),
+        SiteIntegration(MEDIUM, "Animes Drive", "https://animesdrive.online/episodio", getScript("animesdrive-script.js")),
+        SiteIntegration(MEDIUM, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js"), disableJavaScript = true),
+        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p", getScript("erairaws-script.js")),
+        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
+        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.io", getScript("darkanimes-script.js")),
+        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
+        SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
+        SiteIntegration(SLOW, "World Fansub", "https://worldfansub.xyz/#lancamentos ", getScript("worldfansub-script.js"), disableJavaScript = true),
+        SiteIntegration(MEDIUM, "AnimeFlix (ENG)", "https://animeflix.team/", getScript("animeflix-script.js"), disableJavaScript = true, waitTime = 300),
+        SiteIntegration(SLOW, "Anime NSK", "https://packs.ansktracker.com/", getScript("animensk-script.js")),
+        SiteIntegration(MEDIUM, "Animes Digital", "https://animesdigital.org/lancamentos", getScript("animesdigital-script.js")),
+        SiteIntegration(FAST, "Better Anime IO", "https://betteranime.io/home/", getScript("betteranimeio-script.js")),
+        SiteIntegration(FAST, "Sushi Animes", "https://sushianimes.com.br/episodios", getScript("sushianimes-script.js")),
+        SiteIntegration(FAST, "AnimesBR Lat", "https://animesbr.lat/episodios", getScript("animesbrlat-script.js"), waitTime = 300),
     )
 
     // https://animesonline.io/
 //    https://chia-anime.su/
+//    https://aniture-pt.com.br/
+//    https://otakuplay.com.br/
+//    https://pluto.tv/br/on-demand/618ee3284a270700077bbe79/5f863330bc4431000775cf92
+//    https://meusanimes.vip/recentes
+//    https://anmtv.com.br/
+//    https://infinitefansub.com/projetos/anime
+
+
+
 
 
 //        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js"), disableJavaScript = true),

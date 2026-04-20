@@ -20,7 +20,9 @@ data class Anime(
     val comments: List<AnimeComment>? = null,
 
     val description: String? = null,
+    var descriptionPtBr: String? = null,
     val synopsis: String? = null,
+    var synopsisPtBr: String? = null,
     val background: String? = null,
     val imageBackgroundUrl: String? = null,
     val nameSecondary: String? = null,
@@ -35,6 +37,16 @@ data class Anime(
     fun getTypeDescription(): String {
         if (type == "TV") return "Episódio"
         return type
+    }
+
+    fun getDescriptionTranslated(): String? {
+        if (descriptionPtBr.isNullOrEmpty()) return description
+        return descriptionPtBr
+    }
+
+    fun getSynopsisTranslated(): String? {
+        if (synopsisPtBr.isNullOrEmpty()) return synopsis
+        return synopsisPtBr
     }
 }
 

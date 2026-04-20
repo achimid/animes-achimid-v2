@@ -1,12 +1,13 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 
 import br.com.achimid.animesachimidv2.domains.Jikan
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeStatusDocument.COMPLETE
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeTypeDocument.TV
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import org.springframework.data.mongodb.core.mapping.Field
 import java.time.Instant
 
 @Document(collection = "animes")
@@ -18,8 +19,8 @@ data class AnimeDocument(
     val slug: String,
     val name: String,
     val imageUrl: String? = null,
-    val type: AnimeTypeDocument = AnimeTypeDocument.TV,
-    val status: AnimeStatusDocument = AnimeStatusDocument.COMPLETE,
+    val type: AnimeTypeDocument = TV,
+    val status: AnimeStatusDocument = COMPLETE,
 
     val accessCounter: Long? = null,
 
@@ -27,7 +28,9 @@ data class AnimeDocument(
     val comments: List<AnimeCommentDocument>? = null,
 
     val description: String? = null,
+    var descriptionPtBr: String? = null,
     val synopsis: String? = null,
+    var synopsisPtBr: String? = null,
     val background: String? = null,
     val episodesCount: Int? = null,
     val imageBackgroundUrl: String? = null,

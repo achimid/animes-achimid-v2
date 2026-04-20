@@ -15,6 +15,7 @@ data class SiteIntegration(
     @JsonIgnore val enabled: Boolean = true,
     @JsonIgnore val skipImage: Boolean = true,
     @JsonIgnore val disableJavaScript: Boolean? = null,
+    @JsonIgnore val waitTime: Long? = null,
     var lastExecutionDate: Instant? = null,
     var lastExecutionSuccess: Boolean = false,
     var lastExecutionDateWithReleaseSuccess: Instant? = null

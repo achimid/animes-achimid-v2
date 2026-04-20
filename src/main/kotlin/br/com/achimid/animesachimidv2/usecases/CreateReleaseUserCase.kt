@@ -11,7 +11,8 @@ import org.springframework.stereotype.Component
 @Component
 class CreateReleaseUserCase(
     val releaseGateway: ReleaseGateway,
-    val searchUseCase: SearchUseCase
+    val searchUseCase: SearchUseCase,
+    val afterCreateReleaseUserCase: AfterCreateReleaseUserCase
 ) {
 
     val logger = LoggerFactory.getLogger(this.javaClass)
@@ -33,6 +34,8 @@ class CreateReleaseUserCase(
             animeImageUrl = anime.imageUrl,
             animeStreamUrl = anime.streamingUrl,
         )
+
+        afterCreateReleaseUserCase.execute(release, anime)
 
         if (release.options!!.any { it.name == result.from }) return
 

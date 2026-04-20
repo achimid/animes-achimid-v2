@@ -27,6 +27,7 @@ class CacheConfig {
                 buildCache("todayCalendarCache", 15, MINUTES, 1),
                 buildCache("fallowingAnimes", 10, MINUTES, 100),
                 buildCache("jikanIntegrationCache", 60, MINUTES, 200),
+                buildCache("translateCache", 60, MINUTES, 1000),
             )
         )
         return cacheManager

@@ -24,6 +24,7 @@ interface AnimeDocumentMapper {
     @Mapping(source = "status.description", target = "status")
     fun fromDocument(document: AnimeDocument): Anime
 
+    @Mapping(target = "status", source = "status")
     fun toDocument(domain: Anime): AnimeDocument
 
     @Mapping(source = "infoValue", target = "infoValue", defaultValue = "??")
@@ -32,7 +33,13 @@ interface AnimeDocumentMapper {
     fun toDocument(domain: AnimeComment): AnimeCommentDocument
     fun fromDocument(document: AnimeCommentDocument): AnimeComment
 
-    fun toDomain(jikan: Jikan): Anime = toDocument(jikan).let(this::fromDocument)
+    fun mapStatus(status: String?): AnimeStatusDocument? {
+        return when (status) {
+            "Em Exibição" -> AIRING
+            "Completo", "Finalizado" -> COMPLETE
+            else -> AnimeStatusDocument.entries.firstOrNull { it.name == status }
+        }
+    }
 
     fun toDocument(jikan: Jikan): AnimeDocument {
         val slug = jikan.url.split("/").last().lowercase()

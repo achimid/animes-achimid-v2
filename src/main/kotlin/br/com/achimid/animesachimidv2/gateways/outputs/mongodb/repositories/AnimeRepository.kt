@@ -29,4 +29,7 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
     @Query(value = "{}", fields = "{ '_id': 0, 'slug': 1 }")
     fun findAllSlugs(): List<String>
 
+    @Query("{ '\$or': [ { 'descriptionPtBr': null }, { 'descriptionPtBr': '' }, { 'synopsisPtBr': null }, { 'synopsisPtBr': '' } ] }")
+    fun findAllWithoutTranslation(): List<AnimeDocument>
+
 }

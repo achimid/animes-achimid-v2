@@ -45,6 +45,8 @@ external:
     url: "https://subsplease.org/api"
   jikan:
     url: "https://api.jikan.moe"
+  libre-translate:
+    url: "https://translate.achimid.com.br"
 
 integration:
   callbackUrl: ${CALLBACK_URL}

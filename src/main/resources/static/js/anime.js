@@ -111,3 +111,40 @@ function getCookie(name) {
 
 let firstEpisode = document.querySelector('.ep-title')
 if (firstEpisode != null) firstEpisode.click()
+
+function openImageModal() {
+    document.getElementById('imageModal').style.display = 'flex';
+}
+
+function closeImageModal() {
+    document.getElementById('imageModal').style.display = 'none';
+}
+
+
+function changePoster(newSrc) {
+    const mainImg = document.getElementById('main-poster');
+    const hero = document.querySelector('.anime-hero');
+
+    if(mainImg) {
+        // Aplica um efeito de fade simples
+        mainImg.style.opacity = '0.5';
+
+        setTimeout(() => {
+            mainImg.src = newSrc;
+            if(hero) {
+                hero.style.backgroundImage = `linear-gradient(0deg, var(--bg-dark) 0%, rgba(0, 0, 0, 0.85) 100%), url(${newSrc})`;
+            }
+            mainImg.style.opacity = '1';
+        }, 200);
+
+        closeImageModal();
+    }
+}
+
+// Fechar modal ao clicar fora dele
+window.onclick = function(event) {
+    const modal = document.getElementById('imageModal');
+    if (event.target == modal) {
+        closeImageModal();
+    }
+}

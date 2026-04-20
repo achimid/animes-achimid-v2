@@ -34,7 +34,8 @@ class PuppeteerAPIGateway(
         config = ExecutionConfig(
             bypassCSP = true,
             skipImage = siteIntegration.skipImage,
-            disableJavaScript = siteIntegration.disableJavaScript
+            disableJavaScript = siteIntegration.disableJavaScript,
+            waitTime = siteIntegration.waitTime
         )
     )
 
