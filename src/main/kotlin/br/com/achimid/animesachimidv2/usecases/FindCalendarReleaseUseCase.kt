@@ -16,7 +16,7 @@ class FindCalendarReleaseUseCase(
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
-    @EventListener(ApplicationReadyEvent::class)
+    @EventListener(ApplicationReadyEvent::class, condition = "'\${spring.profiles.active}' == 'prod'")
     @Cacheable("calendarCache")
     fun execute(): Calendar? {
         try {

@@ -16,7 +16,7 @@ class TranslateAnimeInfoUserCase(
 ) {
     val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @EventListener(ApplicationReadyEvent::class)
+    @EventListener(ApplicationReadyEvent::class, condition = "'\${spring.profiles.active}' == 'prod'")
     fun processAnimeWithoutTranslation() {
         val animeWithoutTranslation = animeGateway.findAllWithoutTranslation()
 

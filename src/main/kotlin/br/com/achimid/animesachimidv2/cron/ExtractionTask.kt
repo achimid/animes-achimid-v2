@@ -4,12 +4,14 @@ import br.com.achimid.animesachimidv2.gateways.outputs.http.PuppeteerAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.SiteIntegrationGateway
 import br.com.achimid.animesachimidv2.usecases.FindTodayCalendarReleaseUseCase
 import org.slf4j.LoggerFactory
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.time.LocalDateTime.now
 import java.time.format.DateTimeFormatter.ofPattern
 
 @Component
+@ConditionalOnProperty(name = ["extraction-tasks.enabled"], havingValue = "true", matchIfMissing = true)
 class ExtractionTask(
     val puppeteerAPIGateway: PuppeteerAPIGateway,
     val siteIntegrationGateway: SiteIntegrationGateway,

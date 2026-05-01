@@ -50,3 +50,6 @@ external:
 
 integration:
   callbackUrl: ${CALLBACK_URL}
+
+extraction-tasks:
+  enabled: true
