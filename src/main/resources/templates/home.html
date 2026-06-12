@@ -172,7 +172,12 @@
             </div>
 
             <div class="sidebar-box">
-                <h3 class="sidebar-title">🌐 Sites Acompanhados</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+                    <h3 class="sidebar-title">🌐 Sites Acompanhados</h3>
+                    <button id="btnRunExtractions" class="btn-run-extractions" title="Executar extração de todos os sites" th:if="${isAdmin}">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
                 <div class="sidebar-search-wrapper">
                     <input type="text" id="siteSearch" class="sidebar-search" placeholder="Filtrar sites...">
                     <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>

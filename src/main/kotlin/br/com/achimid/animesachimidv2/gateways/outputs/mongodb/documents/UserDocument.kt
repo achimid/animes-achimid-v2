@@ -14,6 +14,7 @@ data class UserDocument(
     val username: String? = null,
 
     val favorites: Set<String>? = null,
+    val isAdmin: Boolean = false,
 
     @CreatedDate
     val createdAt: Instant? = null,

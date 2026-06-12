@@ -19,7 +19,8 @@ class HomeController(
     val findFallowingAnimesUseCase: FindFallowingAnimesUseCase,
     val findRecommendationsUseCase: FindRecommendationsUseCase,
     val findSiteIntegrationsUseCase: FindSiteIntegrationsUseCase,
-    val findTodayCalendarReleaseUseCase: FindTodayCalendarReleaseUseCase
+    val findTodayCalendarReleaseUseCase: FindTodayCalendarReleaseUseCase,
+    val findUserUseCase: FindUserUseCase
 ) {
 
     @GetMapping
@@ -34,8 +35,9 @@ class HomeController(
         val fallowingList = supplyAsync { findFallowingAnimesUseCase.execute(userId) }
         val siteIntegrations = supplyAsync { findSiteIntegrationsUseCase.execute() }
         val pageAccess = supplyAsync { pageAccessGateway.getPageAccess() }
+        val user = supplyAsync { if (userId != null) findUserUseCase.execute(userId) else null }
 
-        allOf(releases, recommendations, calendarRelease, fallowingList, siteIntegrations, pageAccess).join()
+        allOf(releases, recommendations, calendarRelease, fallowingList, siteIntegrations, pageAccess, user).join()
 
         model.addAttribute("releases", releases.join())
         model.addAttribute("releasesEpisodes", releases.join().toList().take(5))
@@ -44,6 +46,7 @@ class HomeController(
         model.addAttribute("fallowingList", fallowingList.join())
         model.addAttribute("siteIntegrations", siteIntegrations.join())
         model.addAttribute("pageAccess", pageAccess.join())
+        model.addAttribute("isAdmin", user.join()?.isAdmin ?: false)
 
         return "home"
     }

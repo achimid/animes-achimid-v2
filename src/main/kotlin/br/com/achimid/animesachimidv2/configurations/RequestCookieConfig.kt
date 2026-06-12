@@ -33,7 +33,7 @@ class RequestCookieConfig(
             cookie.path = "/"
             response.addCookie(cookie)
 
-            runAsync { userGateway.save(User(id = userId)) }
+            runAsync { userGateway.save(User(id = userId, isAdmin = false)) }
         }
 
         filterChain.doFilter(request, response)

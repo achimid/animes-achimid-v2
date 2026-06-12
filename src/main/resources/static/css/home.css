@@ -411,6 +411,11 @@
     50% { transform: scale(1.2); opacity: 1; }
 }
 
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* ==========================================================================
    8. RESPONSIVIDADE (MEDIA QUERIES)
    ========================================================================== */
@@ -542,4 +547,52 @@
 .btn-quick-play i {
     font-size: 0.8rem;
     margin-left: 2px; /* Correção óptica para o triângulo do play */
+}
+
+/* Botão de Execução de Extrações */
+.btn-run-extractions {
+    background: rgba(46, 248, 97, 0.15);
+    color: var(--primary-green);
+    border: 1px solid rgba(46, 248, 97, 0.3);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.btn-run-extractions:hover {
+    background: var(--primary-green);
+    color: #000;
+    border-color: var(--primary-green);
+    box-shadow: 0 0 12px rgba(46, 248, 97, 0.5);
+}
+
+.btn-run-extractions:active {
+    transform: scale(0.95);
+}
+
+.btn-run-extractions.loading {
+    animation: spin 1s linear infinite;
+}
+
+/* Ajuste para o título com botão */
+.sidebar-box > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sidebar-box > div:first-child .sidebar-title {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    flex: 1;
 }

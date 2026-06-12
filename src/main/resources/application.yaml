@@ -53,3 +53,11 @@ integration:
 
 extraction-tasks:
   enabled: true
+
+resilience4j.ratelimiter:
+  instances:
+    extractionApiLimiter:
+      limitForPeriod: 1
+      limitRefreshPeriod: 10s
+      timeoutDuration: 0s
+      registerHealthIndicator: true

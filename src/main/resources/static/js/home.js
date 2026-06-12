@@ -195,4 +195,60 @@ function selectAnimeEpisodes(e) {
 
 document.querySelector('.btn-download').click()
 
+// Botão de Execução de Extrações
+document.getElementById('btnRunExtractions').addEventListener('click', async function () {
+    const btn = this;
 
+    // Prevenir cliques múltiplos
+    if (btn.classList.contains('loading')) return;
+
+    btn.classList.add('loading');
+    btn.disabled = true;
+    const originalTitle = btn.title;
+    btn.title = 'Executando extrações...';
+
+    try {
+        const response = await fetch('/api/v1/site/integration/extraction/all/run', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            // Sucesso - mostrar feedback visual
+            btn.style.color = '#2ef861';
+            btn.style.boxShadow = '0 0 20px rgba(46, 248, 97, 0.7)';
+            btn.title = 'Extrações iniciadas com sucesso!';
+
+            // Fazer refresh periódico das informações dos sites
+            let refreshCount = 0;
+            const maxRefreshes = 4; // Refresh a cada 10 segundos por até 40 segundos
+
+            const refreshInterval = setInterval(() => {
+                const currentSearchValue = siteSearch.value;
+                filterSites(currentSearchValue);
+                refreshCount++;
+
+                if (refreshCount >= maxRefreshes) {
+                    clearInterval(refreshInterval);
+                }
+            }, 10000);
+        } else {
+            console.error('Erro na requisição:', response.status);
+            btn.title = 'Erro ao executar as extrações';
+        }
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        btn.title = 'Erro ao conectar com o servidor';
+    } finally {
+        // Remove o estado de carregamento após 3 segundos
+        setTimeout(() => {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            btn.style.color = '';
+            btn.style.boxShadow = '';
+            btn.title = originalTitle;
+        }, 3000);
+    }
+});

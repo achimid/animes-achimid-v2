@@ -5,4 +5,5 @@ data class User(
     val email: String? = null,
     val username: String? = null,
     val favorites: Set<String>? = null,
+    val isAdmin: Boolean = false
 )
