@@ -4,20 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lista de Animes - Catalogo - Animes Achimid</title>
+    <title>Catálogo de Animes - Animes Achimid</title>
 
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
 
-    <meta name="description" content="Encontre informações e lançamentos de animes no Animes Achimid">
-    <meta name="keywords" content="Anime, Lançamento, Temporada, Fansub, Grátis">
-    <meta property="og:title" content="Lista de Animes - Catalogo - Animes Achimid">
-    <meta property="og:description" content="Encontre informações e lançamentos de animes no Animes Achimid">
+    <meta name="description" content="Explore o catálogo completo de animes no Animes Achimid. Filtre por gênero, pesquise por nome e descubra novos títulos da temporada.">
+    <meta name="keywords" content="Catálogo de animes, lista de animes, animes por gênero, temporada anime, Animes Achimid">
+    <meta property="og:title" content="Catálogo de Animes - Animes Achimid">
+    <meta property="og:description" content="Explore o catálogo completo de animes no Animes Achimid. Filtre por gênero, pesquise por nome e descubra novos títulos da temporada.">
     <meta property="og:type" content="website">
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="Animes Achimid" />
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Animes Achimid">
+    <meta property="og:url" content="https://animes.achimid.com.br/animes">
+    <meta property="og:image" content="https://animes.achimid.com.br/img/banner-small.png">
 
-    <link rel="canonical" href="https://animes.achimid.com.br/animes" />
+    <link rel="canonical" href="https://animes.achimid.com.br/animes">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -28,7 +30,14 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+        gtag('js', new Date());
+        gtag('config', 'G-89V9QWJ1Q4');
+    </script>
     <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
@@ -47,21 +56,36 @@
 
             <div class="filter-group-wrapper">
                 <div class="filter-item">
-                    <label class="label-style">Ordenação</label>
-                    <select class="input-style">
-<!--                        <option>Lançamento</option>-->
-                        <option>Data de Edição</option>
-<!--                        <option>Ranking</option>-->
-<!--                        <option>Ordem Alfabética</option>-->
+                    <label class="label-style" for="animeSort">Ordenação</label>
+                    <select id="animeSort" class="input-style">
+                        <option value="recent">Mais Recentes</option>
+                        <option value="score">Melhor Avaliação</option>
+                        <option value="popular">Mais Populares</option>
+                        <option value="az">A → Z</option>
+                        <option value="za">Z → A</option>
                     </select>
                 </div>
                 <div class="filter-item">
-                    <label class="label-style">Gênero</label>
-                    <select class="input-style">
-                        <option>Todos</option>
-<!--                        <option>Ação</option>-->
-<!--                        <option>Isekai</option>-->
-<!--                        <option>Aventura</option>-->
+                    <label class="label-style" for="animeGenre">Gênero</label>
+                    <select id="animeGenre" class="input-style">
+                        <option value="">Todos</option>
+                        <option value="Action">Ação</option>
+                        <option value="Adventure">Aventura</option>
+                        <option value="Comedy">Comédia</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Fantasy">Fantasia</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Ficção Científica</option>
+                        <option value="Horror">Terror</option>
+                        <option value="Mystery">Mistério</option>
+                        <option value="Thriller">Suspense</option>
+                        <option value="Slice of Life">Slice of Life</option>
+                        <option value="Sports">Esportes</option>
+                        <option value="Supernatural">Sobrenatural</option>
+                        <option value="Mecha">Mecha</option>
+                        <option value="Isekai">Isekai</option>
+                        <option value="Ecchi">Ecchi</option>
+                        <option value="Military">Militar</option>
                     </select>
                 </div>
             </div>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderação de Comentários - Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/admin-comments.css}" />
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <div class="admin-wrapper">
+
+                <div class="ac-page-header">
+                    <div>
+                        <a href="/admin" class="ac-back-link">← Painel Admin</a>
+                        <h1 class="admin-title">💬 Gerenciar Comentários</h1>
+                    </div>
+                    <div class="ac-summary" id="acSummary"></div>
+                </div>
+
+                <!-- Filtros e busca -->
+                <div class="ac-filters">
+                    <input type="text" id="acSearch" class="ac-search" placeholder="Filtrar por anime, usuário ou conteúdo...">
+                    <div class="ac-filter-group">
+                        <button class="ac-filter-btn active" data-status="all">Todos</button>
+                        <button class="ac-filter-btn" data-status="PENDING">Pendentes</button>
+                        <button class="ac-filter-btn" data-status="APPROVED">Aprovados</button>
+                        <button class="ac-filter-btn" data-status="REJECTED">Rejeitados</button>
+                    </div>
+                    <select id="acSort" class="ac-sort-select">
+                        <option value="date-desc">Mais recentes primeiro</option>
+                        <option value="date-asc">Mais antigos primeiro</option>
+                        <option value="anime">Por anime (A-Z)</option>
+                        <option value="user">Por usuário (A-Z)</option>
+                        <option value="status">Por status</option>
+                    </select>
+                </div>
+
+                <!-- Tabela de comentários -->
+                <div class="ac-table-wrap">
+                    <table class="admin-table ac-table" id="acTable">
+                        <thead>
+                            <tr>
+                                <th style="width:40px"></th>
+                                <th>Anime</th>
+                                <th>Usuário</th>
+                                <th>Comentário</th>
+                                <th>Data</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="acBody">
+                            <tr class="ac-row"
+                                th:each="c : ${allComments}"
+                                th:attr="data-status=${c.comment.status},
+                                         data-anime=${c.animeName},
+                                         data-user=${c.comment.userName},
+                                         data-content=${c.comment.content},
+                                         data-date=${c.comment.createdAt}">
+                                <td>
+                                    <div class="ac-avatar" th:text="${c.comment.avatar}">AA</div>
+                                </td>
+                                <td>
+                                    <a th:href="|/anime/${c.animeSlug}|" class="ac-anime-link" th:text="${c.animeName}">Anime</a>
+                                </td>
+                                <td class="ac-user" th:text="${c.comment.userName}">Usuário</td>
+                                <td class="ac-content-cell">
+                                    <p class="ac-comment-text" th:text="${c.comment.content}">texto</p>
+                                </td>
+                                <td class="ac-date" th:text="${c.comment.date()}">data</td>
+                                <td>
+                                    <span th:class="|ac-badge ac-badge-${c.comment.status.name().toLowerCase()}|"
+                                          th:text="${c.comment.status}">STATUS</span>
+                                </td>
+                                <td class="ac-actions">
+                                    <!-- Aprovar: aparece para PENDING e REJECTED -->
+                                    <button th:if="${c.comment.status.name() != 'APPROVED'}"
+                                            class="ac-icon-btn ac-icon-approve js-ac-moderate"
+                                            th:attr="data-anime=${c.animeId},data-comment=${c.comment.id},data-approve=true"
+                                            title="Aprovar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                    </button>
+                                    <!-- Rejeitar: aparece para PENDING e APPROVED -->
+                                    <button th:if="${c.comment.status.name() != 'REJECTED'}"
+                                            class="ac-icon-btn ac-icon-reject js-ac-moderate"
+                                            th:attr="data-anime=${c.animeId},data-comment=${c.comment.id},data-approve=false"
+                                            title="Rejeitar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                    </button>
+                                    <!-- Excluir: sempre visível -->
+                                    <button class="ac-icon-btn ac-icon-delete js-ac-delete"
+                                            th:attr="data-anime=${c.animeId},data-comment=${c.comment.id}"
+                                            title="Excluir permanentemente">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="admin-empty" id="acEmpty" style="display:none">Nenhum comentário encontrado.</p>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/admin-comments.js}"></script>
+</body>
+</html>

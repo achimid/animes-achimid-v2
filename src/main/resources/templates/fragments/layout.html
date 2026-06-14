@@ -3,7 +3,8 @@
     <body>
 
         <!-- A common header fragment -->
-        <header th:fragment="header">
+        <header th:fragment="header" id="siteHeader">
+            <script th:inline="javascript">/*<![CDATA[*/window.VAPID_PUBLIC_KEY=/*[[${vapidPublicKey}]]*/''/*]]>*/;</script>
             <div class="logo-container">
                 <a href="/">
                     <div class="logo">Animes <span>Achimid</span></div>
@@ -14,22 +15,65 @@
                 <input type="text" class="search-bar" id="animeSearch" placeholder="Pesquisar anime agora..." autocomplete="off">
                 <div class="search-results" id="searchResults"></div>
             </div>
-            <nav>
+            <nav id="siteNav">
                 <ul>
                     <li><a href="/">Início</a></li>
                     <li><a href="/animes">Animes</a></li>
-                    <li><a href="/calendar">Calendario</a></li>
-<!--                    <li><a href="/fallowing">Acompanhando</a></li>-->
+                    <li><a href="/calendar">Calendário</a></li>
+                    <li><a href="/favoritos">Favoritos</a></li>
                 </ul>
             </nav>
-            <div class="login-group">
-                <div class="btn-login-main">LOGIN</div>
+            <!-- Central de notificações (FUNC-07) -->
+            <div class="notif-wrapper" id="notifWrapper" hidden>
+                <button type="button" class="notif-bell" id="notifBell" aria-label="Notificações"
+                        aria-haspopup="true" aria-expanded="false" title="Notificações">
+                    <svg class="notif-bell-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="20" height="20">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                    <span class="notif-badge" id="notifBadge" hidden>0</span>
+                </button>
+                <div class="notif-dropdown" id="notifDropdown" hidden role="menu">
+                    <div class="notif-dropdown-header">Notificações</div>
+                    <div class="notif-list" id="notifList"></div>
+                    <div class="notif-push-footer" id="notifPushFooter" hidden>
+                        <button type="button" class="notif-push-btn" id="notifPushBtn">
+                            🔔 Ativar notificações push
+                        </button>
+                    </div>
+                </div>
             </div>
+            <a href="/usuario" class="nav-avatar"
+               th:title="${currentUser != null and currentUser.authenticated ? currentUser.name : 'Minha conta'}">
+                <img th:if="${currentUser != null and currentUser.authenticated and currentUser.picture != null}"
+                     th:src="${currentUser.picture}" class="nav-avatar-img" alt="Avatar" referrerpolicy="no-referrer">
+                <svg th:unless="${currentUser != null and currentUser.authenticated and currentUser.picture != null}"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                     width="20" height="20" aria-hidden="true">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </a>
+            <!-- Botão hamburger (mobile only) -->
+            <button class="nav-hamburger" id="navHamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="siteNav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </header>
 
         <!-- A common footer fragment -->
         <footer th:fragment="footer">
             <p>&copy; 2026 <strong>Animes Achimid</strong>. Todos os direitos reservados.</p>
+            <nav class="footer-nav">
+                <a href="/dmca">DMCA</a>
+                <span class="sep">|</span>
+                <a href="/cookies">Cookies</a>
+                <span class="sep">|</span>
+                <a href="/privacidade">Privacidade</a>
+                <span class="sep">|</span>
+                <a href="/termos">Termos</a>
+                <span class="sep">|</span>
+                <a href="mailto:achimid@hotmail.com?subject=Contato - Animes Achimid">Contato</a>
+            </nav>
             <div class="disclaimer">
                 <p>Disclaimer: Não hospedamos nenhum dos vídeos nos nossos servidores, apenas os indexamos.</p>
                 <p>Contato: achimid@hotmail.com</p>

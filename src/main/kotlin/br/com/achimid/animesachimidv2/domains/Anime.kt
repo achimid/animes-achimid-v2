@@ -79,6 +79,10 @@ data class AnimeComment(
     val avatar: String? = userName?.take(2)?.uppercase() ?: "AA",
     val content: String,
     val createdAt: Instant = Instant.now(),
+    val status: CommentStatus = CommentStatus.PENDING,
 ) {
     fun date() = createdAt.toString().split("T")[0]
+    fun isApproved() = status == CommentStatus.APPROVED
 }
+
+enum class CommentStatus { PENDING, APPROVED, REJECTED }

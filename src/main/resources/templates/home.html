@@ -43,8 +43,35 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
-    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+        gtag('js', new Date());
+        gtag('config', 'G-89V9QWJ1Q4');
+    </script>
+    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c">
+
+    <!-- JSON-LD: WebSite + SearchAction (Google Sitelinks Search Box) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Animes Achimid",
+      "url": "https://animes.achimid.com.br",
+      "description": "Agregador de lançamentos de animes com calendário, catálogo e informações da temporada.",
+      "inLanguage": "pt-BR",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://animes.achimid.com.br/animes?query={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/home.css}" />
@@ -59,6 +86,38 @@
         <main class="content-area">
 
 
+            <!-- Anime em destaque (H-07) -->
+            <section th:if="${featuredAnime != null}" class="featured-section">
+                <div class="featured-card">
+                    <img class="featured-bg"
+                         th:src="${featuredAnime.imageUrl}"
+                         th:alt="${featuredAnime.name}"
+                         aria-hidden="true">
+                    <div class="featured-overlay">
+                        <a th:href="|/anime/${featuredAnime.slug}|" class="featured-cover-link">
+                            <img class="featured-cover"
+                                 th:src="${featuredAnime.imageUrl}"
+                                 th:alt="${featuredAnime.name}"
+                                 loading="eager">
+                        </a>
+                        <div class="featured-info">
+                            <span class="featured-badge">🔥 Em destaque</span>
+                            <h2 class="featured-title" th:text="${featuredAnime.name}"></h2>
+                            <div class="featured-meta">
+                                <span class="featured-score" th:if="${featuredAnime.score != null}">
+                                    ⭐ <span th:text="${featuredAnime.score}"></span>
+                                </span>
+                                <th:block th:each="tag, iter : ${featuredAnime.tags}" th:if="${iter.index < 4}">
+                                    <span class="featured-tag" th:text="${tag}"></span>
+                                </th:block>
+                            </div>
+                            <p class="featured-synopsis" th:text="${featuredAnime.getDescriptionTranslated()}"></p>
+                            <a class="featured-cta" th:href="|/anime/${featuredAnime.slug}|">Ver anime →</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="releases-section">
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
                 <div class="anime-grid" id="recent-grid">
@@ -70,7 +129,7 @@
                             <i class="fas fa-search"></i>
                         </button>
 
-                        <button class="btn-quick-play" th:if="${release.animeStreamUrl != null}" th:onclick="event.preventDefault(); window.location.href=[[${release.animeStreamUrl}]]">
+                        <button class="btn-quick-play" th:if="${release.animeStreamUrl != null}" th:onclick="|event.preventDefault(); window.location.href='${release.animeStreamUrl}';|">
                             <i class="fas fa-play"></i>
                         </button>
 
@@ -86,7 +145,7 @@
             </section>
 
             <section>
-                <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados Aleatóriamente</h2></div>
+                <div class="section-header"><h2 class="section-title">🔥 Animes Recomendados Para Você</h2></div>
                 <div class="anime-grid">
                     <a class="anime-card" th:each="recommended : ${recommendations}" th:href="|/anime/${recommended.slug}|" >
                         <div class="rating-badge">
@@ -151,9 +210,27 @@
 
             <div class="sidebar-box">
                 <h3 class="sidebar-title">📊 Estatísticas</h3>
-                <div class="stats-box-single">
-                    <span class="stat-value-large" id="total-views" th:text="${pageAccess.totalCount}">0</span>
-                    <span class="stat-label-sub">Acessos Totais</span>
+                <div class="stats-grid">
+                    <div class="stats-cell">
+                        <span class="stats-cell-icon">👁️</span>
+                        <span class="stats-cell-value" id="total-views" th:text="${pageAccess.totalCount}">0</span>
+                        <span class="stats-cell-label">Acessos totais</span>
+                    </div>
+                    <div class="stats-cell">
+                        <span class="stats-cell-icon">🎌</span>
+                        <span class="stats-cell-value" th:text="${statsAnimes}">0</span>
+                        <span class="stats-cell-label">Animes</span>
+                    </div>
+                    <div class="stats-cell">
+                        <span class="stats-cell-icon">📺</span>
+                        <span class="stats-cell-value" th:text="${statsReleasesToday}">0</span>
+                        <span class="stats-cell-label">Episódios hoje</span>
+                    </div>
+                    <div class="stats-cell">
+                        <span class="stats-cell-icon">🌐</span>
+                        <span class="stats-cell-value" th:text="${statsSites}">0</span>
+                        <span class="stats-cell-label">Sites monitorados</span>
+                    </div>
                 </div>
             </div>
 
@@ -172,12 +249,7 @@
             </div>
 
             <div class="sidebar-box">
-                <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
-                    <h3 class="sidebar-title">🌐 Sites Acompanhados</h3>
-                    <button id="btnRunExtractions" class="btn-run-extractions" title="Executar extração de todos os sites" th:if="${isAdmin}">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                </div>
+                <h3 class="sidebar-title">🌐 Sites Acompanhados</h3>
                 <div class="sidebar-search-wrapper">
                     <input type="text" id="siteSearch" class="sidebar-search" placeholder="Filtrar sites...">
                     <span id="clearSiteSearch" class="btn-clear-sidebar">&times;</span>

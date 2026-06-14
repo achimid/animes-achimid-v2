@@ -26,4 +26,9 @@ class UserGateway(
 
 
     fun findById(id: String): User? = repository.findById(id).getOrNull()?.let(mapper::fromDocument)
+
+    fun findByEmail(email: String): User? = repository.findByEmail(email)?.let(mapper::fromDocument)
+
+    fun findByFavorite(animeId: String): List<User> =
+        repository.findByFavoritesContaining(animeId).map(mapper::fromDocument)
 }

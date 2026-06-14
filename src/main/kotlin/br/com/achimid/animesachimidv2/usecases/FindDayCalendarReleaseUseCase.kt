@@ -14,7 +14,8 @@ class FindDayCalendarReleaseUseCase(
 
     @Cacheable("calendarCache")
     fun execute(dayIndex: Int): List<CalendarItem> {
-        return findCalendarReleaseUseCase.execute()!!.schedule.entries.elementAt(dayIndex).value
+        val schedule = findCalendarReleaseUseCase.execute().schedule
+        return schedule.entries.elementAtOrNull(dayIndex)?.value ?: emptyList()
     }
 
 }

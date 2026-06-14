@@ -1,22 +1,26 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents
 
+import br.com.achimid.animesachimidv2.domains.CommentStatus
 import br.com.achimid.animesachimidv2.domains.Jikan
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeStatusDocument.COMPLETE
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeTypeDocument.TV
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
+import org.springframework.data.mongodb.core.index.CompoundIndex
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 
 @Document(collection = "animes")
+@CompoundIndex(name = "comments_status_idx", def = "{'comments.status': 1}")
 data class AnimeDocument(
     @Id
     val id: String? = null,
 
     @Indexed(unique = true)
     val slug: String,
+    @Indexed
     val name: String,
     val imageUrl: String? = null,
     val type: AnimeTypeDocument = TV,
@@ -35,8 +39,10 @@ data class AnimeDocument(
     val episodesCount: Int? = null,
     val imageBackgroundUrl: String? = null,
     val nameSecondary: String? = null,
+    @Indexed
     val tags: List<String>? = null,
     val infoList: List<AnimeDetailsInfoDocument>? = null,
+    @Indexed
     val score: Double? = null,
     val popularity: String? = null,
     val rank: String? = null,
@@ -47,6 +53,7 @@ data class AnimeDocument(
     @CreatedDate
     val createdAt: Instant? = null,
     @LastModifiedDate
+    @Indexed
     val updatedAt: Instant? = null,
 )
 
@@ -83,6 +90,8 @@ data class AnimeCommentDocument(
     val avatar: String? = null,
     val content: String,
     val createdAt: Instant,
+    // Default APPROVED para que comentários antigos (sem o campo) continuem aparecendo (FUNC-05).
+    val status: CommentStatus = CommentStatus.APPROVED,
 )
 
 

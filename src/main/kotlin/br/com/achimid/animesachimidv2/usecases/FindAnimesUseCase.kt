@@ -15,13 +15,16 @@ class FindAnimesUseCase(
     private val animeGateway: AnimeGateway
 ) {
 
-    fun execute(pageNumber: Int, pageSize: Int, query: String?= null) : Page<Anime> {
-
-        if (query.isNullOrEmpty()) {
-            return animeGateway.findAll(of(pageNumber, pageSize, DESC, "updatedAt"))
+    fun execute(pageNumber: Int, pageSize: Int, query: String? = null, sort: String? = null, genre: String? = null): Page<Anime> {
+        val sortObj = when (sort) {
+            "score"   -> Sort.by(DESC, "score")
+            "popular" -> Sort.by(DESC, "accessCounter")
+            "az"      -> Sort.by(ASC, "name")
+            "za"      -> Sort.by(DESC, "name")
+            else      -> Sort.by(DESC, "updatedAt")
         }
-
-        return animeGateway.findByName(of(pageNumber, pageSize, ASC, "name"), query)
+        val pageRequest = of(pageNumber, pageSize, sortObj)
+        return animeGateway.findWithFilters(pageRequest, query, genre)
     }
 
 }

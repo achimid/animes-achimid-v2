@@ -1,77 +1,137 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegration
+import br.com.achimid.animesachimidv2.domains.SiteIntegrationType
 import br.com.achimid.animesachimidv2.domains.SiteIntegrationType.*
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.SiteIntegrationDocument
+import jakarta.annotation.PostConstruct
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.io.InputStream
+import java.time.Instant
 
+/**
+ * Fachada das integrações de sites (F2). A fonte de verdade agora é a coleção `site_integrations`
+ * no MongoDB (via [SiteIntegrationMongoRepository]); este componente apenas converte documento ↔
+ * domínio (carregando o conteúdo do script de `resources/scripts/`) e semeia a coleção uma única vez
+ * a partir da lista abaixo. Habilitar/desabilitar e mudar a fila passam a ser feitos nos dados.
+ */
 @Component
-class SiteIntegrationRepository {
+class SiteIntegrationRepository(
+    private val mongo: SiteIntegrationMongoRepository
+) {
 
-    private val db = mutableListOf(
-//        SiteIntegration(SLOW, "Animes 365", "https://animes365.net/", getScript("animes365-script.js")),
-        SiteIntegration(SLOW, "Crunchyroll", "https://www.crunchyroll.com/pt-br/simulcastcalendar?filter=premium", getScript("crunchyroll-script.js")),
-        SiteIntegration(MEDIUM, "Anitube VIP", "https://www.anitube.vip/", getScript("anitubevip-script.js")),
-        SiteIntegration(MEDIUM, "AnimesRoll", "https://anroll.tv/", getScript("animesroll-script.js"), disableJavaScript = true),
-        SiteIntegration(MEDIUM, "Animes HD", "https://animeshd.to/", getScript("animeshd-to-script.js"), disableJavaScript = true),
-        SiteIntegration(MEDIUM, "Animes Online CC", "https://animesonlinecc.to/episodio/", getScript("animesonlinecc-script.js")),
-        SiteIntegration(MEDIUM, "Goyabu", "https://goyabu.to/lancamentos", getScript("goyabu-script.js"), disableJavaScript = true),
-        SiteIntegration(MEDIUM, "Animes Online FHD", "https://animesonlinefhd.vip/", getScript("animesonlinefhd-script.js")),
-        SiteIntegration(MEDIUM, "Hinata Soul", "https://www.hinatasoul.com/", getScript("hinata-soul.js")),
-        SiteIntegration(MEDIUM, "Anime Q", "https://animeq.net/", getScript("animeq-script.js")),
-        SiteIntegration(MEDIUM, "Animes Online Cloud", "https://animesonline.cloud/", getScript("animesonlinecloud-script.js")),
-        SiteIntegration(MEDIUM, "Animes Drive", "https://animesdrive.online/episodio", getScript("animesdrive-script.js")),
-        SiteIntegration(MEDIUM, "Animes Up", "https://www.animesup.info/", getScript("animesup-info-script.js"), disableJavaScript = true),
-        SiteIntegration(FAST, "Erai-raws (Nyaa)", "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p", getScript("erairaws-script.js")),
-        SiteIntegration(FAST, "Subs Please (ENG)", "https://subsplease.org/", getScript("subsplease-script.js")),
-        SiteIntegration(FAST, "Dark Animes", "https://darkmahou.io", getScript("darkanimes-script.js")),
-        SiteIntegration(FAST, "Anime Fire", "https://animefire.plus/", getScript("animefire-script.js")),
-        SiteIntegration(FAST, "Top Animes", "https://topanimes.net/", getScript("topanimes-script.js")),
-        SiteIntegration(SLOW, "World Fansub", "https://worldfansub.xyz/#lancamentos ", getScript("worldfansub-script.js"), disableJavaScript = true),
-        SiteIntegration(MEDIUM, "AnimeFlix (ENG)", "https://animeflix.team/", getScript("animeflix-script.js"), disableJavaScript = true, waitTime = 300),
-        SiteIntegration(SLOW, "Anime NSK", "https://packs.ansktracker.com/", getScript("animensk-script.js")),
-        SiteIntegration(MEDIUM, "Animes Digital", "https://animesdigital.org/lancamentos", getScript("animesdigital-script.js")),
-        SiteIntegration(FAST, "Better Anime IO", "https://betteranime.io/home/", getScript("betteranimeio-script.js")),
-        SiteIntegration(FAST, "Sushi Animes", "https://sushianimes.com.br/episodios", getScript("sushianimes-script.js")),
-        SiteIntegration(FAST, "AnimesBR Lat", "https://animesbr.lat/episodios", getScript("animesbrlat-script.js"), waitTime = 300),
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
+    /** Seed inicial: usado apenas quando a coleção está vazia (migração da antiga lista em memória). */
+    private val seed = listOf(
+        SiteIntegrationDocument(name = "Crunchyroll", url = "https://www.crunchyroll.com/pt-br/simulcastcalendar?filter=premium", type = SLOW, scriptFile = "crunchyroll-script.js"),
+        SiteIntegrationDocument(name = "Anitube VIP", url = "https://www.anitube.vip/", type = MEDIUM, scriptFile = "anitubevip-script.js"),
+        SiteIntegrationDocument(name = "AnimesRoll", url = "https://anroll.tv/", type = MEDIUM, scriptFile = "animesroll-script.js", disableJavaScript = true),
+        SiteIntegrationDocument(name = "Animes HD", url = "https://animeshd.to/", type = MEDIUM, scriptFile = "animeshd-to-script.js", disableJavaScript = true),
+        SiteIntegrationDocument(name = "Animes Online CC", url = "https://animesonlinecc.to/episodio/", type = MEDIUM, scriptFile = "animesonlinecc-script.js"),
+        SiteIntegrationDocument(name = "Goyabu", url = "https://goyabu.to/lancamentos", type = MEDIUM, scriptFile = "goyabu-script.js", disableJavaScript = true),
+        SiteIntegrationDocument(name = "Animes Online FHD", url = "https://animesonlinefhd.vip/", type = MEDIUM, scriptFile = "animesonlinefhd-script.js"),
+        SiteIntegrationDocument(name = "Hinata Soul", url = "https://www.hinatasoul.com/", type = MEDIUM, scriptFile = "hinata-soul.js"),
+        SiteIntegrationDocument(name = "Anime Q", url = "https://animeq.net/", type = MEDIUM, scriptFile = "animeq-script.js"),
+        SiteIntegrationDocument(name = "Animes Online Cloud", url = "https://animesonline.cloud/", type = MEDIUM, scriptFile = "animesonlinecloud-script.js"),
+        SiteIntegrationDocument(name = "Animes Drive", url = "https://animesdrive.online/episodio", type = MEDIUM, scriptFile = "animesdrive-script.js"),
+        SiteIntegrationDocument(name = "Animes Up", url = "https://www.animesup.info/", type = MEDIUM, scriptFile = "animesup-info-script.js", disableJavaScript = true),
+        SiteIntegrationDocument(name = "Erai-raws (Nyaa)", url = "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p", type = FAST, scriptFile = "erairaws-script.js"),
+        SiteIntegrationDocument(name = "Subs Please (ENG)", url = "https://subsplease.org/", type = FAST, scriptFile = "subsplease-script.js"),
+        SiteIntegrationDocument(name = "Dark Animes", url = "https://darkmahou.io", type = FAST, scriptFile = "darkanimes-script.js"),
+        SiteIntegrationDocument(name = "Anime Fire", url = "https://animefire.plus/", type = FAST, scriptFile = "animefire-script.js"),
+        SiteIntegrationDocument(name = "Top Animes", url = "https://topanimes.net/", type = FAST, scriptFile = "topanimes-script.js"),
+        SiteIntegrationDocument(name = "World Fansub", url = "https://worldfansub.xyz/#lancamentos ", type = SLOW, scriptFile = "worldfansub-script.js", disableJavaScript = true),
+        SiteIntegrationDocument(name = "AnimeFlix (ENG)", url = "https://animeflix.team/", type = MEDIUM, scriptFile = "animeflix-script.js", disableJavaScript = true, waitTime = 300),
+        SiteIntegrationDocument(name = "Anime NSK", url = "https://packs.ansktracker.com/", type = SLOW, scriptFile = "animensk-script.js"),
+        SiteIntegrationDocument(name = "Animes Digital", url = "https://animesdigital.org/lancamentos", type = MEDIUM, scriptFile = "animesdigital-script.js"),
+        SiteIntegrationDocument(name = "Better Anime IO", url = "https://betteranime.io/home/", type = FAST, scriptFile = "betteranimeio-script.js"),
+        SiteIntegrationDocument(name = "Sushi Animes", url = "https://sushianimes.com.br/episodios", type = FAST, scriptFile = "sushianimes-script.js"),
+        SiteIntegrationDocument(name = "AnimesBR Lat", url = "https://animesbr.lat/episodios", type = FAST, scriptFile = "animesbrlat-script.js", waitTime = 300),
+
+        // Candidatos para triagem (FUNC-14): scripts já existem no repo, mas precisam de validação.
+        // Entram DESABILITADOS — o admin valida e habilita pelo painel (/admin).
+        SiteIntegrationDocument(name = "Animes 365", url = "https://animes365.net/", type = SLOW, scriptFile = "animes365-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Central de Animes", url = "https://centraldeanimes.xyz/", type = SLOW, scriptFile = "centraldeanimes-script.js", disableJavaScript = true, enabled = false),
+        SiteIntegrationDocument(name = "Animes Games", url = "https://animesgames.cc/lancamentos", type = SLOW, scriptFile = "animesgames-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Animes Flix", url = "https://animesflix.net/", type = SLOW, scriptFile = "animesflix-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Animes BR", url = "https://animesbr.tv/episodios/", type = SLOW, scriptFile = "animesbr-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Animes Online Red", url = "https://animesonline.red/", type = SLOW, scriptFile = "animesonline-red-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Go Animes", url = "https://www.goanimes.vip/", type = SLOW, scriptFile = "goanimes-script.js", enabled = false),
+        SiteIntegrationDocument(name = "Bakashi", url = "https://bakashi.tv/", type = SLOW, scriptFile = "bakashi-script.js", enabled = false),
     )
 
-    // https://animesonline.io/
-//    https://chia-anime.su/
-//    https://aniture-pt.com.br/
-//    https://otakuplay.com.br/
-//    https://pluto.tv/br/on-demand/618ee3284a270700077bbe79/5f863330bc4431000775cf92
-//    https://meusanimes.vip/recentes
-//    https://anmtv.com.br/
-//    https://infinitefansub.com/projetos/anime
+    /**
+     * Insere os sites do seed que ainda não existem na coleção (idempotente por nome).
+     * Assim, novos sites adicionados ao seed (FUNC-14) propagam para bancos já populados,
+     * sem sobrescrever ajustes do admin (enabled/fila) nos sites existentes.
+     */
+    @PostConstruct
+    fun seedMissing() {
+        val existingNames = mongo.findAll().map { it.name }.toSet()
+        val missing = seed.filterNot { it.name in existingNames }
+        if (missing.isNotEmpty()) {
+            mongo.saveAll(missing)
+            logger.info("Seed: ${missing.size} integrações de sites inseridas no MongoDB")
+        }
+    }
 
-
-
-
-
-//        SiteIntegration(SLOW, "Central de Animes", "https://centraldeanimes.xyz/", getScript("centraldeanimes-script.js"), disableJavaScript = true),
-//        SiteIntegration(SLOW, "Animes Games", "https://animesgames.cc/lancamentos", getScript("animesgames-script.js")),
-//        SiteIntegration(SLOW, "Animes Flix", "https://animesflix.net/", getScript("animesflix-script.js")),
-//        SiteIntegration(SLOW, "Animes BR", "https://animesbr.tv/episodios/", getScript("animesbr-script.js")),
-//        SiteIntegration(SLOW, "Animes Online Red", "https://animesonline.red/", getScript("animesonline-red-script.js")),
-//        SiteIntegration(FAST, "Go Animes", "https://www.goanimes.vip/", getScript("goanimes-script.js")),
-//        SiteIntegration(FAST, "Bakashi", "https://topanimes.net/", getScript("bakashi-script.js"), enabled = false),
-
-    fun findAll(): List<SiteIntegration> = db.sortedWith(
+    fun findAll(): List<SiteIntegration> = mongo.findAll().map(::toDomain).sortedWith(
         compareByDescending<SiteIntegration> { it.lastExecutionSuccess }
             .thenByDescending { it.lastExecutionDateWithReleaseSuccess }
             .thenBy { it.lastExecutionDate }
     )
-    fun findSlow(): List<SiteIntegration> = db.filter { it.type == SLOW }
-    fun findMedium(): List<SiteIntegration> = db.filter { it.type == MEDIUM }
-    fun findFast(): List<SiteIntegration> = db.filter { it.type == FAST }
 
-    fun findByName(name: String) = db.first { it.name == name }
+    fun findSlow(): List<SiteIntegration> = mongo.findByTypeAndEnabledTrue(SLOW).map(::toDomain)
+    fun findMedium(): List<SiteIntegration> = mongo.findByTypeAndEnabledTrue(MEDIUM).map(::toDomain)
+    fun findFast(): List<SiteIntegration> = mongo.findByTypeAndEnabledTrue(FAST).map(::toDomain)
 
-    private fun getScript(scriptName: String): String {
-        val inputStream: InputStream? = object {}.javaClass.getResourceAsStream("/scripts/$scriptName")
+    fun findByName(name: String): SiteIntegration =
+        toDomain(mongo.findByName(name) ?: error("SiteIntegration não encontrada: $name"))
 
-        return inputStream!!.bufferedReader().use { it.readText() }
+    /** Habilita/desabilita um site (FUNC-04). */
+    fun setEnabled(name: String, enabled: Boolean): Boolean {
+        val doc = mongo.findByName(name) ?: return false
+        mongo.save(doc.copy(enabled = enabled))
+        return true
     }
 
+    /** Move um site para outra fila FAST/MEDIUM/SLOW (FUNC-04). */
+    fun setType(name: String, type: SiteIntegrationType): Boolean {
+        val doc = mongo.findByName(name) ?: return false
+        mongo.save(doc.copy(type = type))
+        return true
+    }
+
+    /** Persiste o resultado da última execução (corrige o bug do antigo update em memória). */
+    fun updateExecution(name: String, success: Boolean, withRelease: Boolean) {
+        val doc = mongo.findByName(name) ?: return
+        val now = Instant.now()
+        mongo.save(
+            doc.copy(
+                lastExecutionSuccess = success,
+                lastExecutionDate = now,
+                lastExecutionDateWithReleaseSuccess = if (withRelease) now else doc.lastExecutionDateWithReleaseSuccess
+            )
+        )
+    }
+
+    private fun toDomain(doc: SiteIntegrationDocument) = SiteIntegration(
+        type = doc.type,
+        name = doc.name,
+        url = doc.url,
+        script = doc.scriptFile?.let(::getScript),
+        enabled = doc.enabled,
+        skipImage = doc.skipImage,
+        disableJavaScript = doc.disableJavaScript,
+        waitTime = doc.waitTime,
+        lastExecutionDate = doc.lastExecutionDate,
+        lastExecutionSuccess = doc.lastExecutionSuccess,
+        lastExecutionDateWithReleaseSuccess = doc.lastExecutionDateWithReleaseSuccess,
+    )
+
+    private fun getScript(scriptName: String): String? {
+        val inputStream = object {}.javaClass.getResourceAsStream("/scripts/$scriptName")
+        return inputStream?.bufferedReader()?.use { it.readText() }
+    }
 }

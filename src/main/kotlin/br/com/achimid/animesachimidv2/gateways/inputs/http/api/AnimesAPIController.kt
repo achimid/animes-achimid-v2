@@ -19,8 +19,10 @@ class AnimesAPIController(
         @RequestParam(required = false) pageNumber: Int = 0,
         @RequestParam(required = false) pageSize: Int = 12,
         @RequestParam(required = false) query: String? = null,
+        @RequestParam(required = false) sort: String? = null,
+        @RequestParam(required = false) genre: String? = null,
     ): Page<Anime> {
-        return findAnimesUseCase.execute(pageNumber, pageSize, query)
+        return findAnimesUseCase.execute(pageNumber, pageSize, query, sort, genre)
     }
 
 }

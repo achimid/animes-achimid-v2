@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minha Conta - Animes Achimid</title>
+
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Sua conta no Animes Achimid: perfil e favoritos.">
+
+    <link rel="canonical" href="https://animes.achimid.com.br/usuario" />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
+
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+        gtag('js', new Date());
+        gtag('config', 'G-89V9QWJ1Q4');
+    </script>
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <div class="profile-wrapper">
+
+                <!-- Cartão de perfil -->
+                <section class="profile-card">
+                    <div class="profile-avatar">
+                        <img th:if="${currentUser.authenticated and currentUser.picture != null}"
+                             th:src="${currentUser.picture}" alt="Avatar" referrerpolicy="no-referrer">
+                        <span th:unless="${currentUser.authenticated and currentUser.picture != null}"
+                              class="profile-avatar-fallback">👤</span>
+                    </div>
+                    <div class="profile-info">
+                        <h1 class="profile-name"
+                            th:text="${currentUser.authenticated ? currentUser.name : 'Visitante anônimo'}">Usuário</h1>
+                        <p class="profile-email" th:if="${profileUser != null and profileUser.email != null}"
+                           th:text="${profileUser.email}">email</p>
+                        <span class="profile-badge" th:if="${profileUser != null and profileUser.isAdmin}">★ Administrador</span>
+                        <a th:if="${profileUser != null and profileUser.isAdmin}" href="/admin"
+                           class="btn-admin-panel">⚙️ Painel Administrativo</a>
+
+                        <!-- Convidado -->
+                        <div class="profile-cta" th:unless="${currentUser.authenticated}">
+                            <p>Você está navegando como <strong>convidado</strong>. Seus favoritos ficam salvos
+                                neste navegador. Entre com o Google para mantê-los na sua conta em qualquer dispositivo.</p>
+                            <a th:if="${oauthEnabled}" href="/oauth2/authorization/google" class="btn-google">
+                                <svg class="btn-google-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                    <path fill="none" d="M0 0h48v48H0z"/>
+                                </svg>
+                                Entrar com Google
+                            </a>
+                            <p th:unless="${oauthEnabled}" class="profile-note">
+                                Login com Google indisponível neste ambiente.</p>
+                        </div>
+
+                        <!-- Autenticado -->
+                        <form th:if="${currentUser.authenticated}" action="/logout" method="post" class="profile-cta">
+                            <button type="submit" class="btn-cookie btn-cookie-reject">Sair da conta</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Favoritos -->
+                <section class="profile-section">
+                    <h2 class="profile-section-title">❤️ Meus Favoritos</h2>
+
+                    <p class="profile-empty" th:if="${favorites.isEmpty()}">
+                        Você ainda não favoritou nenhum anime. Explore o <a href="/animes">catálogo</a> e clique em
+                        "+ Minha Lista" na página de um anime!</p>
+
+                    <div class="profile-fav-grid" th:unless="${favorites.isEmpty()}">
+                        <a class="profile-fav-card" th:each="fav : ${favorites}" th:href="|/anime/${fav.slug}|">
+                            <img th:src="${fav.imageUrl}" th:alt="${fav.name}" loading="lazy">
+                            <span class="profile-fav-title" th:text="${fav.name}">Anime</span>
+                        </a>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+</body>
+</html>

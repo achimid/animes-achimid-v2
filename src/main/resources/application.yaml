@@ -10,12 +10,23 @@ spring:
       enabled: true
   mongodb:
     uri: ${MONGODB_URI}
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
   data:
     mongodb:
       auto-index-creation: true
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:3000}
   shutdown: graceful
   tomcat:
     threads:
@@ -47,12 +58,19 @@ external:
     url: "https://api.jikan.moe"
   libre-translate:
     url: "https://translate.achimid.com.br"
+  anilist:
+    url: "https://graphql.anilist.co"
 
 integration:
   callbackUrl: ${CALLBACK_URL}
 
 extraction-tasks:
   enabled: true
+
+webpush:
+  vapid-public-key: ${VAPID_PUBLIC_KEY}
+  vapid-private-key: ${VAPID_PRIVATE_KEY}
+  subject: "mailto:achimidd@gmail.com"
 
 resilience4j.ratelimiter:
   instances:

@@ -24,13 +24,13 @@ body {
 a { text-decoration: none; color: inherit; transition: 0.3s; }
 ul { list-style: none; }
 
-/* --- HEADER (ORIGINAL) --- */
+/* --- HEADER --- */
 header {
     background-color: rgba(5, 5, 5, 0.95);
     border-bottom: 2px solid var(--primary-green);
     padding: 0.8rem 5%;
     display: grid;
-    grid-template-columns: auto 1fr auto auto;
+    grid-template-columns: auto 1fr auto auto auto;
     align-items: center;
     gap: 30px;
     position: sticky;

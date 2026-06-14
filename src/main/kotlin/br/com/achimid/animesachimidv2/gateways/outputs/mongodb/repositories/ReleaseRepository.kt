@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
+import java.time.Instant
 
 @Repository
 interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
@@ -14,4 +15,6 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
     fun findByAnimeIdOrderByEpisodeDesc(animeId: String): List<ReleaseDocument>
 
     fun findByAnimeIdAndEpisode(animeId: String, episodeNumber: String): List<ReleaseDocument>
+
+    fun countByCreatedAtAfter(date: Instant): Long
 }

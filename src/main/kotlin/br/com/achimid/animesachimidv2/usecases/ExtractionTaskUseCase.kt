@@ -16,6 +16,12 @@ class ExtractionTaskUseCase(
 
     val logger = LoggerFactory.getLogger(this::class.java)
 
+    fun executeSingle(name: String) {
+        val site = siteIntegrationGateway.findByName(name)
+        puppeteerAPIGateway.execute(site)
+        logger.info("Extração individual disparada para: $name")
+    }
+
     fun executeFastQueueMonitoring() {
         siteIntegrationGateway.findFast().forEach(puppeteerAPIGateway::execute)
     }

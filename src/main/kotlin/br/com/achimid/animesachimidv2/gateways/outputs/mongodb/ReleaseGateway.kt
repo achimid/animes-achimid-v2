@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneOffset
 
 @Component
 class ReleaseGateway(
@@ -35,6 +37,12 @@ class ReleaseGateway(
 
     fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
         return repository.findByAnimeIdAndEpisode(animeId, episodeNumber.padLeft()!!).map(this::fromDocument)
+    }
+
+    @Cacheable("statsCache", key = "'releasesToday'")
+    fun countToday(): Long {
+        val startOfDay = LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC).toInstant()
+        return repository.countByCreatedAtAfter(startOfDay)
     }
 
     fun toDocument(release: Release): ReleaseDocument {

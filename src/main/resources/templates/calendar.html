@@ -9,15 +9,17 @@
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
 
-    <meta name="description" content="Encontre informações e lançamentos de animes no Animes Achimid">
-    <meta name="keywords" content="Anime, Lançamento, Temporada, Fansub, Grátis">
-    <meta property="og:title" content="Lista de Animes - Catalogo - Animes Achimid">
-    <meta property="og:description" content="Encontre o calendário dee lançamentos dos animes da temporada no Animes Achimid">
+    <meta name="description" content="Calendário de lançamentos de animes da temporada. Veja quais episódios saem em cada dia da semana no Animes Achimid.">
+    <meta name="keywords" content="Calendário anime, lançamentos semanais, episódios por dia, temporada anime, Animes Achimid">
+    <meta property="og:title" content="Calendário de Lançamentos - Animes Achimid">
+    <meta property="og:description" content="Calendário de lançamentos de animes da temporada. Veja quais episódios saem em cada dia da semana.">
     <meta property="og:type" content="website">
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="Animes Achimid" />
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Animes Achimid">
+    <meta property="og:url" content="https://animes.achimid.com.br/calendar">
+    <meta property="og:image" content="https://animes.achimid.com.br/img/banner-small.png">
 
-    <link rel="canonical" href="https://animes.achimid.com.br/calendar" />
+    <link rel="canonical" href="https://animes.achimid.com.br/calendar">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -28,7 +30,14 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+        gtag('js', new Date());
+        gtag('config', 'G-89V9QWJ1Q4');
+    </script>
     <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />

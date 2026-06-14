@@ -1,6 +1,7 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.SiteIntegration
+import br.com.achimid.animesachimidv2.domains.SiteIntegrationType
 import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackIntegrationExecutionResult
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.IntegrationEventDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.MirrorDataDocument
@@ -9,7 +10,6 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.Site
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.IntegrationEventRepository
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.time.Instant
 
 @Component
 class SiteIntegrationGateway(
@@ -27,13 +27,15 @@ class SiteIntegrationGateway(
 
     fun findFast(): List<SiteIntegration> = siteIntegrationRepository.findFast()
 
+    fun findByName(name: String): SiteIntegration = siteIntegrationRepository.findByName(name)
+
     fun updateByName(name: String, success: Boolean, withRelease: Boolean = false) {
-        siteIntegrationRepository.findByName(name).let {
-            it.lastExecutionSuccess = success
-            it.lastExecutionDate = Instant.now()
-            if (withRelease) it.lastExecutionDateWithReleaseSuccess = Instant.now()
-        }
+        siteIntegrationRepository.updateExecution(name, success, withRelease)
     }
+
+    fun setEnabled(name: String, enabled: Boolean) = siteIntegrationRepository.setEnabled(name, enabled)
+
+    fun setType(name: String, type: SiteIntegrationType) = siteIntegrationRepository.setType(name, type)
 
     fun createEvenIntegration(result: CallbackIntegrationExecutionResult): Boolean {
         val idt = result.getIdt()

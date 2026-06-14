@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
 
+# Rotas privadas / sem valor de indexação
+Disallow: /api/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /usuario
+Disallow: /favoritos
+Disallow: /500
+
 Sitemap: https://animes.achimid.com.br/sitemap.xml

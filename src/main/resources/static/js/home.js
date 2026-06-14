@@ -58,20 +58,35 @@ function toggleAccordion(btn) {
 setInterval(autoReload, 1000 * 60 * 5)
 
 function autoReload() {
-    releasesPageNumber = 0
     grid.innerHTML = ''
+    releasesPageNumber = 0
+    hasMoreReleases = true
+    isLoadingReleases = false
+
     showMoreButton()
-    releasesPageNumber = 1
 
     filterAnimeReleaseEpisode('').then(() => {
-        document.querySelector('.btn-download').click()
+        const firstDownload = document.querySelector('.btn-download')
+        if (firstDownload) firstDownload.click()
     })
 }
 
+const RELEASES_PAGE_SIZE = 20
 var releasesPageNumber = 1
+var hasMoreReleases = true
+var isLoadingReleases = false
 
 function showMoreButton() {
-    fetch(`/api/v1/release?pageNumber=${releasesPageNumber}`).then(res => res.json()).then(result => {
+    if (isLoadingReleases || !hasMoreReleases) return
+
+    isLoadingReleases = true
+    btnLoad.disabled = true
+    btnLoad.textContent = 'Carregando...'
+
+    fetch(`/api/v1/release?pageNumber=${releasesPageNumber}&pageSize=${RELEASES_PAGE_SIZE}`).then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`)
+        return res.json()
+    }).then(result => {
         result.content.forEach((anime, index) => {
             grid.innerHTML += `
                 <a class="anime-card" href="/anime/${anime.animeSlug}">
@@ -86,10 +101,10 @@ function showMoreButton() {
                     </button>
 
                     ${anime.animeStreamUrl == null ? '': `
-                        <button class="btn-quick-play" onclick="event.preventDefault(); window.location.href=${anime.animeStreamUrl}">
+                        <button class="btn-quick-play" onclick="event.preventDefault(); window.location.href='${anime.animeStreamUrl}'">
                             <i class="fas fa-play"></i>
                         </button>
-                    `}                   
+                    `}
                              
                     <img src="${anime.animeImageUrl}" alt="${anime.animeName}">
                     <div class="anime-card-info">
@@ -98,7 +113,20 @@ function showMoreButton() {
                 </a>
             `
         });
-        releasesPageNumber = result.number + 1
+        // Spring Boot 4 serializa Page como { content, page: { number, totalPages, ... } }
+        const page = result.page || {}
+        const currentPage = page.number != null ? page.number : releasesPageNumber
+        const totalPages = page.totalPages != null ? page.totalPages : 0
+        releasesPageNumber = currentPage + 1
+        hasMoreReleases = releasesPageNumber < totalPages
+        btnLoad.textContent = hasMoreReleases ? 'Exibir mais' : 'Você chegou ao fim 🎉'
+        btnLoad.disabled = !hasMoreReleases
+    }).catch(err => {
+        console.error('Erro ao carregar mais lançamentos:', err)
+        btnLoad.textContent = 'Erro ao carregar. Tentar novamente'
+        btnLoad.disabled = false
+    }).finally(() => {
+        isLoadingReleases = false
     })
 }
 
@@ -193,62 +221,8 @@ function selectAnimeEpisodes(e) {
 }
 
 
-document.querySelector('.btn-download').click()
+const initialDownload = document.querySelector('.btn-download')
+if (initialDownload) toggleAccordion(initialDownload);
 
-// Botão de Execução de Extrações
-document.getElementById('btnRunExtractions').addEventListener('click', async function () {
-    const btn = this;
-
-    // Prevenir cliques múltiplos
-    if (btn.classList.contains('loading')) return;
-
-    btn.classList.add('loading');
-    btn.disabled = true;
-    const originalTitle = btn.title;
-    btn.title = 'Executando extrações...';
-
-    try {
-        const response = await fetch('/api/v1/site/integration/extraction/all/run', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (response.ok) {
-            // Sucesso - mostrar feedback visual
-            btn.style.color = '#2ef861';
-            btn.style.boxShadow = '0 0 20px rgba(46, 248, 97, 0.7)';
-            btn.title = 'Extrações iniciadas com sucesso!';
-
-            // Fazer refresh periódico das informações dos sites
-            let refreshCount = 0;
-            const maxRefreshes = 4; // Refresh a cada 10 segundos por até 40 segundos
-
-            const refreshInterval = setInterval(() => {
-                const currentSearchValue = siteSearch.value;
-                filterSites(currentSearchValue);
-                refreshCount++;
-
-                if (refreshCount >= maxRefreshes) {
-                    clearInterval(refreshInterval);
-                }
-            }, 10000);
-        } else {
-            console.error('Erro na requisição:', response.status);
-            btn.title = 'Erro ao executar as extrações';
-        }
-    } catch (error) {
-        console.error('Erro na requisição:', error);
-        btn.title = 'Erro ao conectar com o servidor';
-    } finally {
-        // Remove o estado de carregamento após 3 segundos
-        setTimeout(() => {
-            btn.classList.remove('loading');
-            btn.disabled = false;
-            btn.style.color = '';
-            btn.style.boxShadow = '';
-            btn.title = originalTitle;
-        }, 3000);
-    }
-});
+// Garante que a página inicia no topo, independente do conteúdo carregado dinamicamente
+window.scrollTo({ top: 0, behavior: 'instant' });

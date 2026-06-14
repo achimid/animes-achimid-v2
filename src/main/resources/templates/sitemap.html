@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- Daily URLs -->
-    <url th:each="url : ${dailyUrls}">
-        <loc th:text="${'https://animes.achimid.com.br' + url}">https://animes.achimid.com.br/</loc>
-        <changefreq>daily</changefreq>
-        <priority>0.9</priority>
-    </url>
-    <!-- Weekly URLs -->
-    <url th:each="url : ${weeklyUrls}">
-        <loc th:text="${'https://animes.achimid.com.br' + url}">https://animes.achimid.com.br/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:th="http://www.thymeleaf.org">
+    <url th:each="url : ${urls}">
+        <loc th:text="${url.loc}"></loc>
+        <lastmod th:if="${url.lastmod != null}" th:text="${url.lastmod}"></lastmod>
+        <changefreq th:text="${url.changefreq}"></changefreq>
+        <priority th:text="${url.priority}"></priority>
     </url>
 </urlset>

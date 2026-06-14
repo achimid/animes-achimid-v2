@@ -17,5 +17,9 @@ interface UserRepository: CrudRepository<UserDocument, String> {
     @Update("{ '\$pull' : { 'favorites' : ?1 } }")
     fun removeFavorite(userId: String, animeId: String)
 
+    fun findByEmail(email: String): UserDocument?
+
+    /** Usuários que favoritaram um anime — base das notificações (FUNC-07). */
+    fun findByFavoritesContaining(animeId: String): List<UserDocument>
 
 }

@@ -1,7 +1,9 @@
 package br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories
 
+import br.com.achimid.animesachimidv2.domains.CommentStatus
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeCommentDocument
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeDocument
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.documents.AnimeStatusDocument
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.mongodb.repository.MongoRepository
@@ -26,10 +28,18 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
 
     fun findTop4ByOrderByUpdatedAtAsc(): List<AnimeDocument>
 
-    @Query(value = "{}", fields = "{ '_id': 0, 'slug': 1 }")
-    fun findAllSlugs(): List<String>
+    fun findByCommentsStatus(status: CommentStatus): List<AnimeDocument>
+
+    fun findByStatus(status: AnimeStatusDocument): List<AnimeDocument>
+
+    fun findByTagsIn(tags: Collection<String>, pageRequest: PageRequest): Page<AnimeDocument>
+
+    fun findByTagsInAndNameContainingIgnoreCase(tags: Collection<String>, name: String, pageRequest: PageRequest): Page<AnimeDocument>
 
     @Query("{ '\$or': [ { 'descriptionPtBr': null }, { 'descriptionPtBr': '' }, { 'synopsisPtBr': null }, { 'synopsisPtBr': '' } ] }")
     fun findAllWithoutTranslation(): List<AnimeDocument>
+
+    @Query("{ 'comments': { '\$exists': true, '\$not': { '\$size': 0 } } }")
+    fun findByCommentsNotEmpty(): List<AnimeDocument>
 
 }

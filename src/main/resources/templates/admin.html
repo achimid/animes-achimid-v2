@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Animes Achimid</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/admin.css}" />
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <div class="admin-wrapper">
+
+                <h1 class="admin-title">⚙️ Painel Administrativo</h1>
+
+                <!-- ===== Sites de scraping ===== -->
+                <section class="admin-section">
+                    <div class="admin-section-head">
+                        <h2>🌐 Sites monitorados</h2>
+                        <button class="btn-admin btn-admin-accent" id="btnRunAllExtractions">Executar todas as extrações</button>
+                    </div>
+
+                    <table class="admin-table">
+                        <thead>
+                            <tr><th>Site</th><th>Fila</th><th>Status</th><th>Última execução</th><th>Ações</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="site : ${siteIntegrations}">
+                                <td><a th:href="${site.url}" target="_blank" rel="noopener" th:text="${site.name}">Site</a></td>
+                                <td>
+                                    <div class="queue-buttons">
+                                        <button th:each="q : ${T(br.com.achimid.animesachimidv2.domains.SiteIntegrationType).values()}"
+                                                th:text="${q}"
+                                                th:classappend="${site.type.name() == q.name()} ? 'active' : ''"
+                                                th:attr="data-name=${site.name},data-type=${q}"
+                                                class="btn-queue js-site-type">FAST</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span th:class="${site.enabled} ? 'badge-on' : 'badge-off'"
+                                          th:text="${site.enabled} ? 'Ativo' : 'Inativo'">Ativo</span>
+                                </td>
+                                <td>
+                                    <span th:text="${site.lastExecutionDateFormatted() != null} ? ${site.lastExecutionDateFormatted()} : '—'">—</span>
+                                    <span th:if="${site.lastExecutionSuccess}" class="check-icon">✓</span>
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-admin btn-admin-run js-site-run"
+                                            th:attr="data-name=${site.name}"
+                                            title="Disparar ingestão agora">▶ Executar</button>
+                                    <button th:if="${site.enabled}" class="btn-admin btn-admin-danger js-site-toggle"
+                                            th:attr="data-name=${site.name},data-enable=false">Desabilitar</button>
+                                    <button th:unless="${site.enabled}" class="btn-admin btn-admin-accent js-site-toggle"
+                                            th:attr="data-name=${site.name},data-enable=true">Habilitar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- ===== Comentários ===== -->
+                <section class="admin-section">
+                    <div class="admin-section-head">
+                        <h2>💬 Comentários
+                            <span class="pending-count" th:text="${pendingComments.size()}">0</span>
+                            <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:400; margin-left:6px;">pendentes</span>
+                        </h2>
+                        <a href="/admin/comments" class="btn-admin btn-admin-accent" style="text-decoration:none">Gerenciar todos →</a>
+                    </div>
+                    <p th:if="${pendingComments.isEmpty()}" class="admin-empty">Nenhum comentário aguardando moderação. 🎉</p>
+                    <div class="pending-comment" th:each="pc : ${pendingComments}">
+                        <div class="pending-comment-body">
+                            <a th:href="|/anime/${pc.animeSlug}|" class="pending-anime" th:text="${pc.animeName}">Anime</a>
+                            <span class="pending-author" th:text="|por ${pc.comment.userName} • ${pc.comment.date()}|">autor</span>
+                            <p class="pending-text" th:text="${pc.comment.content}">conteúdo</p>
+                        </div>
+                        <div class="pending-actions">
+                            <button class="btn-admin btn-admin-accent js-moderate"
+                                    th:attr="data-anime=${pc.animeId},data-comment=${pc.comment.id},data-approve=true">Aprovar</button>
+                            <button class="btn-admin btn-admin-danger js-moderate"
+                                    th:attr="data-anime=${pc.animeId},data-comment=${pc.comment.id},data-approve=false">Rejeitar</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/admin.js}"></script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import br.com.achimid.animesachimidv2.gateways.inputs.http.api.request.CallbackI
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.ReleaseGateway
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Caching
 import org.springframework.stereotype.Component
 
 @Component
@@ -17,7 +18,11 @@ class CreateReleaseUserCase(
 
     val logger = LoggerFactory.getLogger(this.javaClass)
 
-    @CacheEvict("releasesCache")
+    @Caching(evict = [
+        CacheEvict("releasesCache", allEntries = true),
+        CacheEvict("statsCache", allEntries = true),
+        CacheEvict("animeCache", allEntries = true),
+    ])
     fun execute(result: CallbackIntegrationExecutionResult) {
         val anime = searchUseCase.execute(result.anime!!).first()
 

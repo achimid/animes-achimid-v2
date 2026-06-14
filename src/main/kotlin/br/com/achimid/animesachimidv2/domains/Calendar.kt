@@ -41,3 +41,10 @@ data class CalendarItem(
 data class CalendarRelease (
     val releasesToday: List<CalendarItem> = emptyList(),
 )
+
+/** Anime local em exibição com seu dia/horário de transmissão (Jikan broadcast) — agenda híbrida (FUNC-08). */
+data class ScheduledAnime(
+    val anime: Anime,
+    val day: String?,
+    val time: String?,
+)

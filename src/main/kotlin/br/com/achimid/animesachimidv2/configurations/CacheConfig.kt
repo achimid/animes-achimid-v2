@@ -28,6 +28,9 @@ class CacheConfig {
                 buildCache("fallowingAnimes", 10, MINUTES, 100),
                 buildCache("jikanIntegrationCache", 60, MINUTES, 200),
                 buildCache("translateCache", 60, MINUTES, 1000),
+                buildCache("nextEpisodeCache", 30, MINUTES, 500),
+                buildCache("statsCache", 5, MINUTES, 10),
+                buildCache("featuredAnimeCache", 2, HOURS, 1),
             )
         )
         return cacheManager

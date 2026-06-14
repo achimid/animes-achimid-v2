@@ -1,11 +1,17 @@
 spring:
   main:
     lazy-initialization: false
+  # O Mongo local é iniciado manualmente (docker-compose up -d, ver CLAUDE.md), então
+  # desligamos o gerenciamento automático do Spring Boot para não conflitar com o container já no ar.
+  docker:
+    compose:
+      enabled: false
   mongodb:
     uri: mongodb://root:password@localhost:27027/animes-achimid?authSource=admin
 
 integration:
-  callbackUrl: "https://local.achimid.com.br/api/v1/site/integration/callback"
+  callbackUrl: "https://rotafii.achimid.com.br/api/v1/site/integration/callback"
 
 extraction-tasks:
   enabled: false
+

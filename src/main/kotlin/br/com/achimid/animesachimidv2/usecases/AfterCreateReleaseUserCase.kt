@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class AfterCreateReleaseUserCase(
-    private val translateAnimeInfoUserCase: TranslateAnimeInfoUserCase
+    private val translateAnimeInfoUserCase: TranslateAnimeInfoUserCase,
+    private val notifyFavoritesUseCase: NotifyFavoritesUseCase
 ) {
     val logger = LoggerFactory.getLogger(this.javaClass)
 
@@ -17,6 +18,9 @@ class AfterCreateReleaseUserCase(
         logger.info("Processing after release creation: ${release.title}")
 
         translateAnimeInfoUserCase.execute(anime)
+
+        // FUNC-07: avisa quem favoritou o anime sobre o novo episódio (dedupe por episódio).
+        notifyFavoritesUseCase.execute(release, anime)
     }
 
 }

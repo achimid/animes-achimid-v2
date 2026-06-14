@@ -9,16 +9,30 @@
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
 
-    <meta name="description" th:content="|Encontre informações de ${anime.name} no Animes Achimid|">
-    <meta name="keywords" th:content="|${anime.name}, Anime, Lançamento, Temporada, Fansub, Grátis|">
-    <meta property="og:title" th:content="|${anime.name} - AnimesAchimid|">
-    <meta property="og:description" th:content="${anime.getDescriptionTranslated()}">
-    <meta property="og:image" th:content="${anime.imageUrl}">
-    <meta property="og:type" content="video.tv_show">
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="Animes Achimid" />
+    <!-- SEO: meta description dinâmica com score, gêneros e trecho da sinopse -->
+    <meta name="description" th:content="${metaDescription}">
+    <meta name="keywords" th:content="|${anime.name}, ${#strings.listJoin(anime.tags ?: {}, ', ')}, Anime, Lançamento, Fansub|">
 
-    <link rel="canonical" th:href="|https://animes.achimid.com.br/anime/${anime.slug}|" />
+    <!-- Open Graph -->
+    <meta property="og:type" content="video.tv_show">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="Animes Achimid">
+    <meta property="og:title" th:content="|${anime.name} - Animes Achimid|">
+    <meta property="og:description" th:content="${metaDescription}">
+    <meta property="og:url" th:content="|https://animes.achimid.com.br/anime/${anime.slug}|">
+    <meta property="og:image" th:content="${anime.imageUrl}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" th:content="|${anime.name} - Animes Achimid|">
+    <meta name="twitter:description" th:content="${metaDescription}">
+    <meta name="twitter:image" th:content="${anime.imageUrl}">
+    <meta name="twitter:image:alt" th:content="|Capa de ${anime.name}|">
+
+    <link rel="canonical" th:href="|https://animes.achimid.com.br/anime/${anime.slug}|">
+
+    <!-- Preload da imagem hero (LCP) -->
+    <link rel="preload" as="image" th:href="${anime.imageUrl}">
 
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -27,8 +41,8 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
-    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/anime.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}">
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/anime.css}">
 
     <style th:inline="css">
         .anime-hero {
@@ -47,12 +61,20 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-89V9QWJ1Q4');</script>
-    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c" />
-
-    <script th:inline="javascript" type="application/ld+json">
-        {"@context": "https://schema.org","@type": "TVSeries","name": [[${anime.name}]],"alternateName": [[${anime.nameSecondary}]],"image": [[${anime.imageUrl}]],"genre": [[${anime.tags}]],"description": [[${anime.getDescriptionTranslated()}]],"aggregateRating": {"@type": "AggregateRating","ratingValue": [[${anime.score}]],"bestRating": 10,"worstRating": 0,"ratingCount": 10000}}
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+        gtag('js', new Date());
+        gtag('config', 'G-89V9QWJ1Q4');
     </script>
+    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c">
+
+    <!-- JSON-LD: TVSeries (gerado no controller) -->
+    <script type="application/ld+json" th:inline="text">[(${jsonLdTvSeries})]</script>
+    <!-- JSON-LD: BreadcrumbList -->
+    <script type="application/ld+json" th:inline="text">[(${jsonLdBreadcrumb})]</script>
 
     <style>
         /* --- ESTILO DO RODAPÉ --- */
@@ -124,7 +146,7 @@
     <section class="anime-hero">
         <div class="anime-poster">
             <span class="status-badge" th:text="${anime.status}">Anime Status</span>
-            <img id="main-poster" loading="lazy" th:src="${anime.imageUrl}" th:alt="${anime.name}">
+            <img id="main-poster" fetchpriority="high" loading="eager" th:src="${anime.imageUrl}" th:alt="${anime.name}">
 
             <button class="btn-edit-image" onclick="openImageModal()" th:if="${isAdmin}">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
@@ -146,13 +168,30 @@
                 <span class="tag" th:each="tag : ${anime.tags}" th:text="${tag}">Anime Tags</span>
             </div>
 
-            <p style="color: #ccc; max-width: 800px; margin-bottom: 20px;" th:text="${anime.getDescriptionTranslated()}"> Anime Description </p>
+            <div class="anime-desc-row">
+                <p class="anime-desc-text" th:text="${anime.getDescriptionTranslated()}"> Anime Description </p>
+
+                <!-- Card inline: Próximo Episódio (FUNC-13) -->
+                <div class="nep-inline-card" th:if="${nextEpisode != null}" id="nepWidget"
+                     th:attr="data-airing=${nextEpisode.airingAt}">
+                    <div class="nep-inline-label">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5.055 7.065C3.64 6.162 2 7.197 2 8.873v6.254c0 1.676 1.64 2.71 3.055 1.808L10 13.944v1.183c0 1.676 1.64 2.71 3.055 1.808l6-3.944a2 2 0 000-3.382l-6-3.944C11.64 4.763 10 5.797 10 7.473v1.183L5.055 7.065zM19 6a1 1 0 112 0v12a1 1 0 11-2 0V6z"/></svg>
+                        Próximo Episódio
+                    </div>
+                    <div class="nep-inline-ep">Episódio <strong th:text="${nextEpisode.episode}">12</strong></div>
+                    <div class="nep-inline-countdown" id="nepCountdown" th:text="${nextEpisode.countdown()}">2d 3h</div>
+                    <div class="nep-inline-footer">via AniList</div>
+                </div>
+            </div>
 
             <div class="action-container">
                 <button class="btn btn-primary" th:if="${anime.streamingUrl != null}" th:onclick="window.location.href=[[${anime.streamingUrl}]]">► Assistir Agora</button>
                 <button class="btn btn-primary" th:if="${anime.streamingUrl == null}">► Assistir Agora</button>
 
-                <button class="btn btn-secondary" id="fav-btn" th:onclick="toggleFavorite(this, [[${anime.id}]])">+ Minha Lista</button>
+                <button class="btn btn-secondary" id="fav-btn"
+                        th:classappend="${isFavorited} ? 'is-fav' : ''"
+                        th:onclick="toggleFavorite(this, [[${anime.id}]])"
+                        th:text="${isFavorited} ? '✓ Na Lista' : '+ Minha Lista'">+ Minha Lista</button>
 
                 <div class="external-icons">
                     <a href="https://www.crunchyroll.com" target="_blank" title="Assistir no Crunchyroll">
@@ -173,7 +212,16 @@
 
         <div class="main-column">
             <h2 class="section-title">Sinopse</h2>
-            <div class="description" th:utext="${anime.getSynopsisTranslated()}"></div>
+            <div class="synopsis-block">
+                <div class="synopsis-tabs"
+                     th:if="${anime.synopsis != null and !anime.synopsis.isEmpty() and anime.synopsisPtBr != null and !anime.synopsisPtBr.isEmpty()}">
+                    <button type="button" class="synopsis-tab active" onclick="switchSynopsis(this, 'pt')">🇧🇷 Português</button>
+                    <button type="button" class="synopsis-tab" onclick="switchSynopsis(this, 'en')">🇬🇧 English</button>
+                </div>
+                <div class="description synopsis-content" data-lang="pt" th:utext="${anime.getSynopsisTranslated()}"></div>
+                <div class="description synopsis-content" data-lang="en" style="display:none"
+                     th:if="${anime.synopsis != null and !anime.synopsis.isEmpty()}" th:utext="${anime.synopsis}"></div>
+            </div>
 
             <h2 class="section-title">Lista de Episódios</h2>
             <div class="episodes-list" id="ep-list-dynamic">
@@ -201,23 +249,50 @@
             </div>
 
             <section class="comments-section">
-                <h2 class="section-title">Comentários</h2>
-                <div class="comment-box">
-                    <div class="comment-input-area">
-                        <textarea id="txtComment" placeholder="Compartilhe o que você acha do anime..."></textarea>
-                        <button id="btnPublishComment" th:onclick="onClickPublishComment(this, [[${anime.id}]])" class="btn btn-primary" style="align-self: flex-end; padding: 10px 25px;">Publicar</button>
-                    </div>
+                <div class="comments-header">
+                    <h2 class="section-title" style="margin-bottom:0">Comentários</h2>
+                    <span class="comments-count" id="commentsCount">0 comentários</span>
+                </div>
 
-                    <div class="comment-list" id="commentList">
-                        <div class="comment-item" th:each="comment : ${anime.comments}">
-<!--                            <button class="delete-comment" title="Excluir comentário" onclick="removeComment(this)">🗑</button>-->
-                            <div class="comment-avatar" th:text="${comment.avatar}">AH</div>
-                            <div class="comment-content">
-                                <span class="user-name" th:text="${comment.userName}">User</span>
-                                <p class="comment-text" th:text="${comment.content}">Content</p>
-                                <span class="comment-date" th:text="${comment.date}">Date</span>
-                            </div>
+                <div class="comment-write-box">
+                    <div class="comment-write-avatar" id="writeAvatar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    </div>
+                    <div class="comment-write-content">
+                        <textarea id="txtComment" placeholder="Compartilhe o que você acha desse anime..."></textarea>
+                        <div class="comment-write-footer">
+                            <span class="comment-char-count" id="charCount">0 / 1000</span>
+                            <button id="btnPublishComment" th:onclick="onClickPublishComment(this, [[${anime.id}]])" class="btn btn-primary">Publicar</button>
                         </div>
+                    </div>
+                </div>
+
+                <div id="commentModerationNote" class="comment-moderation-note" style="display:none">
+                    ⏳ Aguardando aprovação
+                </div>
+
+                <div class="comment-list" id="commentList">
+                    <div class="comment-item" th:each="comment : ${anime.comments}" th:if="${comment.isApproved()}">
+                        <div class="comment-avatar" th:text="${comment.avatar}">AA</div>
+                        <div class="comment-content">
+                            <div class="comment-meta">
+                                <span class="comment-username" th:text="${comment.userName}">Usuário</span>
+                                <span class="comment-date" th:text="${comment.date()}">Data</span>
+                            </div>
+                            <p class="comment-text" th:text="${comment.content}">Conteúdo</p>
+                        </div>
+                        <button th:if="${isAdmin}" class="comment-delete-btn js-delete-comment"
+                                th:attr="data-anime=${anime.id},data-comment=${comment.id}"
+                                title="Excluir comentário">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6l-1 14H6L5 6"></path>
+                                <path d="M10 11v6M14 11v6"></path>
+                                <path d="M9 6V4h6v2"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </section>
@@ -267,7 +342,7 @@
             </div>
 
             <div class="sidebar-card" style="border-top-color: var(--accent-orange);">
-                <h3 style="color:var(--accent-orange); margin-bottom:15px;">Recomendados Aleatóriamente</h3>
+                <h3 style="color:var(--accent-orange); margin-bottom:15px;">Animes Parecidos</h3>
                 <div class="recommended-list">
                     <a href="#" class="rec-item" th:each="recomendation : ${recommendations}" th:href="|/anime/${recomendation.slug}|">
                         <img class="rec-thumb" loading="lazy" th:src="${recomendation.imageUrl}" th:alt="|Poster do anime ${recomendation.title}|">
@@ -338,6 +413,10 @@
                 <a href="/dmca">DMCA</a>
                 <span class="sep">|</span>
                 <a href="/cookies">Cookies</a>
+                <span class="sep">|</span>
+                <a href="/privacidade">Privacidade</a>
+                <span class="sep">|</span>
+                <a href="/termos">Termos</a>
                 <span class="sep">|</span>
                 <a href="mailto:achimid@hotmail.com?subject=Contato - Animes Achimid">Contato</a>
             </nav>

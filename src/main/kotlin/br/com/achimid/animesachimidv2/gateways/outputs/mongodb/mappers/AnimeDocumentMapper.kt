@@ -67,7 +67,10 @@ interface AnimeDocumentMapper {
                 ?: jikan.images?.webp?.largeImageUrl
                 ?: jikan.images?.jpg?.largeImageUrl,
             imageBackgroundUrl = jikan.images?.webp?.largeImageUrl ?: jikan.images?.jpg?.largeImageUrl,
-            tags = jikan.genres?.mapNotNull { it.name },
+            // FUNC-10: tags = gêneros + temas + demografia (mais sinal para recomendação e chips mais ricos)
+            tags = (jikan.genres.orEmpty() + jikan.themes.orEmpty() + jikan.demographics.orEmpty())
+                .mapNotNull { it.name }
+                .distinct(),
             description = jikan.synopsis,
             synopsis = jikan.synopsis,
             background = jikan.background,

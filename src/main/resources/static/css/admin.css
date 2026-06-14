@@ -1,0 +1,208 @@
+/* Painel administrativo (FUNC-04/FUNC-05) */
+.admin-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-6) 5% var(--space-7);
+}
+
+.admin-title {
+    font-family: var(--font-heading);
+    color: var(--color-accent);
+    font-size: 2rem;
+    margin-bottom: var(--space-6);
+}
+
+.admin-section {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    margin-bottom: var(--space-6);
+}
+
+.admin-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.admin-section-head h2 {
+    color: var(--color-text);
+    font-size: 1.2rem;
+}
+
+.pending-count {
+    display: inline-block;
+    background: var(--color-accent-strong);
+    color: var(--color-text-on-accent);
+    border-radius: var(--radius-pill);
+    padding: 0 10px;
+    font-size: 0.85rem;
+    margin-left: var(--space-2);
+}
+
+.admin-empty {
+    color: var(--color-text-muted);
+}
+
+/* Tabela de sites */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    vertical-align: middle;
+}
+
+.admin-table th {
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.admin-table a {
+    color: var(--color-accent);
+}
+
+.queue-buttons {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.btn-queue {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-queue:hover {
+    color: var(--color-text);
+}
+
+.btn-queue.active {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.badge-on {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+.badge-off {
+    color: var(--color-text-muted);
+}
+
+/* Botões de ação */
+.btn-admin {
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text);
+    padding: 7px 16px;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-admin-accent {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.btn-admin-accent:hover {
+    background: var(--color-accent);
+    color: var(--color-text-on-accent);
+}
+
+.btn-admin-danger {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+}
+
+.btn-admin-danger:hover {
+    background: var(--color-danger);
+    color: #fff;
+}
+
+.btn-admin-run {
+    border-color: var(--color-info);
+    color: var(--color-info);
+}
+
+.btn-admin-run:hover {
+    background: var(--color-info);
+    color: #fff;
+}
+
+.btn-admin-run.running {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-admin-run.success {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.btn-admin-run.error {
+    border-color: var(--color-danger);
+    color: var(--color-danger);
+}
+
+.actions-cell {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Comentários pendentes */
+.pending-comment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+    flex-wrap: wrap;
+}
+
+.pending-anime {
+    color: var(--color-accent);
+    font-weight: 700;
+}
+
+.pending-author {
+    color: var(--color-text-muted);
+    font-size: 0.8rem;
+    margin-left: var(--space-2);
+}
+
+.pending-text {
+    color: var(--color-text);
+    margin-top: var(--space-2);
+    max-width: 700px;
+}
+
+.pending-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
