@@ -7,7 +7,7 @@
     <title>Minha Conta - Animes Achimid</title>
 
     <meta name="robots" content="noindex, nofollow">
-    <meta name="description" content="Sua conta no Animes Achimid: perfil e favoritos.">
+    <meta name="description" content="Sua conta no Animes Achimid: perfil, favoritos, alertas e configurações.">
 
     <link rel="canonical" href="https://animes.achimid.com.br/usuario" />
 
@@ -30,6 +30,7 @@
     </script>
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/user.css}" />
 </head>
 <body>
 
@@ -37,29 +38,53 @@
 
     <div class="main-wrapper">
         <main class="content-area">
-            <div class="profile-wrapper">
+            <div class="user-wrapper">
 
-                <!-- Cartão de perfil -->
-                <section class="profile-card">
-                    <div class="profile-avatar">
+                <!-- ===== Cartão de perfil ===== -->
+                <div class="user-profile-card">
+                    <div class="user-avatar">
                         <img th:if="${currentUser.authenticated and currentUser.picture != null}"
                              th:src="${currentUser.picture}" alt="Avatar" referrerpolicy="no-referrer">
-                        <span th:unless="${currentUser.authenticated and currentUser.picture != null}"
-                              class="profile-avatar-fallback">👤</span>
+                        <div th:unless="${currentUser.authenticated and currentUser.picture != null}"
+                             class="user-avatar-fallback">👤</div>
                     </div>
-                    <div class="profile-info">
-                        <h1 class="profile-name"
+
+                    <div class="user-info">
+                        <h1 class="user-name"
                             th:text="${currentUser.authenticated ? currentUser.name : 'Visitante anônimo'}">Usuário</h1>
-                        <p class="profile-email" th:if="${profileUser != null and profileUser.email != null}"
+
+                        <p class="user-email"
+                           th:if="${profileUser != null and profileUser.email != null}"
                            th:text="${profileUser.email}">email</p>
-                        <span class="profile-badge" th:if="${profileUser != null and profileUser.isAdmin}">★ Administrador</span>
-                        <a th:if="${profileUser != null and profileUser.isAdmin}" href="/admin"
-                           class="btn-admin-panel">⚙️ Painel Administrativo</a>
+
+                        <a th:if="${profileUser != null and profileUser.isAdmin}"
+                           href="/admin" class="btn-admin-panel-link">⚙️ Painel Administrativo</a>
+
+                        <!-- Barra de estatísticas -->
+                        <div class="user-stats-bar" th:if="${profileUser != null}">
+                            <span class="user-stat">
+                                <strong th:text="${favorites.size()}">0</strong> favoritos
+                            </span>
+                            <span class="user-stat-sep">·</span>
+                            <span class="user-stat">
+                                <strong th:text="${notificationCount}">0</strong> alertas
+                            </span>
+                            <span class="user-stat-sep" th:if="${profileUser.memberSince() != null}">·</span>
+                            <span class="user-stat" th:if="${profileUser.memberSince() != null}">
+                                membro desde <strong th:text="${profileUser.memberSince()}">—</strong>
+                            </span>
+                        </div>
+
+                        <!-- Top gêneros derivados dos favoritos -->
+                        <div class="user-genres" th:unless="${topGenres.isEmpty()}">
+                            <span class="user-genre-chip" th:each="g : ${topGenres}" th:text="${g}">Gênero</span>
+                        </div>
 
                         <!-- Convidado -->
-                        <div class="profile-cta" th:unless="${currentUser.authenticated}">
-                            <p>Você está navegando como <strong>convidado</strong>. Seus favoritos ficam salvos
-                                neste navegador. Entre com o Google para mantê-los na sua conta em qualquer dispositivo.</p>
+                        <div class="user-actions" th:unless="${currentUser.authenticated}">
+                            <p class="user-guest-note">Você está navegando como <strong>convidado</strong>.
+                                Seus favoritos ficam salvos neste navegador. Entre com o Google para
+                                mantê-los na sua conta em qualquer dispositivo.</p>
                             <a th:if="${oauthEnabled}" href="/oauth2/authorization/google" class="btn-google">
                                 <svg class="btn-google-icon" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
                                     <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -70,32 +95,147 @@
                                 </svg>
                                 Entrar com Google
                             </a>
-                            <p th:unless="${oauthEnabled}" class="profile-note">
+                            <p th:unless="${oauthEnabled}" class="user-guest-note">
                                 Login com Google indisponível neste ambiente.</p>
                         </div>
 
                         <!-- Autenticado -->
-                        <form th:if="${currentUser.authenticated}" action="/logout" method="post" class="profile-cta">
-                            <button type="submit" class="btn-cookie btn-cookie-reject">Sair da conta</button>
-                        </form>
+                        <div class="user-actions" th:if="${currentUser.authenticated}">
+                            <form action="/logout" method="post" style="display:inline">
+                                <button type="submit" class="btn-cookie btn-cookie-reject">Sair da conta</button>
+                            </form>
+                        </div>
                     </div>
-                </section>
+                </div>
 
-                <!-- Favoritos -->
-                <section class="profile-section">
-                    <h2 class="profile-section-title">❤️ Meus Favoritos</h2>
+                <!-- ===== Abas ===== -->
+                <div class="user-tabs" role="tablist">
+                    <button class="user-tab" role="tab" data-tab="favoritos" aria-selected="true">
+                        ❤️ Favoritos
+                        <span class="user-tab-badge" th:text="${favorites.size()}">0</span>
+                    </button>
+                    <button class="user-tab" role="tab" data-tab="alertas" aria-selected="false">
+                        🔔 Alertas
+                        <span class="user-tab-badge" th:text="${notificationCount}">0</span>
+                    </button>
+                    <button class="user-tab" role="tab" data-tab="configuracoes" aria-selected="false">
+                        ⚙️ Configurações
+                    </button>
+                </div>
 
-                    <p class="profile-empty" th:if="${favorites.isEmpty()}">
-                        Você ainda não favoritou nenhum anime. Explore o <a href="/animes">catálogo</a> e clique em
-                        "+ Minha Lista" na página de um anime!</p>
+                <!-- ===== Aba: Favoritos ===== -->
+                <div class="user-tab-panel" id="tab-favoritos" role="tabpanel">
+                    <div class="user-fav-redirect">
+                        <p th:if="${favorites.isEmpty()}" class="user-empty">
+                            Você ainda não favoritou nenhum anime.
+                            Explore o <a href="/animes">catálogo</a> e clique em "+ Minha Lista"!
+                        </p>
+                        <div th:unless="${favorites.isEmpty()}" class="user-fav-preview">
+                            <p class="user-fav-preview-hint">
+                                <strong th:text="${favorites.size()}">0</strong> animes na sua lista.
+                            </p>
+                            <a href="/favoritos" class="user-fav-goto-btn">Ver e gerenciar favoritos →</a>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="profile-fav-grid" th:unless="${favorites.isEmpty()}">
-                        <a class="profile-fav-card" th:each="fav : ${favorites}" th:href="|/anime/${fav.slug}|">
-                            <img th:src="${fav.imageUrl}" th:alt="${fav.name}" loading="lazy">
-                            <span class="profile-fav-title" th:text="${fav.name}">Anime</span>
+                <!-- ===== Aba: Alertas ===== -->
+                <div class="user-tab-panel" id="tab-alertas" role="tabpanel" hidden>
+
+                    <p class="user-empty" th:if="${notifications.isEmpty()}">
+                        Nenhum alerta por enquanto. Quando um anime favoritado lançar um novo episódio, você será notificado aqui.
+                    </p>
+
+                    <div class="user-notif-list" th:unless="${notifications.isEmpty()}">
+                        <a class="user-notif-item"
+                           th:each="notif : ${notifications}"
+                           th:href="|/anime/${notif.animeSlug}|"
+                           th:classappend="${!notif.read} ? ' unread' : ''">
+
+                            <img th:if="${notif.animeImageUrl != null}"
+                                 th:src="${notif.animeImageUrl}"
+                                 th:alt="${notif.animeName}"
+                                 class="user-notif-thumb"
+                                 loading="lazy">
+                            <div th:unless="${notif.animeImageUrl != null}"
+                                 class="user-notif-thumb-placeholder"></div>
+
+                            <div class="user-notif-info">
+                                <span class="user-notif-anime" th:text="${notif.animeName}">Anime</span>
+                                <span class="user-notif-episode"
+                                      th:text="|Novo episódio: ${notif.episode}|">Ep.</span>
+                                <span class="user-notif-date"
+                                      th:text="${notif.createdAt.toString().substring(0, 10)}">data</span>
+                            </div>
+
+                            <div class="user-notif-dot" th:unless="${notif.read}"></div>
                         </a>
                     </div>
-                </section>
+                </div>
+
+                <!-- ===== Aba: Configurações ===== -->
+                <div class="user-tab-panel" id="tab-configuracoes" role="tabpanel" hidden>
+                    <div class="user-settings-section">
+
+                        <!-- Perfil -->
+                        <div class="user-settings-group">
+                            <h3 class="user-settings-group-title">Perfil</h3>
+
+                            <div class="user-settings-field">
+                                <label class="user-settings-label" for="inputUsername">Nome de exibição</label>
+                                <input id="inputUsername" type="text" class="user-settings-input"
+                                       maxlength="40"
+                                       th:placeholder="${currentUser.name ?: 'Seu nome'}"
+                                       th:value="${profileUser != null and profileUser.username != null} ? ${profileUser.username} : ''">
+                                <p class="user-settings-hint">Aparece nos comentários que você publicar.</p>
+                            </div>
+
+                            <button id="btnSaveSettings" class="user-settings-save">Salvar</button>
+                            <span id="settingsFeedback" class="user-settings-feedback"></span>
+                        </div>
+
+                        <!-- Notificações push -->
+                        <div class="user-settings-group">
+                            <h3 class="user-settings-group-title">Notificações</h3>
+                            <div class="user-push-row">
+                                <div>
+                                    <p class="user-push-label">Notificações push</p>
+                                    <p class="user-push-sub">Receba alertas no navegador quando novos episódios chegarem.</p>
+                                </div>
+                                <button id="btnPushToggle" class="user-push-toggle">Ativar</button>
+                            </div>
+                        </div>
+
+                        <!-- Identificação / Transferência de ID -->
+                        <div class="user-settings-group">
+                            <h3 class="user-settings-group-title">Identificação</h3>
+
+                            <div class="user-settings-field">
+                                <label class="user-settings-label" for="inputUserId">Seu ID de usuário</label>
+                                <div class="user-id-row">
+                                    <input id="inputUserId" type="text" class="user-settings-input" readonly
+                                           placeholder="Carregando…">
+                                    <button id="btnCopyId" class="user-id-copy-btn" title="Copiar ID">📋</button>
+                                </div>
+                                <p class="user-settings-hint">Copie este ID para usar sua conta em outro navegador ou máquina.</p>
+                            </div>
+
+                            <div class="user-settings-field" style="margin-top:18px">
+                                <label class="user-settings-label" for="inputImportId">Importar ID de outra máquina</label>
+                                <div class="user-id-row">
+                                    <input id="inputImportId" type="text" class="user-settings-input"
+                                           placeholder="Cole aqui o ID de outra máquina" maxlength="36">
+                                    <button id="btnImportId" class="user-settings-save" style="flex-shrink:0">Aplicar</button>
+                                </div>
+                                <p class="user-settings-hint" style="color:#f87171">
+                                    Ao importar, sua sessão atual é substituída pela do ID informado. Anote seu ID atual antes de importar.
+                                </p>
+                                <span id="importIdFeedback" class="user-settings-feedback"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
 
             </div>
         </main>
@@ -103,6 +243,13 @@
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const SITE_LIST = /*[[${siteIntegrations != null ? siteIntegrations.![name] : {}}]]*/ [];
+        const NOTIF_PREFS = /*[[${profileUser != null and profileUser.notificationSitePreferences != null ? profileUser.notificationSitePreferences : {}}]]*/ {};
+        /*]]>*/
+    </script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/user.js}"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ package br.com.achimid.animesachimidv2.gateways.outputs.http.jikan
 
 import br.com.achimid.animesachimidv2.domains.JikanApiResponse
 import br.com.achimid.animesachimidv2.domains.JikanApiSingleResponse
+import br.com.achimid.animesachimidv2.domains.JikanPicturesResponse
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,5 +23,12 @@ interface JikanAPIClient {
     @Cacheable("jikanIntegrationCache")
     @GetMapping("/v4/anime/{id}/full")
     fun findById(@PathVariable id: String): JikanApiSingleResponse
+
+    @Cacheable("jikanIntegrationCache", key = "'pictures::' + #id")
+    @GetMapping("/v4/anime/{id}/pictures")
+    fun findPictures(@PathVariable id: String): JikanPicturesResponse
+
+    @GetMapping("/v4/seasons/now")
+    fun findSeasonNow(@RequestParam("page") page: Int = 1): JikanApiResponse
 
 }

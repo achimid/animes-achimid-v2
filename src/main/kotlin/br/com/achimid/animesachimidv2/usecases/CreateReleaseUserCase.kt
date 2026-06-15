@@ -24,9 +24,10 @@ class CreateReleaseUserCase(
         CacheEvict("animeCache", allEntries = true),
     ])
     fun execute(result: CallbackIntegrationExecutionResult) {
-        val anime = searchUseCase.execute(result.anime!!).first()
+        val searchResult = searchUseCase.execute(result.anime!!)
+        val anime = searchResult.anime
 
-        logger.info("Search: ${result.anime} -> Found: ${anime.name}")
+        logger.info("Search: ${result.anime} -> Found: ${anime.name} (score: ${searchResult.score}, needsReview: ${searchResult.needsReview})")
 
         val release = releaseGateway.findByAnimeIdAndEpisodeNumber(anime.id, result.episode!!)
             .firstOrNull() ?: Release(
@@ -38,9 +39,12 @@ class CreateReleaseUserCase(
             animeEpisode = result.episode,
             animeImageUrl = anime.imageUrl,
             animeStreamUrl = anime.streamingUrl,
+            matchScore = searchResult.score,
+            needsReview = searchResult.needsReview,
+            rawSearchTitle = searchResult.rawTitle,
         )
 
-        afterCreateReleaseUserCase.execute(release, anime)
+        afterCreateReleaseUserCase.execute(release, anime, result.from)
 
         if (release.options!!.any { it.name == result.from }) return
 

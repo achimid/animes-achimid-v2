@@ -32,6 +32,11 @@ data class Anime(
     val popularity: String? = null,
     val rank: String? = null,
     val streamingUrl: String? = null,
+    val jikanSyncedAt: Instant? = null,
+    val createdAt: Instant? = null,
+    val episodesCount: Int? = null,
+    val season: String? = null,
+    val year: Int? = null,
 ) {
 
     fun getTypeDescription(): String {
@@ -47,6 +52,13 @@ data class Anime(
     fun getSynopsisTranslated(): String? {
         if (synopsisPtBr.isNullOrEmpty()) return synopsis
         return synopsisPtBr
+    }
+
+    fun createdAtFormatted(): String? = createdAt?.toString()?.substring(0, 10)
+    fun jikanSyncedAtFormatted(): String? = jikanSyncedAt?.toString()?.let {
+        val d = it.substring(0, 10)
+        val t = it.substring(11, 16)
+        "$d $t"
     }
 }
 

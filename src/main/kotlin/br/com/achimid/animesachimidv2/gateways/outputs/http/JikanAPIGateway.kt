@@ -33,6 +33,22 @@ class JikanAPIGateway(
         }
     }
 
+    fun findCurrentSeason(): List<Jikan> {
+        logger.info("Fetching current season from Jikan /seasons/now")
+        val result = mutableListOf<Jikan>()
+        var page = 1
+        var response = runCatching { jikanAPIClient.findSeasonNow(page) }.getOrElse { return emptyList() }
+        result.addAll(response.data)
+        while (response.pagination?.hasNextPage == true && page < 5) {
+            page++
+            Thread.sleep(400)
+            response = runCatching { jikanAPIClient.findSeasonNow(page) }.getOrNull() ?: break
+            result.addAll(response.data)
+        }
+        logger.info("Jikan /seasons/now returned ${result.size} animes (${page} page(s))")
+        return result
+    }
+
     fun logError(ex: RuntimeException) {
         if (!ex.message!!.contains("[429 Too Many Requests]")) {
             logger.error("Error on integrate with Jikan", ex)

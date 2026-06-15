@@ -122,16 +122,22 @@
                 <div class="section-header"><h2 class="section-title">✨ Últimos Lançamentos</h2></div>
                 <div class="anime-grid" id="recent-grid">
                     <a class="anime-card" th:each="release : ${releases}" th:href="|/anime/${release.animeSlug}|">
-                        <span class="ep-badge" th:if="${release.animeEpisode == null || release.animeEpisode.isEmpty()}" th:text="${release.animeType}">Episode Number</span>
-                        <span class="ep-badge" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
+                        <span class="ep-badge" th:if="${#strings.isEmpty(release.animeEpisode)}" th:text="${release.animeType}">Episode Number</span>
+                        <span class="ep-badge" th:if="${!#strings.isEmpty(release.animeEpisode)}" th:text="|${release.animeType}: ${release.animeEpisode}|">Episode Number</span>
 
                         <button class="btn-quick-search" onclick="selectAnimeEpisodes(event)">
                             <i class="fas fa-search"></i>
                         </button>
 
-                        <button class="btn-quick-play" th:if="${release.animeStreamUrl != null}" th:onclick="|event.preventDefault(); window.location.href='${release.animeStreamUrl}';|">
+                        <button class="btn-quick-play" th:if="${release.animeStreamUrl != null}"
+                                onclick="event.preventDefault(); event.stopPropagation(); window.location.href=this.dataset.url"
+                                th:data-url="${release.animeStreamUrl}">
                             <i class="fas fa-play"></i>
                         </button>
+
+                        <button th:if="${isAdmin}" class="btn-hide-release"
+                                th:data-release-id="${release.id}"
+                                title="Ocultar lançamento" aria-label="Ocultar lançamento">✕</button>
 
                         <img th:src="${release.animeImageUrl}" th:alt="${release.animeName}" fetchpriority="high">
                         <div class="anime-card-info">
@@ -156,6 +162,25 @@
                             <span class="anime-card-title" th:text="${recommended.title}">Anime Recommended Title</span>
                         </div>
                     </a>
+                </div>
+            </section>
+
+            <section th:if="${!currentSeasonAnimes.isEmpty()}">
+                <div class="section-header"><h2 class="section-title">📅 Animes da Temporada</h2></div>
+                <div class="season-carousel">
+                    <button class="season-nav season-nav-prev" onclick="scrollSeason(-1)" aria-label="Anterior">&#8249;</button>
+                    <div class="season-scroll" id="season-scroll">
+                        <a class="anime-card" th:each="anime : ${currentSeasonAnimes}" th:href="|/anime/${anime.slug}|">
+                            <div class="rating-badge">
+                                ⭐ <span th:text="${anime.score}"></span>
+                            </div>
+                            <img th:src="${anime.imageUrl}" th:alt="${anime.name}" loading="lazy">
+                            <div class="anime-card-info">
+                                <span class="anime-card-title" th:text="${anime.name}"></span>
+                            </div>
+                        </a>
+                    </div>
+                    <button class="season-nav season-nav-next" onclick="scrollSeason(1)" aria-label="Próximo">&#8250;</button>
                 </div>
             </section>
 
@@ -184,8 +209,8 @@
                             <a th:href="|/anime/${release.animeSlug}|">
                                 <span class="download-name" th:text="${release.animeName}">Anime Name</span>
                             </a>
-                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${release.animeEpisode == null || release.animeEpisode.isEmpty()}" th:text="|${release.animeType}|">Anime Episode</button>
-                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${!release.animeEpisode.isEmpty()}" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${#strings.isEmpty(release.animeEpisode)}" th:text="|${release.animeType}|">Anime Episode</button>
+                            <button class="btn-download" onclick="toggleAccordion(this)" th:if="${!#strings.isEmpty(release.animeEpisode)}" th:text="|${release.animeType}: ${release.animeEpisode}|">Anime Episode</button>
                         </div>
                         <div class="download-options">
                             <a class="btn-server" th:each="item : ${release.options}" th:text="${item.name}" th:href="${item.url}" target="_blank" rel="noopener">Site Name</a>
@@ -198,7 +223,7 @@
                 <h3 class="sidebar-title">📅 Calendário</h3>
                 <div class="calendar-item anime-tooltip-div" th:each="item : ${calendarRelease.releasesToday}"  th:classappend="${item.shouldBeReleased} ? 'released' : ''">
                     <img loading="lazy" th:src="${item.imageUrl }" th:alt="${item.title}" class="anime-tooltip">
-                    <a th:href="|/anime/${item.anime.slug}|">
+                    <a th:href="${item.anime != null} ? |/anime/${item.anime.slug}| : '#'">
                         <span class="cal-name" th:text="${item.title}"></span>
                     </a>
                     <div class="cal-info">
@@ -286,6 +311,7 @@
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script th:inline="javascript">/*<![CDATA[*/window.IS_ADMIN=/*[[${isAdmin}]]*/false;/*]]>*/</script>
     <script type="text/javascript" th:src="@{/js/home.js}"></script>
 </body>
 </html>

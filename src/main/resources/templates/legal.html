@@ -54,7 +54,7 @@
                         <span class="legal-hero-icon">🛡️</span>
                         <h1>DMCA e Direitos Autorais</h1>
                         <p class="legal-hero-desc">Entenda como o Animes Achimid funciona e como entrar em contato caso identifique conteúdo que viole direitos autorais.</p>
-                        <span class="legal-updated-badge">Última atualização: 13 de junho de 2026</span>
+                        <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-intro">
@@ -139,7 +139,7 @@
                         <span class="legal-hero-icon">🍪</span>
                         <h1>Política de Cookies</h1>
                         <p class="legal-hero-desc">Saiba quais cookies usamos, para que servem e como você pode gerenciá-los.</p>
-                        <span class="legal-updated-badge">Última atualização: 13 de junho de 2026</span>
+                        <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-intro">
@@ -152,11 +152,25 @@
                             <h2>Cookies Essenciais</h2>
                         </div>
                         <span class="cookie-chip essential">Obrigatório · Sempre ativo</span>
-                        <p>Necessários para o funcionamento básico do site. Sem eles, recursos como favoritos e comentários não funcionam. Não exigem consentimento.</p>
+                        <p>Necessários para o funcionamento básico do site. Sem eles, recursos como favoritos, comentários e notificações não funcionam. Não exigem consentimento.</p>
                         <ul class="legal-list">
-                            <li><code>user_id</code> — identificador anônimo gerado pelo navegador. Permite associar seus favoritos, comentários e histórico ao seu dispositivo sem criar uma conta obrigatória.</li>
+                            <li><code>user_id</code> — identificador anônimo gerado pelo navegador. Permite associar seus favoritos, comentários, preferências de notificação e histórico ao seu dispositivo sem criar uma conta obrigatória. Pode ser exportado e importado para continuar sua sessão em outro dispositivo.</li>
                             <li><code>JSESSIONID</code> — cookie de sessão do servidor, removido ao fechar o navegador.</li>
                             <li><code>cookie_consent</code> — armazena sua escolha de consentimento de analytics para não exibir o banner repetidamente.</li>
+                        </ul>
+                    </div>
+
+                    <div class="legal-section">
+                        <div class="legal-section-header">
+                            <span class="legal-section-icon">🔔</span>
+                            <h2>Notificações Push</h2>
+                        </div>
+                        <span class="cookie-chip optional">Opcional · Requer permissão do navegador</span>
+                        <p>O Animes Achimid oferece notificações push para avisar quando um anime da sua lista recebe novo episódio. Esse recurso <strong>não usa cookies</strong> — utiliza a <strong>API Push do navegador</strong>, que requer sua permissão explícita.</p>
+                        <ul class="legal-list">
+                            <li>A permissão é solicitada ao adicionar um anime aos favoritos. Você pode negar ou revogar a qualquer momento nas configurações do navegador.</li>
+                            <li>Ao aceitar, o navegador gera uma <em>assinatura push</em> (endpoint e chaves de criptografia) que é armazenada no servidor apenas para entrega das notificações. Nenhum dado pessoal identificável é transmitido.</li>
+                            <li>Você pode configurar de qual site deseja receber notificações para cada anime, diretamente na página de <a href="/favoritos">Favoritos</a>.</li>
                         </ul>
                     </div>
 
@@ -208,7 +222,7 @@
                         <span class="legal-hero-icon">🔐</span>
                         <h1>Política de Privacidade</h1>
                         <p class="legal-hero-desc">Como o Animes Achimid coleta, usa e protege suas informações pessoais.</p>
-                        <span class="legal-updated-badge">Última atualização: 13 de junho de 2026</span>
+                        <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-info-grid">
@@ -230,7 +244,7 @@
                         <div class="legal-info-item">
                             <span class="info-icon">📅</span>
                             <span class="info-label">Última revisão</span>
-                            <span class="info-value">13 de junho de 2026</span>
+                            <span class="info-value">14 de junho de 2026</span>
                         </div>
                     </div>
 
@@ -244,9 +258,10 @@
                             <h2>Dados que coletamos</h2>
                         </div>
                         <ul class="legal-list">
-                            <li><strong>Identificador anônimo (<code>user_id</code>)</strong> — gerado automaticamente pelo site no primeiro acesso. Não está vinculado a nome, e-mail ou qualquer dado pessoal identificável. Utilizado para persistir favoritos e comentários no seu dispositivo.</li>
+                            <li><strong>Identificador anônimo (<code>user_id</code>)</strong> — gerado automaticamente pelo site no primeiro acesso. Não está vinculado a nome, e-mail ou qualquer dado pessoal identificável. Utilizado para persistir favoritos, comentários e preferências de notificação. Pode ser exportado e importado pelo usuário para continuar a sessão em outro dispositivo.</li>
                             <li><strong>Dados de conta Google (opcional)</strong> — se você optar por entrar com o Google, recebemos seu nome de exibição, endereço de e-mail e foto de perfil para criar e identificar sua conta no site.</li>
-                            <li><strong>Conteúdo gerado por você</strong> — comentários publicados e lista de animes favoritados.</li>
+                            <li><strong>Conteúdo gerado por você</strong> — comentários publicados, lista de animes favoritados e preferências de qual site deseja receber notificações para cada anime.</li>
+                            <li><strong>Assinatura push (opcional)</strong> — se você autorizar notificações push no navegador, armazenamos o endpoint de entrega e as chaves de criptografia geradas pelo seu navegador. Esses dados são usados exclusivamente para enviar alertas de novos episódios dos animes que você favoritar. Não contêm informações pessoais identificáveis e podem ser revogados a qualquer momento.</li>
                             <li><strong>Dados de uso agregados</strong> — via Google Analytics (somente com consentimento): páginas visitadas, tempo de sessão e origem do acesso, de forma completamente anônima.</li>
                             <li><strong>Dados técnicos de acesso</strong> — endereço IP, tipo de navegador e sistema operacional, coletados automaticamente pelos logs do servidor para fins de segurança e estabilidade.</li>
                         </ul>
@@ -258,7 +273,8 @@
                             <h2>Como e por que usamos seus dados</h2>
                         </div>
                         <ul class="legal-list">
-                            <li><strong>Funcionamento do site</strong> — o <code>user_id</code> é necessário para que seus favoritos e comentários funcionem sem a necessidade de criar uma conta obrigatória.</li>
+                            <li><strong>Funcionamento do site</strong> — o <code>user_id</code> é necessário para que seus favoritos, comentários e preferências de notificação funcionem sem a necessidade de criar uma conta obrigatória.</li>
+                            <li><strong>Notificações de lançamentos</strong> — a assinatura push (quando concedida) é usada exclusivamente para enviar alertas quando um anime da sua lista recebe um novo episódio. Você controla quais sites ativam a notificação para cada anime.</li>
                             <li><strong>Autenticação</strong> — dados do Google são usados exclusivamente para criar e reconhecer sua conta; nunca compartilhados com terceiros.</li>
                             <li><strong>Melhoria do serviço</strong> — dados de analytics (com consentimento) nos ajudam a entender quais recursos são mais usados para priorizar melhorias.</li>
                             <li><strong>Segurança</strong> — logs de acesso são usados para detectar e bloquear comportamentos abusivos ou ataques ao servidor.</li>
@@ -287,7 +303,8 @@
                         </div>
                         <ul class="legal-list">
                             <li><strong>Dados de conta</strong> — mantidos enquanto sua conta estiver ativa. Excluídos mediante solicitação.</li>
-                            <li><strong>Comentários e favoritos</strong> — mantidos indefinidamente para garantir a experiência do site. Podem ser excluídos por solicitação.</li>
+                            <li><strong>Comentários, favoritos e preferências</strong> — mantidos indefinidamente para garantir a experiência do site. Podem ser excluídos por solicitação.</li>
+                            <li><strong>Assinaturas push</strong> — mantidas até que você revogue a permissão de notificações no navegador ou solicite a exclusão. A revogação no navegador invalida automaticamente a assinatura no servidor.</li>
                             <li><strong>Logs de acesso</strong> — retidos por até 90 dias para fins de segurança e diagnóstico.</li>
                             <li><strong>Dados de analytics</strong> — retidos pelo Google Analytics por 14 meses (configuração padrão do GA4).</li>
                         </ul>
@@ -330,7 +347,7 @@
                         <span class="legal-hero-icon">📋</span>
                         <h1>Termos de Uso</h1>
                         <p class="legal-hero-desc">Ao usar o Animes Achimid, você concorda com as condições descritas abaixo. Leia com atenção.</p>
-                        <span class="legal-updated-badge">Última atualização: 13 de junho de 2026</span>
+                        <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-intro">

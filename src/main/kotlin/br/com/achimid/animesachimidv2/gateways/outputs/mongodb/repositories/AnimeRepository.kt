@@ -28,6 +28,10 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
 
     fun findTop4ByOrderByUpdatedAtAsc(): List<AnimeDocument>
 
+    fun findTop4ByOrderByJikanSyncedAtAsc(): List<AnimeDocument>
+
+    fun findTop30ByOrderByCreatedAtDesc(): List<AnimeDocument>
+
     fun findByCommentsStatus(status: CommentStatus): List<AnimeDocument>
 
     fun findByStatus(status: AnimeStatusDocument): List<AnimeDocument>
@@ -35,6 +39,8 @@ interface AnimeRepository: MongoRepository<AnimeDocument, String> {
     fun findByTagsIn(tags: Collection<String>, pageRequest: PageRequest): Page<AnimeDocument>
 
     fun findByTagsInAndNameContainingIgnoreCase(tags: Collection<String>, name: String, pageRequest: PageRequest): Page<AnimeDocument>
+
+    fun findBySeasonAndYear(season: String, year: Int, pageRequest: PageRequest): Page<AnimeDocument>
 
     @Query("{ '\$or': [ { 'descriptionPtBr': null }, { 'descriptionPtBr': '' }, { 'synopsisPtBr': null }, { 'synopsisPtBr': '' } ] }")
     fun findAllWithoutTranslation(): List<AnimeDocument>

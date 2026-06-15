@@ -23,7 +23,7 @@ class FindTodayCalendarReleaseUseCase(
             val fullSchedule = subsPleaseAPIGateway.findTodaySchedule()
 
             fullSchedule.schedule.forEach { item ->
-                item.anime = searchUseCase.execute(item.title).firstOrNull()
+                item.anime = runCatching { searchUseCase.execute(item.title).anime }.getOrNull()
             }
 
             return CalendarRelease(fullSchedule.schedule)

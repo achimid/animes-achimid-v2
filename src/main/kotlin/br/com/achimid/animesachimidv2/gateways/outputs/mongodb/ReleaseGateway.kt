@@ -22,17 +22,23 @@ class ReleaseGateway(
 
     fun save(release: Release) = release.let(this::toDocument).let(repository::save)
 
+    fun findById(id: String): Release? =
+        repository.findById(id).map(this::fromDocument).orElse(null)
+
+    fun updateAnimeImage(animeId: String, imageUrl: String) =
+        repository.updateAnimeImageByAnimeId(animeId, imageUrl)
+
     @Cacheable("releasesCache")
     fun findAll(pageRequest: PageRequest): Page<Release> {
-        return repository.findAll(pageRequest).map(this::fromDocument)
+        return repository.findVisible(pageRequest).map(this::fromDocument)
     }
 
     fun findByTitle(pageRequest: PageRequest, query: String): Page<Release> {
-        return repository.findByTitleContainingIgnoreCase(query, pageRequest).map(this::fromDocument)
+        return repository.findVisibleByTitleContaining(query, pageRequest).map(this::fromDocument)
     }
 
     fun findByAnimeIdOrderByEpisodeDesc(animeId: String): List<Release> {
-        return repository.findByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
+        return repository.findVisibleByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
     }
 
     fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
@@ -42,8 +48,11 @@ class ReleaseGateway(
     @Cacheable("statsCache", key = "'releasesToday'")
     fun countToday(): Long {
         val startOfDay = LocalDate.now(ZoneOffset.UTC).atStartOfDay(ZoneOffset.UTC).toInstant()
-        return repository.countByCreatedAtAfter(startOfDay)
+        return repository.countVisibleByCreatedAtAfter(startOfDay)
     }
+
+    fun findNeedingReview(pageRequest: PageRequest): Page<Release> =
+        repository.findNeedingReview(pageRequest).map(this::fromDocument)
 
     fun toDocument(release: Release): ReleaseDocument {
         return ReleaseDocument(
@@ -58,6 +67,10 @@ class ReleaseGateway(
             animeEpisode = release.animeEpisode.padLeft(),
             animeStreamUrl = release.animeStreamUrl,
             sources = release.options?.map { ReleaseSourceDocument(it.name, it.url) },
+            hidden = release.hidden,
+            matchScore = release.matchScore,
+            needsReview = release.needsReview,
+            rawSearchTitle = release.rawSearchTitle,
             createdAt = Instant.now(),
             updatedAt = Instant.now(),
         )
@@ -75,6 +88,10 @@ class ReleaseGateway(
             animeStreamUrl = document.animeStreamUrl,
             animeId = document.animeId,
             options = document.sources!!.map { EpisodeLinkOptions(it.url, it.title) }.toMutableList(),
+            hidden = document.hidden,
+            matchScore = document.matchScore,
+            needsReview = document.needsReview,
+            rawSearchTitle = document.rawSearchTitle,
         )
     }
 

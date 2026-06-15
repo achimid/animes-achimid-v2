@@ -14,4 +14,5 @@ data class NameDocument(
     val id: String = name + animeId,
     val potential: Boolean? = null,
     val animeName: String? = null,
+    val confirmed: Boolean = false,
 )

@@ -14,13 +14,13 @@ class AfterCreateReleaseUserCase(
     val logger = LoggerFactory.getLogger(this.javaClass)
 
     @Async
-    fun execute(release: Release, anime: Anime) {
+    fun execute(release: Release, anime: Anime, fromSite: String? = null) {
         logger.info("Processing after release creation: ${release.title}")
 
         translateAnimeInfoUserCase.execute(anime)
 
         // FUNC-07: avisa quem favoritou o anime sobre o novo episódio (dedupe por episódio).
-        notifyFavoritesUseCase.execute(release, anime)
+        notifyFavoritesUseCase.execute(release, anime, fromSite)
     }
 
 }

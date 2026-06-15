@@ -28,6 +28,11 @@ data class ReleaseDocument(
     val anime: ReleaseAnimeDocument? = null,
     val mirrors: List<MirrorDocument>? = emptyList(),
     val sources: List<ReleaseSourceDocument>? = emptyList(),
+    val hidden: Boolean = false,
+    val matchScore: Int? = null,
+    @Indexed
+    val needsReview: Boolean = false,
+    val rawSearchTitle: String? = null,
 
     @CreatedDate
     val createdAt: Instant? = null,

@@ -31,6 +31,7 @@ class CacheConfig {
                 buildCache("nextEpisodeCache", 30, MINUTES, 500),
                 buildCache("statsCache", 5, MINUTES, 10),
                 buildCache("featuredAnimeCache", 2, HOURS, 1),
+                buildCache("currentSeasonCache", 2, HOURS, 1),
             )
         )
         return cacheManager

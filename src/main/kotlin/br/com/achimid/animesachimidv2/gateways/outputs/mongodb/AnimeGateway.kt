@@ -2,6 +2,7 @@ package br.com.achimid.animesachimidv2.gateways.outputs.mongodb
 
 import br.com.achimid.animesachimidv2.domains.Anime
 import br.com.achimid.animesachimidv2.domains.AnimeComment
+import br.com.achimid.animesachimidv2.domains.AnimeCreatedEvent
 import br.com.achimid.animesachimidv2.domains.CommentStatus
 import br.com.achimid.animesachimidv2.domains.Jikan
 import br.com.achimid.animesachimidv2.domains.ScheduledAnime
@@ -12,17 +13,18 @@ import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.AnimeDocu
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.AnimeRepository
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.NamesRepository
 import org.springframework.cache.annotation.Cacheable
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.PageRequest.of
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
-import org.springframework.data.mongodb.core.aggregation.MatchOperation
 import org.springframework.data.mongodb.core.query.BasicQuery
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.LocalDate
 import kotlin.jvm.optionals.getOrNull
 
 data class AnimeSitemapEntry(val slug: String, val updatedAt: Instant?)
@@ -33,16 +35,26 @@ class AnimeGateway(
     val animeRepository: AnimeRepository,
     val namesRepository: NamesRepository,
     val mongoTemplate: MongoTemplate,
+    val eventPublisher: ApplicationEventPublisher,
 ) {
 
-    fun saveAll(animes: List<Jikan>): List<Anime> = animes
-        .map {
-            val anime = animeRepository.findById(it.malId.toString()).getOrNull() ?: mapper.toDocument(it)
-
-            return@map animeRepository.save(mapper.merge(anime, it))
+    fun saveAll(animes: List<Jikan>): List<Anime> {
+        val savedDocs = animes.map {
+            val existing = animeRepository.findById(it.malId.toString()).getOrNull()
+            val isNew = existing == null
+            val doc = existing ?: mapper.toDocument(it)
+            Pair(isNew, animeRepository.save(mapper.merge(doc, it).copy(jikanSyncedAt = Instant.now())))
         }
-        .also { getAllNames(it).forEach(namesRepository::save) }
-        .map(mapper::fromDocument)
+        savedDocs.map { it.second }.also { getAllNames(it).forEach(namesRepository::save) }
+        return savedDocs.map { (isNew, doc) ->
+            mapper.fromDocument(doc).also { anime ->
+                if (isNew) eventPublisher.publishEvent(AnimeCreatedEvent(anime))
+            }
+        }
+    }
+
+    fun findRecentlyAdded(limit: Int = 30): List<Anime> =
+        animeRepository.findTop30ByOrderByCreatedAtDesc().map(mapper::fromDocument)
 
     fun save(anime: Anime): Anime = anime
         .let(mapper::toDocument)
@@ -56,15 +68,45 @@ class AnimeGateway(
 
     @Cacheable("featuredAnimeCache")
     fun findFeatured(): Anime? {
-        val match: MatchOperation = Aggregation.match(
-            Criteria.where("status").`is`(AnimeStatusDocument.AIRING)
-                .and("score").gte(7.5)
-                .and("imageUrl").ne(null)
-        )
-        return mongoTemplate.aggregate(
-            Aggregation.newAggregation(match, Aggregation.sample(1)),
+        val now = LocalDate.now()
+        val currentSeason = when (now.monthValue) {
+            in 1..3 -> "winter"
+            in 4..6 -> "spring"
+            in 7..9 -> "summer"
+            else -> "fall"
+        }
+        val currentYear = now.year
+
+        // Pega os 20 animes da temporada mais recentemente atualizados e sorteia 1 aleatoriamente
+        val result = mongoTemplate.aggregate(
+            Aggregation.newAggregation(
+                Aggregation.match(
+                    Criteria.where("season").`is`(currentSeason)
+                        .and("year").`is`(currentYear)
+                        .and("imageUrl").ne(null)
+                ),
+                Aggregation.sort(Sort.Direction.DESC, "updatedAt"),
+                Aggregation.limit(20),
+                Aggregation.sample(1),
+            ),
             "animes", AnimeDocument::class.java
-        ).mappedResults.firstOrNull()?.let(mapper::fromDocument)
+        ).mappedResults.firstOrNull()
+
+        return result?.let(mapper::fromDocument)
+    }
+
+    @Cacheable("currentSeasonCache")
+    fun findCurrentSeason(limit: Int = 30): List<Anime> {
+        val now = LocalDate.now()
+        val season = when (now.monthValue) {
+            in 1..3 -> "winter"
+            in 4..6 -> "spring"
+            in 7..9 -> "summer"
+            else -> "fall"
+        }
+        val pageRequest = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "updatedAt"))
+        return animeRepository.findBySeasonAndYear(season, now.year, pageRequest)
+            .content.map(mapper::fromDocument)
     }
 
     @Cacheable("recommendationsCache")

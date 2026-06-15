@@ -17,6 +17,7 @@ data class UserDocument(
 
     val favorites: Set<String>? = null,
     val isAdmin: Boolean = false,
+    val notificationSitePreferences: Map<String, Set<String>>? = null,
 
     @CreatedDate
     val createdAt: Instant? = null,

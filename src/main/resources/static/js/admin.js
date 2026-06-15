@@ -1,5 +1,34 @@
 // Painel administrativo (FUNC-04/FUNC-05)
 
+// ===== Sistema de abas =====
+(function () {
+    const tabs = document.querySelectorAll('.admin-tab');
+    if (!tabs.length) return;
+
+    function activate(tabId) {
+        tabs.forEach(t => {
+            const active = t.dataset.tab === tabId;
+            t.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        document.querySelectorAll('.admin-tab-panel').forEach(panel => {
+            panel.hidden = panel.id !== 'tab-' + tabId;
+        });
+        try { sessionStorage.setItem('adminTab', tabId); } catch (_) {}
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => activate(tab.dataset.tab));
+    });
+
+    // Restaura aba salva, ou usa hash da URL, ou padrão "sites"
+    const saved = (function () {
+        const hash = location.hash.replace('#', '');
+        if (hash && document.getElementById('tab-' + hash)) return hash;
+        try { return sessionStorage.getItem('adminTab'); } catch (_) { return null; }
+    }());
+    activate(saved && document.getElementById('tab-' + saved) ? saved : 'sites');
+}());
+
 function apiPost(url) {
     return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
 }
@@ -19,6 +48,57 @@ function handleAdminAction(btn, promise) {
         btn.textContent = 'Erro';
     });
 }
+
+// ===== Aba Animes: atualizar via Jikan =====
+document.querySelectorAll('.js-admin-refresh-anime').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const slug = encodeURIComponent(btn.dataset.slug);
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = '⏳';
+        fetch(`/api/v1/anime/${slug}/refresh`, { method: 'POST' })
+            .then(res => {
+                btn.textContent = res.ok ? '✓' : '✗';
+                if (res.ok) {
+                    const row = btn.closest('tr');
+                    if (row) row.style.opacity = '0.5';
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    btn.disabled = false;
+                    setTimeout(() => { btn.textContent = orig; }, 2500);
+                }
+            }).catch(() => {
+                btn.textContent = '✗';
+                btn.disabled = false;
+                setTimeout(() => { btn.textContent = orig; }, 2500);
+            });
+    });
+});
+
+// ===== Aba Animes: traduzir sinopse =====
+document.querySelectorAll('.js-admin-translate-anime').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const slug = encodeURIComponent(btn.dataset.slug);
+        btn.disabled = true;
+        btn.textContent = '⏳';
+        fetch(`/api/v1/anime/${slug}/translate`, { method: 'POST' })
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (data?.synopsisPtBr) {
+                    btn.textContent = '✓';
+                    setTimeout(() => btn.remove(), 1500);
+                } else {
+                    btn.textContent = '✗';
+                    btn.disabled = false;
+                    setTimeout(() => { btn.textContent = '🇧🇷'; }, 2500);
+                }
+            }).catch(() => {
+                btn.textContent = '✗';
+                btn.disabled = false;
+                setTimeout(() => { btn.textContent = '🇧🇷'; }, 2500);
+            });
+    });
+});
 
 document.querySelectorAll('.js-site-type').forEach(btn => {
     btn.addEventListener('click', () => {

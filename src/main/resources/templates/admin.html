@@ -20,18 +20,55 @@
         <main class="content-area">
             <div class="admin-wrapper">
 
-                <h1 class="admin-title">⚙️ Painel Administrativo</h1>
+                <h1 class="admin-title">Painel Administrativo</h1>
 
-                <!-- ===== Sites de scraping ===== -->
-                <section class="admin-section">
-                    <div class="admin-section-head">
-                        <h2>🌐 Sites monitorados</h2>
-                        <button class="btn-admin btn-admin-accent" id="btnRunAllExtractions">Executar todas as extrações</button>
+                <!-- ===== Barra de abas ===== -->
+                <div class="admin-tabs" role="tablist">
+                    <button class="admin-tab" role="tab" data-tab="sites" aria-selected="true">
+                        <span class="tab-icon">🌐</span>
+                        <span class="tab-label">Sites</span>
+                        <span class="tab-badge" th:text="${siteIntegrations.size()}">0</span>
+                    </button>
+                    <button class="admin-tab" role="tab" data-tab="comments" aria-selected="false">
+                        <span class="tab-icon">💬</span>
+                        <span class="tab-label">Comentários</span>
+                        <span class="tab-badge tab-badge-alert"
+                              th:if="${!pendingComments.isEmpty()}"
+                              th:text="${pendingComments.size()}">0</span>
+                    </button>
+                    <button class="admin-tab" role="tab" data-tab="review" aria-selected="false">
+                        <span class="tab-icon">🔍</span>
+                        <span class="tab-label">Fila de revisão</span>
+                        <span class="tab-badge tab-badge-alert"
+                              th:if="${reviewCount > 0}"
+                              th:text="${reviewCount}">0</span>
+                    </button>
+                    <button class="admin-tab" role="tab" data-tab="animes" aria-selected="false">
+                        <span class="tab-icon">🎌</span>
+                        <span class="tab-label">Animes</span>
+                        <span class="tab-badge" th:text="${recentAnimes.size()}">0</span>
+                    </button>
+                </div>
+
+                <!-- ===== Aba: Sites monitorados ===== -->
+                <div class="admin-tab-panel" id="tab-sites" role="tabpanel">
+                    <div class="admin-panel-head">
+                        <div>
+                            <h2 class="admin-panel-title">Sites monitorados</h2>
+                            <p class="admin-panel-subtitle">Gerencie os sites de scraping e dispare extrações manualmente.</p>
+                        </div>
+                        <button class="btn-admin btn-admin-accent" id="btnRunAllExtractions">▶ Executar todas</button>
                     </div>
 
                     <table class="admin-table">
                         <thead>
-                            <tr><th>Site</th><th>Fila</th><th>Status</th><th>Última execução</th><th>Ações</th></tr>
+                            <tr>
+                                <th>Site</th>
+                                <th>Fila</th>
+                                <th>Status</th>
+                                <th>Última execução</th>
+                                <th>Ações</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr th:each="site : ${siteIntegrations}">
@@ -65,18 +102,20 @@
                             </tr>
                         </tbody>
                     </table>
-                </section>
+                </div>
 
-                <!-- ===== Comentários ===== -->
-                <section class="admin-section">
-                    <div class="admin-section-head">
-                        <h2>💬 Comentários
-                            <span class="pending-count" th:text="${pendingComments.size()}">0</span>
-                            <span style="font-size:0.8rem; color:var(--color-text-muted); font-weight:400; margin-left:6px;">pendentes</span>
-                        </h2>
-                        <a href="/admin/comments" class="btn-admin btn-admin-accent" style="text-decoration:none">Gerenciar todos →</a>
+                <!-- ===== Aba: Comentários ===== -->
+                <div class="admin-tab-panel" id="tab-comments" role="tabpanel" hidden>
+                    <div class="admin-panel-head">
+                        <div>
+                            <h2 class="admin-panel-title">Comentários pendentes</h2>
+                            <p class="admin-panel-subtitle">Modere os comentários antes de serem exibidos publicamente.</p>
+                        </div>
+                        <a href="/admin/comments" class="btn-admin btn-admin-accent" style="text-decoration:none">Ver todos →</a>
                     </div>
+
                     <p th:if="${pendingComments.isEmpty()}" class="admin-empty">Nenhum comentário aguardando moderação. 🎉</p>
+
                     <div class="pending-comment" th:each="pc : ${pendingComments}">
                         <div class="pending-comment-body">
                             <a th:href="|/anime/${pc.animeSlug}|" class="pending-anime" th:text="${pc.animeName}">Anime</a>
@@ -90,7 +129,90 @@
                                     th:attr="data-anime=${pc.animeId},data-comment=${pc.comment.id},data-approve=false">Rejeitar</button>
                         </div>
                     </div>
-                </section>
+                </div>
+
+                <!-- ===== Aba: Fila de revisão ===== -->
+                <div class="admin-tab-panel" id="tab-review" role="tabpanel" hidden>
+                    <div class="admin-panel-head">
+                        <div>
+                            <h2 class="admin-panel-title">Fila de revisão de matching</h2>
+                            <p class="admin-panel-subtitle">Releases exibidos normalmente, mas com match de baixa confiança. Corrija o anime associado para melhorar o matching futuro.</p>
+                        </div>
+                        <a href="/admin/releases/review" class="btn-admin btn-admin-accent" style="text-decoration:none">Lista completa →</a>
+                    </div>
+
+                    <div class="review-summary" th:if="${reviewCount == 0}">
+                        <p class="admin-empty">Nenhum lançamento aguardando revisão. ✓</p>
+                    </div>
+                    <div class="review-summary" th:if="${reviewCount > 0}">
+                        <div class="review-stat-card">
+                            <span class="review-stat-number" th:text="${reviewCount}">0</span>
+                            <span class="review-stat-label">aguardando revisão</span>
+                        </div>
+                        <p class="review-info-text">
+                            Os releases são exibidos com o melhor match disponível. Acesse a lista completa para reatribuir ao anime correto — isso também ensina o sistema para matches futuros.
+                        </p>
+                        <div class="review-actions-row">
+                            <a href="/admin/releases/review" class="btn-admin btn-admin-accent" style="text-decoration:none">Abrir fila de revisão →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Aba: Animes ===== -->
+                <div class="admin-tab-panel" id="tab-animes" role="tabpanel" hidden>
+                    <div class="admin-panel-head">
+                        <div>
+                            <h2 class="admin-panel-title">Animes recentes</h2>
+                            <p class="admin-panel-subtitle">Últimos 30 animes cadastrados. Use os botões para atualizar dados do Jikan ou traduzir a sinopse.</p>
+                        </div>
+                    </div>
+
+                    <table class="admin-table admin-animes-table">
+                        <thead>
+                            <tr>
+                                <th class="col-thumb"></th>
+                                <th>Anime</th>
+                                <th>Status</th>
+                                <th>Eps</th>
+                                <th>Cadastrado</th>
+                                <th>Sync Jikan</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="anime : ${recentAnimes}">
+                                <td class="col-thumb">
+                                    <img th:if="${anime.imageUrl != null}" th:src="${anime.imageUrl}"
+                                         class="anime-thumb" th:alt="${anime.name}" loading="lazy">
+                                    <div th:unless="${anime.imageUrl != null}" class="anime-thumb-empty">?</div>
+                                </td>
+                                <td>
+                                    <a th:href="|/anime/${anime.slug}|" class="anime-name-link" th:text="${anime.name}" target="_blank">Nome</a>
+                                </td>
+                                <td>
+                                    <span th:if="${anime.status == 'Finalizado'}" class="anime-status-badge status-finished">Encerrado</span>
+                                    <span th:if="${anime.status == 'Em Exibição'}" class="anime-status-badge status-airing">Em exibição</span>
+                                    <span th:if="${anime.status != 'Finalizado' and anime.status != 'Em Exibição'}"
+                                          class="anime-status-badge status-unknown" th:text="${anime.status ?: '—'}">—</span>
+                                </td>
+                                <td th:text="${anime.episodesCount ?: '—'}">—</td>
+                                <td th:text="${anime.createdAtFormatted() ?: '—'}">—</td>
+                                <td>
+                                    <span th:if="${anime.jikanSyncedAt != null}"
+                                          th:text="${anime.jikanSyncedAtFormatted()}">—</span>
+                                    <span th:unless="${anime.jikanSyncedAt != null}" class="never-synced">nunca</span>
+                                </td>
+                                <td class="actions-cell">
+                                    <button class="btn-admin btn-admin-run js-admin-refresh-anime"
+                                            th:attr="data-slug=${anime.slug}" title="Atualizar via Jikan">🔄</button>
+                                    <button th:if="${anime.synopsisPtBr == null or anime.synopsisPtBr.isEmpty()}"
+                                            class="btn-admin js-admin-translate-anime"
+                                            th:attr="data-slug=${anime.slug}" title="Traduzir sinopse">🇧🇷</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             </div>
         </main>

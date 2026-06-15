@@ -44,9 +44,10 @@ class HomeController(
         val statsAnimes = supplyAsync { animeGateway.count() }
         val statsReleasesToday = supplyAsync { releaseGateway.countToday() }
         val featuredAnime = supplyAsync { findFeaturedAnimeUseCase.execute() }
+        val currentSeasonAnimes = supplyAsync { animeGateway.findCurrentSeason() }
 
         allOf(releases, recommendations, calendarRelease, fallowingList, siteIntegrations,
-              pageAccess, user, statsAnimes, statsReleasesToday, featuredAnime).join()
+              pageAccess, user, statsAnimes, statsReleasesToday, featuredAnime, currentSeasonAnimes).join()
 
         val siteIntegrationsList = siteIntegrations.join()
 
@@ -62,6 +63,7 @@ class HomeController(
         model.addAttribute("statsReleasesToday", statsReleasesToday.join())
         model.addAttribute("statsSites", siteIntegrationsList.count { it.enabled })
         model.addAttribute("featuredAnime", featuredAnime.join())
+        model.addAttribute("currentSeasonAnimes", currentSeasonAnimes.join())
 
         return "home"
     }

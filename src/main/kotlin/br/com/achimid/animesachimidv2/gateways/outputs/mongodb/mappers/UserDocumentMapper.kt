@@ -20,6 +20,8 @@ class UserDocumentMapper {
         googleId = document.googleId,
         favorites = document.favorites,
         isAdmin = document.isAdmin,
+        createdAt = document.createdAt,
+        notificationSitePreferences = document.notificationSitePreferences,
     )
 
     fun toDocument(domain: User): UserDocument = UserDocument(
@@ -30,5 +32,6 @@ class UserDocumentMapper {
         googleId = domain.googleId,
         favorites = domain.favorites,
         isAdmin = domain.isAdmin,
+        notificationSitePreferences = domain.notificationSitePreferences,
     )
 }

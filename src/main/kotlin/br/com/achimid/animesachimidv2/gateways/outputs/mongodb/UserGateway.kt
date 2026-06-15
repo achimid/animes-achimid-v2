@@ -24,6 +24,12 @@ class UserGateway(
     fun addFavorite(userId: String, animeId: String) = repository.addFavorite(userId, animeId)
     fun removeFavorite(userId: String, animeId: String) = repository.removeFavorite(userId, animeId)
 
+    fun updateNotificationSitePreference(userId: String, animeId: String, sites: Set<String>?) {
+        val user = findById(userId) ?: return
+        val prefs = user.notificationSitePreferences?.toMutableMap() ?: mutableMapOf()
+        if (sites.isNullOrEmpty()) prefs.remove(animeId) else prefs[animeId] = sites
+        save(user.copy(notificationSitePreferences = prefs))
+    }
 
     fun findById(id: String): User? = repository.findById(id).getOrNull()?.let(mapper::fromDocument)
 

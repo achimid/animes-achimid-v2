@@ -13,5 +13,4 @@ integration:
   callbackUrl: "https://rotafii.achimid.com.br/api/v1/site/integration/callback"
 
 extraction-tasks:
-  enabled: false
-
+  enabled: true

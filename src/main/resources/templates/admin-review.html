@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fila de Revisão - Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/admin.css}" />
+    <style>
+        .review-table { width: 100%; border-collapse: collapse; }
+        .review-table th, .review-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--color-border, #2a2a2a); font-size: 0.9rem; }
+        .review-table th { color: var(--color-text-muted, #aaa); font-weight: 600; font-size: 0.8rem; text-transform: uppercase; }
+        .review-table tr:hover td { background: rgba(255,255,255,0.03); }
+        .score-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 0.8rem; }
+        .score-low  { background: rgba(220,53,69,0.2); color: #f87171; }
+        .score-mid  { background: rgba(255,193,7,0.2); color: #fbbf24; }
+        .score-ok   { background: rgba(40,167,69,0.2); color: #4ade80; }
+        .raw-title  { color: var(--color-text-muted, #aaa); font-size: 0.82rem; margin-top: 2px; }
+        .btn-reassign { padding: 4px 12px; border-radius: 4px; background: var(--primary-blue, #3b82f6); color: #fff; border: none; cursor: pointer; font-size: 0.82rem; }
+        .btn-reassign:hover { opacity: 0.85; }
+        .btn-confirm { padding: 4px 12px; border-radius: 4px; background: rgba(40,167,69,0.2); color: #4ade80; border: 1px solid #4ade80; cursor: pointer; font-size: 0.82rem; }
+        .btn-confirm:hover { background: rgba(40,167,69,0.35); }
+        .pagination { display: flex; gap: 8px; margin-top: 20px; justify-content: center; }
+        .pagination a { padding: 6px 14px; border-radius: 6px; background: rgba(255,255,255,0.07); color: var(--text-light, #fff); text-decoration: none; font-size: 0.85rem; }
+        .pagination a.active { background: var(--primary-blue, #3b82f6); }
+
+        /* Modal */
+        .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; }
+        .modal-backdrop.open { display:flex; }
+        .modal-box { background: var(--bg-card, #1a1a2e); border-radius: 12px; padding: 24px; width: min(500px,92vw); }
+        .modal-box h3 { margin: 0 0 16px; font-size: 1.1rem; }
+        .modal-search { width: 100%; padding: 8px 12px; border-radius: 6px; border: 1px solid var(--color-border, #333); background: var(--bg-dark, #0f0f1a); color: #fff; font-size: 0.9rem; }
+        .modal-results { margin-top: 10px; max-height: 220px; overflow-y: auto; }
+        .modal-result-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display:flex; align-items:center; gap:10px; }
+        .modal-result-item:hover { background: rgba(255,255,255,0.07); }
+        .modal-result-item img { width:32px; height:45px; object-fit:cover; border-radius:3px; }
+        .modal-footer { margin-top: 16px; display:flex; gap:10px; justify-content:flex-end; }
+        .btn-modal-cancel { padding: 7px 16px; border-radius: 6px; background: transparent; color: var(--color-text-muted, #aaa); border: 1px solid var(--color-border, #333); cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <div class="admin-wrapper">
+
+                <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px;">
+                    <a href="/admin" style="color:var(--color-text-muted,#aaa); text-decoration:none; font-size:0.9rem;">← Painel admin</a>
+                    <h1 class="admin-title" style="margin:0;">🔍 Fila de Revisão de Matching</h1>
+                    <span style="color:var(--color-text-muted,#aaa); font-size:0.9rem;" th:text="|${totalElements} releases|"></span>
+                </div>
+
+                <p style="color:var(--color-text-muted,#aaa); font-size:0.88rem; margin-bottom:20px;">
+                    Estes releases foram criados com match de baixa confiança e continuam sendo exibidos normalmente no site.
+                    Confirme o anime correto para melhorar o matching futuro.
+                </p>
+
+                <section class="admin-section" th:if="${releases.isEmpty()}">
+                    <p class="admin-empty">Nenhum release aguardando revisão. ✓</p>
+                </section>
+
+                <section class="admin-section" th:unless="${releases.isEmpty()}">
+                    <table class="review-table">
+                        <thead>
+                            <tr>
+                                <th>Título do lançamento</th>
+                                <th>Título buscado (scraper)</th>
+                                <th>Anime atual</th>
+                                <th>Score</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="r : ${releases}" th:attr="data-id=${r.id}">
+                                <td>
+                                    <span th:text="${r.title}">Título</span>
+                                    <div class="raw-title" th:text="|ep. ${r.animeEpisode}|">ep.</div>
+                                </td>
+                                <td>
+                                    <span th:text="${r.rawSearchTitle ?: '—'}">—</span>
+                                </td>
+                                <td>
+                                    <a th:if="${r.animeSlug != null}" th:href="|/anime/${r.animeSlug}|" th:text="${r.animeName}" target="_blank" style="color:inherit; text-decoration:underline dotted;">—</a>
+                                    <span th:unless="${r.animeSlug != null}" th:text="${r.animeName ?: '—'}">—</span>
+                                </td>
+                                <td>
+                                    <span class="score-badge"
+                                          th:classappend="${r.matchScore == null or r.matchScore == 0} ? 'score-low' : (${r.matchScore < 80} ? 'score-low' : (${r.matchScore < 90} ? 'score-mid' : 'score-ok'))"
+                                          th:text="${r.matchScore != null and r.matchScore > 0} ? ${r.matchScore} + '%' : '?'">?</span>
+                                </td>
+                                <td style="display:flex; gap:8px; flex-wrap:wrap;">
+                                    <button class="btn-reassign js-open-reassign"
+                                            th:attr="data-id=${r.id}, data-title=${r.rawSearchTitle ?: r.title}">
+                                        Reatribuir
+                                    </button>
+                                    <button class="btn-confirm js-confirm-match"
+                                            th:attr="data-id=${r.id}">
+                                        ✓ Confirmar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Paginação -->
+                    <div class="pagination" th:if="${totalPages > 1}">
+                        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                           th:href="|/admin/releases/review?pageNumber=${i}|"
+                           th:text="${i + 1}"
+                           th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de reatribuição -->
+    <div class="modal-backdrop" id="reassignModal">
+        <div class="modal-box">
+            <h3>Reatribuir release</h3>
+            <p style="color:var(--color-text-muted,#aaa); font-size:0.85rem; margin-top:-8px; margin-bottom:12px;" id="modalReleaseTitle"></p>
+            <input type="text" class="modal-search" id="animeSearchInput" placeholder="Buscar anime pelo nome...">
+            <div class="modal-results" id="animeSearchResults"></div>
+            <div class="modal-footer">
+                <button class="btn-modal-cancel" id="btnModalCancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+
+    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script>
+        let currentReleaseId = null;
+        let searchTimeout = null;
+
+        document.querySelectorAll('.js-open-reassign').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentReleaseId = btn.dataset.id;
+                document.getElementById('modalReleaseTitle').textContent = btn.dataset.title || '';
+                document.getElementById('animeSearchInput').value = '';
+                document.getElementById('animeSearchResults').innerHTML = '';
+                document.getElementById('reassignModal').classList.add('open');
+                document.getElementById('animeSearchInput').focus();
+            });
+        });
+
+        document.getElementById('btnModalCancel').addEventListener('click', closeModal);
+        document.getElementById('reassignModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('reassignModal')) closeModal();
+        });
+
+        function closeModal() {
+            document.getElementById('reassignModal').classList.remove('open');
+            currentReleaseId = null;
+        }
+
+        document.getElementById('animeSearchInput').addEventListener('input', e => {
+            clearTimeout(searchTimeout);
+            const q = e.target.value.trim();
+            if (q.length < 2) { document.getElementById('animeSearchResults').innerHTML = ''; return; }
+            searchTimeout = setTimeout(() => searchAnimes(q), 300);
+        });
+
+        function searchAnimes(q) {
+            fetch(`/api/v1/animes?query=${encodeURIComponent(q)}&pageSize=10`)
+                .then(r => r.json())
+                .then(data => {
+                    const items = data.content || [];
+                    const el = document.getElementById('animeSearchResults');
+                    el.innerHTML = items.length
+                        ? items.map(a => `
+                            <div class="modal-result-item" data-slug="${a.slug}" onclick="selectAnime('${a.slug}', '${escHtml(a.name)}')">
+                                <img src="${a.imageUrl || ''}" alt="" onerror="this.style.display='none'">
+                                <span>${escHtml(a.name)}</span>
+                            </div>`).join('')
+                        : '<p style="color:var(--color-text-muted,#aaa);padding:8px;font-size:0.85rem;">Nenhum anime encontrado.</p>';
+                })
+                .catch(() => {});
+        }
+
+        function escHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function selectAnime(slug, name) {
+            if (!currentReleaseId) return;
+            if (!confirm(`Reatribuir este release para "${name}"?`)) return;
+            fetch(`/api/v1/release/${currentReleaseId}/reassign`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ animeSlug: slug }),
+            }).then(r => {
+                if (r.ok) {
+                    const row = document.querySelector(`tr[data-id="${currentReleaseId}"]`);
+                    if (row) row.remove();
+                    closeModal();
+                }
+            }).catch(() => {});
+        }
+
+        document.querySelectorAll('.js-confirm-match').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.dataset.id;
+                if (!confirm('Confirmar que o anime atual está correto?')) return;
+                // Reassign para o próprio anime atual (limpa needsReview via reassign)
+                const row = document.querySelector(`tr[data-id="${id}"]`);
+                const animeLink = row ? row.querySelector('td:nth-child(3) a') : null;
+                if (!animeLink) return;
+                const slug = animeLink.href.split('/anime/').pop();
+                fetch(`/api/v1/release/${id}/reassign`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ animeSlug: slug }),
+                }).then(r => {
+                    if (r.ok && row) row.remove();
+                }).catch(() => {});
+            });
+        });
+    </script>
+</body>
+</html>

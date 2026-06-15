@@ -86,6 +86,8 @@ interface AnimeDocumentMapper {
             rank = jikan.rank,
             score = jikan.score,
             popularity = jikan.popularity,
+            season = jikan.season,
+            year = jikan.year,
             streamingUrl = jikan.streaming?.firstOrNull()?.url,
             sources = SourceWrapperDocument(jikan = jikan),
             updatedAt = Instant.now(),

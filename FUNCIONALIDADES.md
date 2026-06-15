@@ -40,7 +40,12 @@ Cada item segue o formato: **Problema/Objetivo → Como implementar → Arquivos
 | FUNC-08 | Agenda híbrida (cobrir ingeridos) | 2026-06-13 |
 | FUNC-10 | Recomendações inteligentes | 2026-06-13 |
 | FUNC-13 | Mais APIs de enriquecimento (AniList) | 2026-06-13 |
-| FUNC-07 | Notificações de favoritos lançados | 2026-06-13 |
+| FUNC-07 | Notificações de favoritos lançados (in-app) | 2026-06-13 |
+| FUNC-07b | Web Push: permissão ao favoritar + assinatura VAPID | 2026-06-14 |
+| FUNC-15 | Preferência de site de notificação por anime | 2026-06-14 |
+| FUNC-16 | Transferência de identidade anônima entre dispositivos | 2026-06-14 |
+| FUNC-17 | Gerenciamento centralizado de favoritos em `/favoritos` | 2026-06-14 |
+| BUG-CAL | Correção do calendário (índice de dia incorreito no domingo) | 2026-06-14 |
 
 **FUNC-01** — **causa-raiz** identificada no smoke test: o **Spring Boot 4 mudou a serialização de
 `Page`** para `{ content, page: { number, totalPages, ... } }`, então o `result.number` que o JS lia
@@ -191,13 +196,79 @@ marcação automática como lido ao abrir e escape de HTML — JS em
 recente, badge de não lidas e `POST .../read` marcando todas como lidas (updateMulti). *Fases 2/3 (Web Push,
 Telegram) e preferências por canal ficam para depois — ver bloco FUNC-07 abaixo.*
 
-## Sumário
+## Sumário (pendentes)
 
 | ID | Funcionalidade | Esforço | Prio | Depende |
 |----|----------------|:------:|:---:|---------|
 | FUNC-12 | Internacionalização (i18n) | 🔴 G | ○ | — |
-| FUNC-07 (fases 2-3) | Web Push + Telegram + preferências | 🔴 G | ◐ | F1 |
+| FUNC-07 (fase 3) | Telegram: vincular chat + alertas | 🔴 G | ○ | F1 |
 | FUNC-13 (TMDB/Kitsu) | Imagens/trailers + sinopse PT | 🟡 M | ◐ | — |
+
+---
+
+## Implementadas na onda de 14/06/2026
+
+### FUNC-07b — Web Push (fase 2 de FUNC-07)
+
+**Implementado.** Ao adicionar um anime aos favoritos pela primeira vez, o site exibe um prompt
+solicitando permissão de notificações push. Se o usuário aceitar, o Service Worker registrado
+(`/sw.js`) cria uma `PushSubscription` via VAPID e a envia para `POST /api/v1/user/push/subscribe`.
+O backend armazena endpoint + chaves (`p256dh`, `auth`) por usuário e, quando um release é criado
+via `AfterCreateReleaseUserCase`/`NotifyFavoritesUseCase`, envia o push via a API de Web Push.
+
+**Arquivos-chave:**
+- `NotifyFavoritesUseCase` — filtra usuários e despacha push
+- `UserAPIController` — endpoint `/push/subscribe`
+- `sw.js` — service worker (cache de assets + handler de push)
+- `anime.js` — prompt inline ao favoritar
+
+---
+
+### FUNC-15 — Preferência de site de notificação por anime
+
+**Implementado.** Na página `/favoritos`, cada card exibe um botão 🔔 que abre um painel flutuante
+com checkboxes — um por site de integração habilitado. O usuário pode escolher um ou mais sites;
+somente releases vindos desses sites geram notificação para aquele anime. Se nenhum site for
+selecionado, o comportamento é "qualquer site" (padrão anterior).
+
+**Modelo de dados:** `User.notificationSitePreferences: Map<String, Set<String>>` — chave=animeId,
+valor=conjunto de nomes de sites.
+
+**Filtragem em `NotifyFavoritesUseCase`:** `if (!userPrefs.isNullOrEmpty() && fromSite !in userPrefs) skip`.
+
+**Arquivos-chave:**
+- `User.kt` / `UserDocument.kt` — novo campo `notificationSitePreferences`
+- `UserGateway.kt` — método `updateNotificationSitePreference`
+- `UpdateNotificationSitePreferenceUseCase.kt` — caso de uso
+- `UserAPIController` — `PUT/DELETE /api/v1/user/notification-preference/{animeId}`
+- `NotifyFavoritesUseCase` — filtro por site
+- `AfterCreateReleaseUserCase` / `CreateReleaseUserCase` — repasse do `fromSite`
+- `FavoritesController` — injeta `siteIntegrations` e `notifPrefs` no model
+- `favoritos.html` + `favoritos-notify.js` + `favoritos.css`
+
+---
+
+### FUNC-16 — Transferência de identidade anônima entre dispositivos
+
+**Implementado.** Na aba "Configurações" de `/usuario`, o usuário pode ver seu `user_id` atual,
+copiá-lo para a área de transferência e importar um ID de outro dispositivo. O endpoint
+`POST /api/v1/user/transfer` valida o UUID, verifica a existência do usuário e atualiza o cookie
+`user_id` com expiração de 1 ano — permitindo continuar a mesma sessão (favoritos, preferências) em
+outro navegador ou máquina sem login com Google.
+
+**Arquivos-chave:**
+- `UserAPIController` — endpoint `POST /api/v1/user/transfer` + DTO `TransferUserRequest`
+- `FindUserUseCase` — verificação de existência antes de emitir o cookie
+- `usuario.html` — seção "Identificação" com campo readonly + botão copiar + input importar
+- `user.js` — handlers de cópia e importação via `document.cookie`
+
+---
+
+### FUNC-17 — Gerenciamento centralizado de favoritos
+
+**Implementado.** Toda a gestão de favoritos foi centralizada em `/favoritos`: remoção de animes,
+configuração de site de notificação e navegação para o detalhe. A página `/usuario` passou a exibir
+apenas um resumo com link para `/favoritos`, evitando duplicidade de controles.
 
 ---
 
@@ -362,13 +433,17 @@ Coisas de alto retorno que não dependem de auth:
 ### Onda 4 — Engajamento & relevância
 - ✅ **FUNC-08** — agenda híbrida (cobre os ingeridos que faltavam) *(feito)*.
 - ✅ **FUNC-10** — recomendações inteligentes (themes persistidos, perfil do usuário) *(feito)*.
-- ✅ **FUNC-07** — notificações de favoritos: **central in-app** (fase 1) *(feito)*. Fases 2-3 (Web Push,
-  Telegram) e preferências por canal ficam para uma próxima onda.
+- ✅ **FUNC-07** — notificações de favoritos: **central in-app** (fase 1) *(feito)*.
+- ✅ **FUNC-07b** — **Web Push** (fase 2): permissão ao favoritar, VAPID, service worker *(feito)*.
+- ✅ **FUNC-15** — preferência de site de notificação por anime (multi-site) *(feito)*.
+- ✅ **FUNC-16** — transferência de identidade anônima entre dispositivos *(feito)*.
+- ✅ **FUNC-17** — gerenciamento centralizado de favoritos em `/favoritos` *(feito)*.
 
 ### Onda 5 — Alcance & polimento
 - ✅ **FUNC-13** — mais APIs: **AniList** (próximo episódio/countdown) *(feito)*. TMDB/Kitsu
   (imagens/trailers/sinopse PT) e precedência por campo no `merge` seguem pendentes.
 - **FUNC-12** — i18n (faseado por página).
+- **FUNC-07 fase 3** — Telegram: vincular chat e receber alertas.
 - **D1/D3/D4/D6** — tema claro, sistema de componentes, micro-interações e inspirações de UX.
 
 ---

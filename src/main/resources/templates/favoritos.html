@@ -56,6 +56,11 @@
                 </h1>
             </div>
 
+            <!-- Dica de notificação por site -->
+            <div class="fav-notify-tip">
+                🔔 Toque no sino de cada anime para escolher de qual site você quer ser notificado quando sair um novo episódio.
+            </div>
+
             <!-- Controles de filtro/ordenação -->
             <div class="fav-controls">
                 <input type="text" id="favSearch" class="fav-search" placeholder="Buscar nos favoritos..." autocomplete="off">
@@ -89,7 +94,7 @@
                      th:data-tags="${fav.tags != null ? #strings.listJoin(fav.tags, ','): ''}">
 
                     <a class="fav-card" th:href="|/anime/${fav.slug}|">
-                        <!-- Botão remover (chama API) -->
+                        <!-- Botão remover (canto superior direito) -->
                         <button class="fav-remove-btn" th:data-id="${fav.id}"
                                 onclick="removeFavorite(event, this)" title="Remover dos favoritos">✕</button>
 
@@ -104,6 +109,12 @@
                             <div class="fav-card-tags" th:if="${fav.tags != null and !fav.tags.isEmpty()}">
                                 <span class="fav-card-tag" th:each="tag,iter : ${fav.tags}" th:if="${iter.index < 3}" th:text="${tag}">Tag</span>
                             </div>
+                            <!-- Botão de notificação — sempre visível no body -->
+                            <button class="fav-notify-btn js-fav-notify"
+                                    th:attr="data-anime-id=${fav.id}"
+                                    onclick="event.preventDefault();event.stopPropagation();">
+                                🔔 <span class="fav-notify-label">Qualquer site</span>
+                            </button>
                         </div>
                     </a>
 
@@ -118,7 +129,14 @@
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const SITE_LIST = /*[[${siteIntegrations != null ? siteIntegrations.![name] : {}}]]*/ [];
+        const NOTIF_PREFS = /*[[${notifPrefs}]]*/ {};
+        /*]]>*/
+    </script>
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script type="text/javascript" th:src="@{/js/favoritos-notify.js}"></script>
     <script>
         function removeFavorite(event, btn) {
             event.preventDefault();

@@ -17,13 +17,17 @@ um único lugar, com calendário da temporada, busca, recomendações e favorito
 ## ✨ Funcionalidades
 
 - **Agregação de lançamentos** — monitora múltiplas fontes e centraliza os episódios novos.
-- **Enriquecimento de dados** — capas, sinopses, notas, gêneros e metadados via [Jikan API](https://jikan.moe/) (MyAnimeList).
+- **Enriquecimento de dados** — capas, sinopses, notas, gêneros e metadados via [Jikan API](https://jikan.moe/) (MyAnimeList) e [AniList](https://anilist.co/) (próximo episódio/countdown).
 - **Tradução automática** — sinopses traduzidas para PT-BR via [LibreTranslate](https://libretranslate.com/) self-hosted.
-- **Calendário da temporada** — grade semanal de lançamentos baseada na [SubsPlease](https://subsplease.org/).
+- **Calendário da temporada** — grade semanal de lançamentos baseada na [SubsPlease](https://subsplease.org/), complementada com os animes já ingeridos.
 - **Busca inteligente** — casamento de títulos por proximidade + _fuzzy matching_ ([FuzzyWuzzy](https://github.com/xdrop/fuzzywuzzy)).
-- **Favoritos e comentários** — sem necessidade de cadastro (identificação por cookie).
+- **Favoritos e comentários** — sem necessidade de cadastro (identificação por cookie anônimo `user_id`).
+- **Notificações de lançamentos** — in-app (sino no header) + Web Push opcional; filtragem por site preferido por anime.
+- **Transferência de identidade anônima** — exportar/importar o `user_id` para continuar a sessão em outro dispositivo.
+- **Área de favoritos** — página dedicada com busca, filtro, remoção e configuração de preferências de notificação por site.
+- **Área admin** — moderação de comentários, gerenciamento de sites monitorados (habilitar/desabilitar, trocar fila) e edição de dados de anime.
 - **API REST** documentada com OpenAPI/Swagger.
-- **SEO** — `sitemap.xml` dinâmico, `robots.txt` e meta tags Open Graph/Twitter.
+- **SEO** — `sitemap.xml` dinâmico, `robots.txt` e meta tags Open Graph/Twitter/JSON-LD.
 
 ## 🌐 Links Úteis
 
@@ -106,7 +110,7 @@ docker-compose up -d
 ./gradlew bootRun --args='--spring.profiles.active=local'
 ```
 
-A aplicação sobe em `http://localhost:8080`.
+A aplicação sobe em `http://localhost:3000`.
 
 Para testar o scraping localmente, ative `extraction-tasks.enabled: true` em
 [`application-local.yaml`](src/main/resources/application-local.yaml).
@@ -131,8 +135,12 @@ docker run -p 8080:8080 --env-file .env animes-achimid-v2
 | `MONGODB_URI` | URI de conexão do MongoDB | ✅ |
 | `CALLBACK_URL` | URL pública que recebe o callback do Puppeteer | ✅ |
 | `SPRING_PROFILES_ACTIVE` | `local` ou `prod` (default: `local`) | — |
-| `PORT` | Porta HTTP (default: `8080`) | — |
+| `PORT` | Porta HTTP (default: `3000`) | — |
 | `LOG_LEVEL` | Nível de log raiz (default: `INFO`) | — |
+| `VAPID_PUBLIC_KEY` | Chave pública VAPID para Web Push | — |
+| `VAPID_PRIVATE_KEY` | Chave privada VAPID para Web Push | — |
+| `GOOGLE_CLIENT_ID` | Client ID OAuth2 do Google (profile `oauth`) | — |
+| `GOOGLE_CLIENT_SECRET` | Client Secret OAuth2 do Google (profile `oauth`) | — |
 
 ## 📡 Endpoints principais
 
@@ -141,13 +149,22 @@ docker run -p 8080:8080 --env-file .env animes-achimid-v2
 - `GET /animes` — Catálogo de animes
 - `GET /anime/{slug}` — Página de detalhes do anime
 - `GET /calendar` — Calendário da temporada
+- `GET /favoritos` — Página de favoritos (com preferências de notificação)
+- `GET /usuario` — Perfil do usuário e configurações
 - `GET /sitemap.xml` — Sitemap dinâmico
+- `GET /dmca` · `/cookies` · `/privacidade` · `/termos` — Páginas legais
 
 ### API REST (`/api/v1`)
 - `GET /api/v1/animes` — Lista/busca animes paginados
 - `GET /api/v1/release` — Lista/busca lançamentos paginados
 - `POST /api/v1/anime/{id}/comment` — Adiciona comentário
 - `POST` / `DELETE /api/v1/anime/{id}/favorite` — Favorita/desfavorita
+- `GET /api/v1/user/notifications` — Notificações in-app do usuário
+- `POST /api/v1/user/notifications/read` — Marca notificações como lidas
+- `PUT /api/v1/user/notification-preference/{animeId}` — Define site preferido para notificação
+- `DELETE /api/v1/user/notification-preference/{animeId}` — Remove preferência (qualquer site)
+- `POST /api/v1/user/push/subscribe` — Registra assinatura Web Push
+- `POST /api/v1/user/transfer` — Transfere identidade anônima entre dispositivos
 - `GET /api/v1/site/integration` — Status das integrações monitoradas
 - `POST /api/v1/site/integration/callback` — Callback do Puppeteer (uso interno)
 

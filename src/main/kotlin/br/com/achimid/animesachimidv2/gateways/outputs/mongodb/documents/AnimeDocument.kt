@@ -48,7 +48,11 @@ data class AnimeDocument(
     val rank: String? = null,
     val streamingUrl: String? = null,
 
+    val season: String? = null,
+    val year: Int? = null,
+
     val sources: SourceWrapperDocument? = null,
+    val jikanSyncedAt: Instant? = null,
 
     @CreatedDate
     val createdAt: Instant? = null,

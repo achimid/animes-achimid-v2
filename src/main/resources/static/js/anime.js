@@ -25,9 +25,74 @@ function addFavorite(animeId) {
             btnFavorite.innerText = "✓ Na Lista";
             btnFavorite.style.borderColor = "var(--primary-green)";
             btnFavorite.style.color = "var(--primary-green)";
+
+            const tip = document.getElementById('animeFavNotifTip');
+            if (tip) tip.style.display = '';
+
+            if ('Notification' in window && Notification.permission === 'default') {
+                const prompt = document.getElementById('animeNotifPrompt');
+                if (prompt) prompt.style.display = '';
+            }
         }
     })
 }
+
+// Prompt de notificação ao favoritar
+(function () {
+    const prompt = document.getElementById('animeNotifPrompt');
+    const yesBtn = document.getElementById('animeNotifYes');
+    const noBtn  = document.getElementById('animeNotifNo');
+    const tip    = document.getElementById('animeFavNotifTip');
+    if (!prompt || !yesBtn || !noBtn) return;
+
+    async function trySubscribePush() {
+        const vapidKey = window.VAPID_PUBLIC_KEY;
+        if (!vapidKey || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
+        try {
+            const reg = await navigator.serviceWorker.register('/sw.js');
+            let sub = await reg.pushManager.getSubscription();
+            if (sub) return;
+            const padding = '='.repeat((4 - vapidKey.length % 4) % 4);
+            const base64 = (vapidKey + padding).replace(/-/g, '+').replace(/_/g, '/');
+            const keyBytes = Uint8Array.from([...atob(base64)].map(c => c.charCodeAt(0)));
+            sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes });
+            const key  = sub.getKey('p256dh');
+            const auth = sub.getKey('auth');
+            await fetch('/api/v1/user/push/subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    endpoint: sub.endpoint,
+                    p256dh: btoa(String.fromCharCode(...new Uint8Array(key))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+                    auth:   btoa(String.fromCharCode(...new Uint8Array(auth))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ''),
+                }),
+            });
+        } catch (e) {
+            console.warn('Push subscribe error:', e);
+        }
+    }
+
+    yesBtn.addEventListener('click', async () => {
+        yesBtn.disabled = true;
+        yesBtn.textContent = '…';
+        try {
+            const permission = await Notification.requestPermission();
+            prompt.style.display = 'none';
+            if (permission === 'granted') {
+                await trySubscribePush();
+                if (tip) {
+                    tip.style.display = '';
+                    tip.textContent = 'Notificações ativadas ✓';
+                    setTimeout(() => { if (tip) tip.textContent = 'Notificações ativas · '; const a = document.createElement('a'); a.href='/favoritos'; a.textContent='Gerenciar'; tip.appendChild(a); }, 2000);
+                }
+            }
+        } catch (e) {
+            prompt.style.display = 'none';
+        }
+    });
+
+    noBtn.addEventListener('click', () => { prompt.style.display = 'none'; });
+}());
 
 function removeFavorite(animeId) {
     fetch(`/api/v1/anime/${animeId}/favorite`, {
@@ -170,33 +235,119 @@ function getCookie(name) {
 let firstEpisode = document.querySelector('.ep-title')
 if (firstEpisode != null) firstEpisode.click()
 
+// ===== Botão: Traduzir sinopse (admin) =====
+const btnTranslate = document.getElementById('btnTranslateSynopsis');
+if (btnTranslate) {
+    btnTranslate.addEventListener('click', () => {
+        btnTranslate.disabled = true;
+        btnTranslate.textContent = 'Traduzindo...';
+        fetch(`/api/v1/anime/${window.ANIME_SLUG}/translate`, { method: 'POST' })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                if (!data?.synopsisPtBr) {
+                    btnTranslate.textContent = '✗ Erro';
+                    btnTranslate.disabled = false;
+                    return;
+                }
+                const ptBlock = document.querySelector('.synopsis-content[data-lang="pt"]');
+                const enBlock = document.querySelector('.synopsis-content[data-lang="en"]');
+                const tabsBlock = document.querySelector('.synopsis-tabs');
+                if (ptBlock) ptBlock.innerHTML = data.synopsisPtBr;
+                if (tabsBlock) tabsBlock.style.display = '';
+                else if (enBlock) {
+                    // Cria as abas dinamicamente
+                    const tabs = document.createElement('div');
+                    tabs.className = 'synopsis-tabs';
+                    tabs.innerHTML = `
+                        <button type="button" class="synopsis-tab active" onclick="switchSynopsis(this,'pt')">🇧🇷 Português</button>
+                        <button type="button" class="synopsis-tab" onclick="switchSynopsis(this,'en')">🇬🇧 English</button>`;
+                    enBlock.parentNode.insertBefore(tabs, enBlock);
+                    switchSynopsis(tabs.firstElementChild, 'pt');
+                }
+                btnTranslate.remove();
+            })
+            .catch(() => {
+                btnTranslate.textContent = '✗ Erro';
+                btnTranslate.disabled = false;
+            });
+    });
+}
+
+// ===== Botão: Atualizar dados do anime via Jikan (admin) =====
+const btnRefresh = document.querySelector('.js-refresh-anime');
+if (btnRefresh) {
+    btnRefresh.addEventListener('click', () => {
+        if (btnRefresh.disabled) return;
+        btnRefresh.disabled = true;
+        btnRefresh.textContent = '⏳';
+        fetch(`/api/v1/anime/${window.ANIME_SLUG}/refresh`, { method: 'POST' })
+            .then(r => {
+                if (r.ok) {
+                    btnRefresh.textContent = '✓';
+                    setTimeout(() => location.reload(), 800);
+                } else {
+                    btnRefresh.textContent = '✗';
+                    btnRefresh.disabled = false;
+                    setTimeout(() => { btnRefresh.textContent = '🔄'; }, 2500);
+                }
+            })
+            .catch(() => {
+                btnRefresh.textContent = '✗';
+                btnRefresh.disabled = false;
+                setTimeout(() => { btnRefresh.textContent = '🔄'; }, 2500);
+            });
+    });
+}
+
 function openImageModal() {
-    document.getElementById('imageModal').style.display = 'flex';
+    const modal = document.getElementById('imageModal');
+    const grid = document.getElementById('imageOptionsGrid');
+    modal.style.display = 'flex';
+    grid.innerHTML = '<div class="img-option-loading">Carregando opções...</div>';
+
+    fetch(`/api/v1/anime/${window.ANIME_SLUG}/images`)
+        .then(res => res.ok ? res.json() : [])
+        .then(options => {
+            if (!options.length) {
+                grid.innerHTML = '<p class="img-option-loading">Nenhuma imagem disponível.</p>';
+                return;
+            }
+            grid.innerHTML = options.map(opt => `
+                <div class="img-option">
+                    <img src="${opt.url}" onclick="changePoster('${opt.url}')" title="${opt.label}" loading="lazy">
+                    <span class="img-option-label">${opt.label}</span>
+                </div>
+            `).join('');
+        })
+        .catch(() => {
+            grid.innerHTML = '<p class="img-option-loading">Erro ao carregar imagens.</p>';
+        });
 }
 
 function closeImageModal() {
     document.getElementById('imageModal').style.display = 'none';
 }
 
-
 function changePoster(newSrc) {
     const mainImg = document.getElementById('main-poster');
     const hero = document.querySelector('.anime-hero');
+    closeImageModal();
+    if (!mainImg) return;
 
-    if(mainImg) {
-        // Aplica um efeito de fade simples
-        mainImg.style.opacity = '0.5';
+    mainImg.style.opacity = '0.5';
+    setTimeout(() => {
+        mainImg.src = newSrc;
+        if (hero) {
+            hero.style.backgroundImage = `linear-gradient(0deg, var(--bg-dark) 0%, rgba(0, 0, 0, 0.85) 100%), url(${newSrc})`;
+        }
+        mainImg.style.opacity = '1';
+    }, 200);
 
-        setTimeout(() => {
-            mainImg.src = newSrc;
-            if(hero) {
-                hero.style.backgroundImage = `linear-gradient(0deg, var(--bg-dark) 0%, rgba(0, 0, 0, 0.85) 100%), url(${newSrc})`;
-            }
-            mainImg.style.opacity = '1';
-        }, 200);
-
-        closeImageModal();
-    }
+    fetch(`/api/v1/anime/${window.ANIME_SLUG}/image`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: newSrc }),
+    }).catch(() => {});
 }
 
 // Fechar modal ao clicar fora dele

@@ -76,6 +76,31 @@ var releasesPageNumber = 1
 var hasMoreReleases = true
 var isLoadingReleases = false
 
+function buildReleaseCard(anime) {
+    const tpl = document.createElement('template')
+    tpl.innerHTML = `
+        <a class="anime-card card-enter" href="/anime/${anime.animeSlug}">
+            ${anime.animeEpisode == null || anime.animeEpisode === ''
+                ? `<span class="ep-badge">${anime.animeType}</span>`
+                : `<span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>`}
+            <button class="btn-quick-search" onclick="selectAnimeEpisodes(event)">
+                <i class="fas fa-search"></i>
+            </button>
+            ${anime.animeStreamUrl == null ? '' : `
+                <button class="btn-quick-play" onclick="event.preventDefault(); window.location.href='${anime.animeStreamUrl}'">
+                    <i class="fas fa-play"></i>
+                </button>
+            `}
+            ${window.IS_ADMIN ? `<button class="btn-hide-release" data-release-id="${anime.id}" title="Ocultar lançamento" aria-label="Ocultar lançamento">✕</button>` : ''}
+            <img src="${anime.animeImageUrl}" alt="${anime.animeName}" loading="lazy">
+            <div class="anime-card-info">
+                <span class="anime-card-title">${anime.animeName}</span>
+            </div>
+        </a>
+    `.trim()
+    return tpl.content.firstElementChild
+}
+
 function showMoreButton() {
     if (isLoadingReleases || !hasMoreReleases) return
 
@@ -83,36 +108,19 @@ function showMoreButton() {
     btnLoad.disabled = true
     btnLoad.textContent = 'Carregando...'
 
+    const skeletons = Array.from({length: RELEASES_PAGE_SIZE}, () => {
+        const sk = document.createElement('div')
+        sk.className = 'anime-card-skeleton'
+        grid.appendChild(sk)
+        return sk
+    })
+
     fetch(`/api/v1/release?pageNumber=${releasesPageNumber}&pageSize=${RELEASES_PAGE_SIZE}`).then(res => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`)
         return res.json()
     }).then(result => {
-        result.content.forEach((anime, index) => {
-            grid.innerHTML += `
-                <a class="anime-card" href="/anime/${anime.animeSlug}">
-                    ${anime.animeEpisode == null || anime.animeEpisode === '' ? `
-                        <span class="ep-badge">${anime.animeType}</span>
-                    ` : `
-                        <span class="ep-badge">${anime.animeType}: ${anime.animeEpisode}</span>
-                    `}           
-                    
-                    <button class="btn-quick-search" onclick="selectAnimeEpisodes(event)">
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                    ${anime.animeStreamUrl == null ? '': `
-                        <button class="btn-quick-play" onclick="event.preventDefault(); window.location.href='${anime.animeStreamUrl}'">
-                            <i class="fas fa-play"></i>
-                        </button>
-                    `}
-                             
-                    <img src="${anime.animeImageUrl}" alt="${anime.animeName}">
-                    <div class="anime-card-info">
-                        <span class="anime-card-title">${anime.animeName}</span>
-                    </div>
-                </a>
-            `
-        });
+        skeletons.forEach(sk => sk.remove())
+        result.content.forEach(anime => grid.appendChild(buildReleaseCard(anime)))
         // Spring Boot 4 serializa Page como { content, page: { number, totalPages, ... } }
         const page = result.page || {}
         const currentPage = page.number != null ? page.number : releasesPageNumber
@@ -123,12 +131,27 @@ function showMoreButton() {
         btnLoad.disabled = !hasMoreReleases
     }).catch(err => {
         console.error('Erro ao carregar mais lançamentos:', err)
+        skeletons.forEach(sk => sk.remove())
         btnLoad.textContent = 'Erro ao carregar. Tentar novamente'
         btnLoad.disabled = false
     }).finally(() => {
         isLoadingReleases = false
     })
 }
+
+function hideRelease(id, card) {
+    fetch(`/api/v1/release/${id}/hide`, { method: 'POST' })
+        .then(res => { if (res.ok && card) card.remove() })
+        .catch(() => {})
+}
+
+grid.addEventListener('click', e => {
+    const btn = e.target.closest('.btn-hide-release')
+    if (!btn) return
+    e.preventDefault()
+    e.stopPropagation()
+    hideRelease(btn.dataset.releaseId, btn.closest('.anime-card'))
+})
 
 function filterAnimeReleaseEpisode(query) {
     return fetch(`/api/v1/release?query=${query}&pageSize=10`).then(res => res.json()).then(result => {
@@ -220,6 +243,13 @@ function selectAnimeEpisodes(e) {
     sidebarSearch.focus();
 }
 
+
+function scrollSeason(direction) {
+    const el = document.getElementById('season-scroll')
+    if (!el) return
+    const cardWidth = el.querySelector('.anime-card')?.offsetWidth || 160
+    el.scrollBy({ left: direction * (cardWidth + 15) * 3, behavior: 'smooth' })
+}
 
 const initialDownload = document.querySelector('.btn-download')
 if (initialDownload) toggleAccordion(initialDownload);

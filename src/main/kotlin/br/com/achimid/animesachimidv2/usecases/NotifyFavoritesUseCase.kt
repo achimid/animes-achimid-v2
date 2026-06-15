@@ -21,13 +21,16 @@ class NotifyFavoritesUseCase(
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun execute(release: Release, anime: Anime) {
+    fun execute(release: Release, anime: Anime, fromSite: String? = null) {
         val episode = release.animeEpisode ?: return
 
         val users = userGateway.findByFavorite(anime.id)
         if (users.isEmpty()) return
 
         val notified = users.count { user ->
+            val userPrefs = user.notificationSitePreferences?.get(anime.id)
+            if (!userPrefs.isNullOrEmpty() && fromSite != null && fromSite !in userPrefs) return@count false
+
             if (notificationGateway.exists(user.id, anime.id, episode)) return@count false
 
             val notification = Notification(

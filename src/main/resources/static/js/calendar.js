@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    const today = new Date().getDay()-1;
+    const today = (new Date().getDay() + 6) % 7;
     const activeChip = document.querySelector(`.chip[data-day="${today}"]`);
     if (activeChip) {
         activeChip.click();

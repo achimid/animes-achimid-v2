@@ -148,7 +148,7 @@
             <span class="status-badge" th:text="${anime.status}">Anime Status</span>
             <img id="main-poster" fetchpriority="high" loading="eager" th:src="${anime.imageUrl}" th:alt="${anime.name}">
 
-            <button class="btn-edit-image" onclick="openImageModal()" th:if="${isAdmin}">
+            <button class="btn-edit-image" onclick="openImageModal()" th:if="${isAdmin}" title="Alterar imagem">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 20px; height: 20px;">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                 </svg>
@@ -204,6 +204,19 @@
                         <img loading="lazy" src="https://www.google.com/s2/favicons?sz=64&domain=anilist.co" class="ext-icon" alt="AL">
                     </a>
                 </div>
+
+                <p class="anime-notif-tip" id="animeFavNotifTip"
+                   th:style="${isFavorited} ? '' : 'display:none'">
+                    Notificações ativas · <a href="/favoritos">Gerenciar</a>
+                </p>
+
+                <div class="anime-notif-prompt" id="animeNotifPrompt" style="display:none">
+                    <span class="anime-notif-prompt-text">Ativar notificações de novos episódios?</span>
+                    <div class="anime-notif-prompt-actions">
+                        <button class="anime-notif-prompt-yes" id="animeNotifYes">Ativar</button>
+                        <button class="anime-notif-prompt-no" id="animeNotifNo">Agora não</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -211,7 +224,12 @@
     <main class="content-container">
 
         <div class="main-column">
-            <h2 class="section-title">Sinopse</h2>
+            <div class="synopsis-section-head">
+                <h2 class="section-title">Sinopse</h2>
+                <button id="btnTranslateSynopsis"
+                        th:if="${isAdmin and (anime.synopsisPtBr == null or anime.synopsisPtBr.isEmpty())}"
+                        class="btn-admin-inline">🇧🇷 Traduzir sinopse</button>
+            </div>
             <div class="synopsis-block">
                 <div class="synopsis-tabs"
                      th:if="${anime.synopsis != null and !anime.synopsis.isEmpty() and anime.synopsisPtBr != null and !anime.synopsisPtBr.isEmpty()}">
@@ -300,7 +318,10 @@
 
         <aside class="sidebar">
             <div class="sidebar-card">
-                <h3 style="color:var(--primary-green); margin-bottom:15px;">Informações</h3>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:15px;">
+                    <h3 style="color:var(--primary-green); margin:0;">Informações</h3>
+                    <button class="btn-admin-inline js-refresh-anime" th:if="${isAdmin}" title="Atualizar dados do Jikan">🔄 Atualizar</button>
+                </div>
                 <div class="info-row">
                     <span class="info-label">Status:</span>
                     <span class="info-value" th:text="${anime.status}">0</span>
@@ -362,30 +383,8 @@
         <div class="modal-content">
             <h3>Selecione uma nova imagem</h3>
             <p>Escolha a versão que melhor representa este anime:</p>
-            <div class="image-options-grid">
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1151/152479.webp" onclick="changePoster(this.src)" title="Poster Original">
-                </div>
-
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1628/150031.webp" onclick="changePoster(this.src)" title="Arte Promocional">
-                </div>
-
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1031/154235.webp" onclick="changePoster(this.src)" title="Versão Clean">
-                </div>
-
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1921/154528.webp" onclick="changePoster(this.src)">
-                </div>
-
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1668/148737.webp" onclick="changePoster(this.src)">
-                </div>
-
-                <div class="img-option">
-                    <img src="https://cdn.myanimelist.net/images/anime/1054/153719.webp" onclick="changePoster(this.src)">
-                </div>
+            <div class="image-options-grid" id="imageOptionsGrid">
+                <div class="img-option-loading">Carregando opções...</div>
             </div>
             <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 15px; margin-bottom: 10px;">
                 <p style="font-size: 0.8rem; margin-bottom: 10px;">Ou cole a URL de uma imagem:</p>
@@ -429,6 +428,7 @@
     </footer>
 
     <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script th:inline="javascript">/*<![CDATA[*/window.ANIME_SLUG=/*[[${anime.slug}]]*/null;/*]]>*/</script>
     <script type="text/javascript" th:src="@{/js/anime.js}"></script>
 </body>
 </html>

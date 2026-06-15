@@ -5,8 +5,14 @@ import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.mongodb.core.mapping.Field
 import java.time.Instant
 
+data class JikanPagination(
+    @JsonProperty("last_visible_page") val lastVisiblePage: Int = 1,
+    @JsonProperty("has_next_page") val hasNextPage: Boolean = false,
+)
+
 data class JikanApiResponse(
-    val data: List<Jikan>
+    val data: List<Jikan>,
+    val pagination: JikanPagination? = null,
 )
 
 data class JikanApiSingleResponse(
@@ -87,6 +93,10 @@ data class JikanResourceLink(
 data class JikanAnimeImages(
     val jpg: JikanImageVariant? = null,
     val webp: JikanImageVariant? = null,
+)
+
+data class JikanPicturesResponse(
+    val data: List<JikanAnimeImages> = emptyList()
 )
 
 data class JikanImageVariant(
