@@ -27,13 +27,15 @@ RUN curl -L https://github.com/glowroot/glowroot/releases/download/v0.14.7/glowr
 # --- Stage 3: Runtime Stage ---
 FROM amazoncorretto:25-alpine AS runner
 
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup -S -g 1000 spring && adduser -S -u 1000 spring -G spring
 USER spring:spring
 
 WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=glowroot --chown=spring:spring /opt/glowroot /app/glowroot
+
+RUN mkdir -p /app/glowroot/logs /app/glowroot-data
 
 EXPOSE 3000 4000
 
