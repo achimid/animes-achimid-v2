@@ -95,3 +95,7 @@ tasks.withType(KaptGenerateStubs).configureEach {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootRun {
+    jvmArgs = ["-javaagent:${projectDir}/glowroot/glowroot.jar"]
+}

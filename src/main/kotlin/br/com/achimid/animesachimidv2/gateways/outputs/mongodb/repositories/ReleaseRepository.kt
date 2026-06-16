@@ -18,7 +18,7 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
     @Query("{ 'hidden': { '\$ne': true }, 'title': { '\$regex': ?0, '\$options': 'i' } }")
     fun findVisibleByTitleContaining(query: String, pageRequest: PageRequest): Page<ReleaseDocument>
 
-    @Query("{ 'hidden': { '\$ne': true }, 'animeId': ?0 }")
+    @Query(value = "{ 'hidden': { '\$ne': true }, 'animeId': ?0 }", sort = "{ 'episode': -1 }")
     fun findVisibleByAnimeIdOrderByEpisodeDesc(animeId: String): List<ReleaseDocument>
 
     fun findByAnimeIdAndEpisode(animeId: String, episodeNumber: String): List<ReleaseDocument>

@@ -10,6 +10,7 @@ import br.com.achimid.animesachimidv2.utils.normalizeTitle
 import br.com.achimid.animesachimidv2.utils.stripSeasonFromTitle
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
 private const val SCORE_CONFIDENT = 90
@@ -26,6 +27,7 @@ class SearchUseCase(
 
     val logger = LoggerFactory.getLogger(SearchUseCase::class.java)
 
+    @Cacheable("calendarSearchCache")
     fun execute(text: String): SearchResult {
         val normalized = normalizeTitle(text)
 

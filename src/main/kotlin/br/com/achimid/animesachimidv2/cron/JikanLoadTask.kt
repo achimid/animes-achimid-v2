@@ -27,6 +27,8 @@ class JikanLoadTask(
     @Caching(evict = [
         CacheEvict("currentSeasonCache", allEntries = true),
         CacheEvict("featuredAnimeCache", allEntries = true),
+        CacheEvict("calendarCache", allEntries = true),
+        CacheEvict("calendarSearchCache", allEntries = true),
     ])
     fun loadCurrentSeason() {
         logger.info("Loading current season animes from Jikan...")
@@ -43,7 +45,6 @@ class JikanLoadTask(
         CacheEvict("animeCache", allEntries = true),
         CacheEvict("animesCache", allEntries = true),
         CacheEvict("featuredAnimeCache", allEntries = true),
-        CacheEvict("calendarCache", allEntries = true),
     ])
     fun alwaysUpdateSourceJikan() {
         val animes = animeRepository.findTop4ByOrderByJikanSyncedAtAsc()

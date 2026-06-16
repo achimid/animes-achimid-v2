@@ -32,6 +32,7 @@ class CacheConfig {
                 buildCache("statsCache", 5, MINUTES, 10),
                 buildCache("featuredAnimeCache", 2, HOURS, 1),
                 buildCache("currentSeasonCache", 2, HOURS, 1),
+                buildCache("calendarSearchCache", 3, DAYS, 300),
             )
         )
         return cacheManager

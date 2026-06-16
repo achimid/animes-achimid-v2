@@ -50,10 +50,11 @@ class JikanAPIGateway(
     }
 
     fun logError(ex: RuntimeException) {
-        if (!ex.message!!.contains("[429 Too Many Requests]")) {
-            logger.error("Error on integrate with Jikan", ex)
-        } else {
-            logger.error("Integrate with Jikan limited")
+        val message = ex.message ?: ""
+        when {
+            message.contains("[404 Not Found]") -> logger.warn("Jikan returned 404: $message")
+            message.contains("[429 Too Many Requests]") -> logger.warn("Jikan rate limit reached")
+            else -> logger.error("Error on integrate with Jikan", ex)
         }
     }
 

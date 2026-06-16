@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 @Component
 class FindCalendarReleaseUseCase(
@@ -31,12 +32,15 @@ class FindCalendarReleaseUseCase(
     fun execute(): Calendar {
         val calendar = try {
             subsPleaseAPIGateway.findFullSchedule().also { schedule ->
-                schedule.schedule.onEachIndexed { index, entry ->
-                    entry.value.forEach { item ->
-                        item.anime = runCatching { searchUseCase.execute(item.title).anime }.getOrNull()
+                val futures = schedule.schedule.entries.flatMapIndexed { index, entry ->
+                    entry.value.map { item ->
                         item.dayIndex = index
+                        CompletableFuture.supplyAsync {
+                            item.anime = runCatching { searchUseCase.execute(item.title).anime }.getOrNull()
+                        }
                     }
                 }
+                CompletableFuture.allOf(*futures.toTypedArray()).join()
             }
         } catch (ex: RuntimeException) {
             logger.error("Erro ao buscar a agenda do SubsPlease; usando apenas dados locais", ex)

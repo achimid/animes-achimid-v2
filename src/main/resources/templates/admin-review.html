@@ -101,7 +101,7 @@
                                         Reatribuir
                                     </button>
                                     <button class="btn-confirm js-confirm-match"
-                                            th:attr="data-id=${r.id}">
+                                            th:attr="data-id=${r.id}, data-anime-slug=${r.animeSlug}">
                                         ✓ Confirmar
                                     </button>
                                 </td>
@@ -210,12 +210,13 @@
         document.querySelectorAll('.js-confirm-match').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
+                const slug = btn.dataset.animeSlug;
+                if (!slug) {
+                    alert('Nenhum anime atribuído a este release. Use "Reatribuir" para definir o anime correto.');
+                    return;
+                }
                 if (!confirm('Confirmar que o anime atual está correto?')) return;
-                // Reassign para o próprio anime atual (limpa needsReview via reassign)
                 const row = document.querySelector(`tr[data-id="${id}"]`);
-                const animeLink = row ? row.querySelector('td:nth-child(3) a') : null;
-                if (!animeLink) return;
-                const slug = animeLink.href.split('/anime/').pop();
                 fetch(`/api/v1/release/${id}/reassign`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
