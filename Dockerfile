@@ -34,9 +34,9 @@ WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=glowroot --chown=spring:spring /opt/glowroot /app/glowroot
-COPY --chown=spring:spring glowroot/admin.json /app/glowroot/admin.json
 
-RUN mkdir -p /app/glowroot/logs /app/glowroot-data
+RUN mkdir -p /app/glowroot/logs /app/glowroot-data \
+    && printf '{\n  "users": [{"username": "anonymous", "roles": ["Administrator"]}],\n  "roles": [{"name": "Administrator", "permissions": ["agent:transaction","agent:error","agent:jvm","agent:incident","agent:config","admin"]}],\n  "web": {"port": 4000, "bindAddress": "0.0.0.0", "contextPath": "/", "sessionTimeoutMinutes": 30, "sessionCookieName": "GLOWROOT_SESSION_ID"},\n  "storage": {"rollupExpirationHours": [72,336,2160,2160], "traceExpirationHours": 336, "fullQueryTextExpirationHours": 336, "rollupCappedDatabaseSizesMb": [500,500,500,500], "traceCappedDatabaseSizeMb": 500}\n}' > /app/glowroot/admin.json
 
 EXPOSE 3000 4000
 
