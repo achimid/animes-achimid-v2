@@ -34,6 +34,7 @@ WORKDIR /app
 
 COPY --from=builder /app/build/libs/*.jar app.jar
 COPY --from=glowroot --chown=spring:spring /opt/glowroot /app/glowroot
+COPY --chown=spring:spring glowroot/admin.json /app/glowroot/admin.json
 
 RUN mkdir -p /app/glowroot/logs /app/glowroot-data
 
