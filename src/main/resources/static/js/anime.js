@@ -83,7 +83,7 @@ function addFavorite(animeId) {
                 if (tip) {
                     tip.style.display = '';
                     tip.textContent = 'Notificações ativadas ✓';
-                    setTimeout(() => { if (tip) tip.textContent = 'Notificações ativas · '; const a = document.createElement('a'); a.href='/favoritos'; a.textContent='Gerenciar'; tip.appendChild(a); }, 2000);
+                    setTimeout(() => { if (tip) tip.textContent = 'Notificações ativas · '; const a = document.createElement('a'); a.href='/favorites'; a.textContent='Gerenciar'; tip.appendChild(a); }, 2000);
                 }
             }
         } catch (e) {

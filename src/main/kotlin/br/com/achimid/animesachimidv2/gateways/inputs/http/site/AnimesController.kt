@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 
 @Controller
@@ -14,12 +15,12 @@ class AnimesController(
 ) {
 
     @GetMapping
-    fun catalogPage(model: Model): String {
-
-        val animeList = findAnimesUseCase.execute(0, 50)
-
+    fun catalogPage(
+        @RequestParam(defaultValue = "0") pageNumber: Int,
+        model: Model
+    ): String {
+        val animeList = findAnimesUseCase.execute(pageNumber, 24)
         model.addAttribute("animeList", animeList)
-
         return "animes"
     }
 

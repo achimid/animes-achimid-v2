@@ -5,8 +5,8 @@ Allow: /
 Disallow: /api/
 Disallow: /admin
 Disallow: /admin/
-Disallow: /usuario
-Disallow: /favoritos
+Disallow: /user
+Disallow: /favorites
 Disallow: /500
 
 Sitemap: https://animes.achimid.com.br/sitemap.xml

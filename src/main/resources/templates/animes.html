@@ -114,10 +114,19 @@
             </article>
         </div>
 
-        <div class="pagination">
-            <div class="page-item active">1</div>
-            <div class="page-item">2</div>
-            <div class="page-item">3</div>
+        <div id="pagination" class="pagination" th:style="${animeList.totalPages <= 1 ? 'display:none' : ''}">
+            <a class="page-item" th:classappend="${animeList.first} ? 'disabled'"
+               th:href="|?pageNumber=${animeList.number - 1}|">&#8249;</a>
+
+            <th:block th:each="i : ${#numbers.sequence(
+                    T(java.lang.Math).max(0, animeList.number - 2),
+                    T(java.lang.Math).min(animeList.totalPages - 1, animeList.number + 2))}">
+                <a class="page-item" th:classappend="${i == animeList.number} ? 'active'"
+                   th:href="|?pageNumber=${i}|" th:text="${i + 1}">1</a>
+            </th:block>
+
+            <a class="page-item" th:classappend="${animeList.last} ? 'disabled'"
+               th:href="|?pageNumber=${animeList.number + 1}|">&#8250;</a>
         </div>
     </main>
 

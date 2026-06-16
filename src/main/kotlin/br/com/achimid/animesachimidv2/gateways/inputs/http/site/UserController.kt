@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-@RequestMapping("/usuario")
+@RequestMapping("/user")
 class UserController(
     val findUserUseCase: FindUserUseCase,
     val findFavoriteAnimesUseCase: FindFavoriteAnimesUseCase,
@@ -46,6 +46,6 @@ class UserController(
         model.addAttribute("topGenres", topGenres)
         model.addAttribute("siteIntegrations", siteIntegrations)
 
-        return "usuario"
+        return "user"
     }
 }

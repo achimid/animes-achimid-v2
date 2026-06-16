@@ -20,7 +20,7 @@
                     <li><a href="/">Início</a></li>
                     <li><a href="/animes">Animes</a></li>
                     <li><a href="/calendar">Calendário</a></li>
-                    <li><a href="/favoritos">Favoritos</a></li>
+                    <li><a href="/favorites">Favoritos</a></li>
                 </ul>
             </nav>
             <!-- Central de notificações (FUNC-07) -->
@@ -42,7 +42,7 @@
                     </div>
                 </div>
             </div>
-            <a href="/usuario" class="nav-avatar"
+            <a href="/user" class="nav-avatar"
                th:title="${currentUser != null and currentUser.authenticated ? currentUser.name : 'Minha conta'}">
                 <img th:if="${currentUser != null and currentUser.authenticated and currentUser.picture != null}"
                      th:src="${currentUser.picture}" class="nav-avatar-img" alt="Avatar" referrerpolicy="no-referrer">
@@ -68,9 +68,9 @@
                 <span class="sep">|</span>
                 <a href="/cookies">Cookies</a>
                 <span class="sep">|</span>
-                <a href="/privacidade">Privacidade</a>
+                <a href="/privacy">Privacidade</a>
                 <span class="sep">|</span>
-                <a href="/termos">Termos</a>
+                <a href="/terms">Termos</a>
                 <span class="sep">|</span>
                 <a href="mailto:achimid@hotmail.com?subject=Contato - Animes Achimid">Contato</a>
             </nav>

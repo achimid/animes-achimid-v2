@@ -23,15 +23,15 @@ class LegalController {
         "Saiba quais cookies o Animes Achimid utiliza, para que servem e como você pode gerenciá-los ou recusá-los."
     )
 
-    @GetMapping("/privacidade")
+    @GetMapping("/privacy")
     fun privacy(model: Model): String = render(
-        model, "privacidade", "Política de Privacidade",
+        model, "privacy", "Política de Privacidade",
         "Política de privacidade do Animes Achimid conforme a LGPD. Saiba quais dados coletamos e como os protegemos."
     )
 
-    @GetMapping("/termos")
+    @GetMapping("/terms")
     fun terms(model: Model): String = render(
-        model, "termos", "Termos de Uso",
+        model, "terms", "Termos de Uso",
         "Termos e condições de uso do Animes Achimid. Conheça as regras para utilizar o site."
     )
 

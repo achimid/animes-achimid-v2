@@ -1,4 +1,4 @@
-// Página do usuário (/usuario)
+// Página do usuário (/user)
 
 // ===== Sistema de abas =====
 (function () {

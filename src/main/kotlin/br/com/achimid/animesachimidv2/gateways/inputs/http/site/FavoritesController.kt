@@ -15,7 +15,7 @@ class FavoritesController(
     val findSiteIntegrationsUseCase: FindSiteIntegrationsUseCase,
 ) {
 
-    @GetMapping("/favoritos")
+    @GetMapping("/favorites")
     fun favorites(
         @CookieValue(value = "user_id", required = false) userId: String? = null,
         model: Model
@@ -24,6 +24,6 @@ class FavoritesController(
         model.addAttribute("favorites", findFavoriteAnimesUseCase.execute(userId))
         model.addAttribute("siteIntegrations", findSiteIntegrationsUseCase.execute())
         model.addAttribute("notifPrefs", user?.notificationSitePreferences ?: emptyMap<String, Set<String>>())
-        return "favoritos"
+        return "favorites"
     }
 }

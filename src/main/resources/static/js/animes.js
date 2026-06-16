@@ -2,7 +2,10 @@ const searchField = document.getElementById('animeSearchList');
 const sortSelect  = document.getElementById('animeSort');
 const genreSelect = document.getElementById('animeGenre');
 const animeContainer = document.getElementById('animeContainer');
+const paginationEl = document.getElementById('pagination');
 
+const PAGE_SIZE = 24;
+let currentPage = 0;
 let searchFieldTimeout = null;
 
 function fetchAnimes() {
@@ -10,7 +13,7 @@ function fetchAnimes() {
     const sort  = sortSelect.value;
     const genre = genreSelect.value;
 
-    const params = new URLSearchParams({ sort });
+    const params = new URLSearchParams({ sort, pageNumber: currentPage, pageSize: PAGE_SIZE });
     if (query) params.set('query', query);
     if (genre) params.set('genre', genre);
 
@@ -46,13 +49,57 @@ function fetchAnimes() {
         if (result.content.length === 0) {
             animeContainer.innerHTML = '<p style="color:#888; padding:40px; text-align:center;">Nenhum anime encontrado com esses filtros.</p>';
         }
+
+        renderPagination(result);
+    });
+}
+
+function renderPagination(result) {
+    if (!paginationEl) return;
+
+    const page       = result.page || {};
+    const totalPages = page.totalPages || 0;
+    const number     = page.number     || 0;
+    const isFirst    = number === 0;
+    const isLast     = number === totalPages - 1;
+
+    if (totalPages === 0) {
+        paginationEl.innerHTML = '';
+        paginationEl.style.display = 'none';
+        return;
+    }
+
+    paginationEl.style.display = 'flex';
+
+    const start = Math.max(0, number - 2);
+    const end   = Math.min(totalPages - 1, number + 2);
+
+    let html = `<a class="page-item${isFirst ? ' disabled' : ''}" data-page="${number - 1}">&#8249;</a>`;
+
+    for (let i = start; i <= end; i++) {
+        html += `<a class="page-item${i === number ? ' active' : ''}" data-page="${i}">${i + 1}</a>`;
+    }
+
+    html += `<a class="page-item${isLast ? ' disabled' : ''}" data-page="${number + 1}">&#8250;</a>`;
+
+    paginationEl.innerHTML = html;
+
+    paginationEl.querySelectorAll('.page-item:not(.disabled)').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentPage = parseInt(btn.dataset.page);
+            fetchAnimes();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     });
 }
 
 searchField.addEventListener('keyup', () => {
     clearTimeout(searchFieldTimeout);
-    searchFieldTimeout = setTimeout(fetchAnimes, 300);
+    searchFieldTimeout = setTimeout(() => {
+        currentPage = 0;
+        fetchAnimes();
+    }, 300);
 });
 
-sortSelect.addEventListener('change', fetchAnimes);
-genreSelect.addEventListener('change', fetchAnimes);
+sortSelect.addEventListener('change', () => { currentPage = 0; fetchAnimes(); });
+genreSelect.addEventListener('change', () => { currentPage = 0; fetchAnimes(); });

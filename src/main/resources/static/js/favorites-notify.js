@@ -1,4 +1,4 @@
-// Painel de preferência de site de notificação para /favoritos
+// Painel de preferência de site de notificação para /favorites
 (function () {
     let activePanel = null;
     let activeBtnEl = null;
