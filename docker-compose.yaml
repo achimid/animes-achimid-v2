@@ -25,7 +25,7 @@ services:
       MONGODB_URI: mongodb://root:password@mongo:27017/animes-achimid?authSource=admin
       SPRING_PROFILES_ACTIVE: prod
     volumes:
-      - glowroot-data:/app/glowroot/data
+      - glowroot-data:/app/glowroot-data
     depends_on:
       - mongo
 

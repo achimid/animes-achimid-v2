@@ -37,4 +37,4 @@ COPY --from=glowroot --chown=spring:spring /opt/glowroot /app/glowroot
 
 EXPOSE 3000 4000
 
-ENTRYPOINT ["java", "-javaagent:/app/glowroot/glowroot.jar", "-Xmx512m", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-javaagent:/app/glowroot/glowroot.jar", "-Dglowroot.data.dir=/app/glowroot-data", "-Xmx512m", "-jar", "app.jar"]
