@@ -18,7 +18,7 @@ class FindFavoriteAnimesUseCase(
     fun execute(userId: String?): List<Anime> {
         if (userId.isNullOrEmpty()) return emptyList()
 
-        return userGateway.findById(userId)?.favorites.orEmpty()
-            .mapNotNull(animeGateway::findById)
+        val ids = userGateway.findById(userId)?.favorites.orEmpty().toList()
+        return animeGateway.findAllByIds(ids)
     }
 }

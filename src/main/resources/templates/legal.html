@@ -1,38 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title th:text="|${pageTitle} - Animes Achimid|">Informações Legais - Animes Achimid</title>
+    <th:block th:replace="~{fragments/head :: commonAssets}"></th:block>
 
     <meta name="robots" content="index, follow">
-    <meta name="description" th:content="|${pageDescription}|">
-    <meta property="og:title" th:content="|${pageTitle} - Animes Achimid|">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="Animes Achimid">
-    <meta property="og:url" th:content="|https://animes.achimid.com.br/${page}|">
 
-    <link rel="canonical" th:href="|https://animes.achimid.com.br/${page}|">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/favicon/site.webmanifest">
-
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
-        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
-        gtag('js', new Date());
-        gtag('config', 'G-89V9QWJ1Q4');
-    </script>
+    <th:block th:replace="~{fragments/head :: seo(|${pageTitle} - Isekai Hub|, ${pageDescription}, |/${page}|, null, null)}"></th:block>
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}">
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/legal.css}">
@@ -53,12 +26,12 @@
                     <div class="legal-hero">
                         <span class="legal-hero-icon">🛡️</span>
                         <h1>DMCA e Direitos Autorais</h1>
-                        <p class="legal-hero-desc">Entenda como o Animes Achimid funciona e como entrar em contato caso identifique conteúdo que viole direitos autorais.</p>
+                        <p class="legal-hero-desc">Entenda como o Isekai Hub funciona e como entrar em contato caso identifique conteúdo que viole direitos autorais.</p>
                         <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-intro">
-                        <strong>O Animes Achimid é um agregador e indexador — não hospedamos nenhum arquivo de vídeo.</strong>
+                        <strong>O Isekai Hub é um agregador e indexador — não hospedamos nenhum arquivo de vídeo.</strong>
                         Todo o conteúdo exibido (episódios, torrents, streams) é obtido de sites de terceiros e indexado automaticamente.
                         Não temos controle sobre a disponibilidade ou a remoção desses conteúdos nas fontes originais.
                     </div>
@@ -73,9 +46,9 @@
                     <div class="legal-section" id="como-funciona">
                         <div class="legal-section-header">
                             <span class="legal-section-icon">🔍</span>
-                            <h2>Como o Animes Achimid funciona</h2>
+                            <h2>Como o Isekai Hub funciona</h2>
                         </div>
-                        <p>O Animes Achimid monitora automaticamente dezenas de sites de animes (fansubs, streamers, trackers de torrent) e coleta informações sobre episódios lançados — como título, número do episódio, links e imagens. Esses dados são exibidos em formato de catálogo para facilitar o acompanhamento da temporada.</p>
+                        <p>O Isekai Hub monitora automaticamente dezenas de sites de animes (fansubs, streamers, trackers de torrent) e coleta informações sobre episódios lançados — como título, número do episódio, links e imagens. Esses dados são exibidos em formato de catálogo para facilitar o acompanhamento da temporada.</p>
                         <p>Não realizamos cópias de arquivos de vídeo, áudio ou legendas. Os links exibidos apontam diretamente para os servidores de terceiros onde o conteúdo está hospedado.</p>
                     </div>
 
@@ -84,9 +57,9 @@
                             <span class="legal-section-icon">⚖️</span>
                             <h2>Seus direitos como titular</h2>
                         </div>
-                        <p>Se você é titular de direitos autorais (ou representante autorizado) e identificou que alguma informação indexada no Animes Achimid aponta para conteúdo que viola seus direitos, você pode solicitar a remoção ou desindexação desse conteúdo.</p>
+                        <p>Se você é titular de direitos autorais (ou representante autorizado) e identificou que alguma informação indexada no Isekai Hub aponta para conteúdo que viola seus direitos, você pode solicitar a remoção ou desindexação desse conteúdo.</p>
                         <div class="legal-warning">
-                            <strong>Atenção:</strong> a remoção no Animes Achimid não remove o conteúdo do site de origem. Para remoção definitiva, você deverá também contatar diretamente o site que hospeda o arquivo.
+                            <strong>Atenção:</strong> a remoção no Isekai Hub não remove o conteúdo do site de origem. Para remoção definitiva, você deverá também contatar diretamente o site que hospeda o arquivo.
                         </div>
                     </div>
 
@@ -98,7 +71,7 @@
                         <p>Para que possamos processar sua solicitação com agilidade, inclua as seguintes informações no e-mail:</p>
                         <ul class="legal-list">
                             <li>Identificação da obra protegida (título, número do episódio, temporada ou filme);</li>
-                            <li>A URL exata da página no Animes Achimid que exibe ou aponta para o conteúdo em questão;</li>
+                            <li>A URL exata da página no Isekai Hub que exibe ou aponta para o conteúdo em questão;</li>
                             <li>Seus dados de contato completos (nome completo e e-mail);</li>
                             <li>Uma declaração de que você é o titular dos direitos ou representante autorizado;</li>
                             <li>Uma declaração de boa-fé de que o uso do conteúdo não é autorizado pelo titular;</li>
@@ -112,7 +85,7 @@
                             <h2>Processo de remoção</h2>
                         </div>
                         <ol class="legal-steps">
-                            <li><span class="legal-step-num">1</span> Envie o e-mail de notificação para <strong>achimid@hotmail.com</strong> com o assunto "DMCA - Animes Achimid".</li>
+                            <li><span class="legal-step-num">1</span> Envie o e-mail de notificação para <strong>achimid@hotmail.com</strong> com o assunto "DMCA - Isekai Hub".</li>
                             <li><span class="legal-step-num">2</span> Nossa equipe analisará a solicitação e poderá entrar em contato para esclarecimentos adicionais.</li>
                             <li><span class="legal-step-num">3</span> Conteúdos válidos serão removidos ou desindexados em até <strong>72 horas úteis</strong> após confirmação.</li>
                             <li><span class="legal-step-num">4</span> Você receberá uma confirmação por e-mail após a conclusão da remoção.</li>
@@ -143,7 +116,7 @@
                     </div>
 
                     <div class="legal-intro">
-                        Cookies são pequenos arquivos de texto armazenados no seu navegador. No Animes Achimid usamos apenas o essencial para o funcionamento do site e, <strong>com seu consentimento</strong>, cookies de análise para entender como o site é usado.
+                        Cookies são pequenos arquivos de texto armazenados no seu navegador. No Isekai Hub usamos apenas o essencial para o funcionamento do site e, <strong>com seu consentimento</strong>, cookies de análise para entender como o site é usado.
                     </div>
 
                     <div class="legal-section">
@@ -166,7 +139,7 @@
                             <h2>Notificações Push</h2>
                         </div>
                         <span class="cookie-chip optional">Opcional · Requer permissão do navegador</span>
-                        <p>O Animes Achimid oferece notificações push para avisar quando um anime da sua lista recebe novo episódio. Esse recurso <strong>não usa cookies</strong> — utiliza a <strong>API Push do navegador</strong>, que requer sua permissão explícita.</p>
+                        <p>O Isekai Hub oferece notificações push para avisar quando um anime da sua lista recebe novo episódio. Esse recurso <strong>não usa cookies</strong> — utiliza a <strong>API Push do navegador</strong>, que requer sua permissão explícita.</p>
                         <ul class="legal-list">
                             <li>A permissão é solicitada ao adicionar um anime aos favoritos. Você pode negar ou revogar a qualquer momento nas configurações do navegador.</li>
                             <li>Ao aceitar, o navegador gera uma <em>assinatura push</em> (endpoint e chaves de criptografia) que é armazenada no servidor apenas para entrega das notificações. Nenhum dado pessoal identificável é transmitido.</li>
@@ -182,7 +155,7 @@
                         <span class="cookie-chip analytics">Analytics</span>
                         <span class="cookie-chip optional">Opcional · Requer consentimento</span>
                         <p>Usamos o <strong>Google Analytics (GA4)</strong> para entender, de forma agregada e anônima, como os visitantes navegam pelo site — quais páginas são mais acessadas, quanto tempo ficam no site e de onde vêm.</p>
-                        <p>Esses dados nos ajudam a melhorar o Animes Achimid, mas são coletados <strong>apenas após você aceitar</strong> no banner exibido ao acessar o site pela primeira vez.</p>
+                        <p>Esses dados nos ajudam a melhorar o Isekai Hub, mas são coletados <strong>apenas após você aceitar</strong> no banner exibido ao acessar o site pela primeira vez.</p>
                         <ul class="legal-list">
                             <li><code>_ga</code> — identifica anonimamente o usuário para fins de contagem de visitantes únicos. Expira em 2 anos.</li>
                             <li><code>_ga_*</code> — mantém o estado da sessão do GA4. Expira em 2 anos.</li>
@@ -221,7 +194,7 @@
                     <div class="legal-hero">
                         <span class="legal-hero-icon">🔐</span>
                         <h1>Política de Privacidade</h1>
-                        <p class="legal-hero-desc">Como o Animes Achimid coleta, usa e protege suas informações pessoais.</p>
+                        <p class="legal-hero-desc">Como o Isekai Hub coleta, usa e protege suas informações pessoais.</p>
                         <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
@@ -229,7 +202,7 @@
                         <div class="legal-info-item">
                             <span class="info-icon">👤</span>
                             <span class="info-label">Responsável</span>
-                            <span class="info-value">Animes Achimid</span>
+                            <span class="info-value">Isekai Hub</span>
                         </div>
                         <div class="legal-info-item">
                             <span class="info-icon">✉️</span>
@@ -249,7 +222,7 @@
                     </div>
 
                     <div class="legal-intro">
-                        Esta Política de Privacidade descreve quais dados o <strong>Animes Achimid</strong> coleta, por que os coleta e como os utiliza, em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>.
+                        Esta Política de Privacidade descreve quais dados o <strong>Isekai Hub</strong> coleta, por que os coleta e como os utiliza, em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018)</strong>.
                     </div>
 
                     <div class="legal-section">
@@ -287,7 +260,7 @@
                             <span class="legal-section-icon">🔗</span>
                             <h2>Serviços de terceiros</h2>
                         </div>
-                        <p>O Animes Achimid utiliza os seguintes serviços externos, cada qual com sua própria política de privacidade:</p>
+                        <p>O Isekai Hub utiliza os seguintes serviços externos, cada qual com sua própria política de privacidade:</p>
                         <ul class="legal-list">
                             <li><strong>Google OAuth2</strong> — autenticação opcional via conta Google (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política do Google</a>).</li>
                             <li><strong>Google Analytics 4</strong> — análise de tráfego com consentimento (<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política do Google</a>).</li>
@@ -346,12 +319,12 @@
                     <div class="legal-hero">
                         <span class="legal-hero-icon">📋</span>
                         <h1>Termos de Uso</h1>
-                        <p class="legal-hero-desc">Ao usar o Animes Achimid, você concorda com as condições descritas abaixo. Leia com atenção.</p>
+                        <p class="legal-hero-desc">Ao usar o Isekai Hub, você concorda com as condições descritas abaixo. Leia com atenção.</p>
                         <span class="legal-updated-badge">Última atualização: 14 de junho de 2026</span>
                     </div>
 
                     <div class="legal-intro">
-                        Bem-vindo ao <strong>Animes Achimid</strong> — um agregador de lançamentos de animes feito de fã para fã. O uso do site implica a aceitação integral destes termos. Se não concordar com alguma parte, pedimos que não utilize o serviço.
+                        Bem-vindo ao <strong>Isekai Hub</strong> — um agregador de lançamentos de animes feito de fã para fã. O uso do site implica a aceitação integral destes termos. Se não concordar com alguma parte, pedimos que não utilize o serviço.
                     </div>
 
                     <nav class="legal-quick-nav" aria-label="Seções desta página">
@@ -367,7 +340,7 @@
                             <span class="legal-section-icon">🎌</span>
                             <h2>Natureza do serviço</h2>
                         </div>
-                        <p>O Animes Achimid é um <strong>agregador e indexador</strong> de informações sobre lançamentos de animes. O site coleta automaticamente dados disponíveis publicamente em sites de terceiros (fansubs, streamers, trackers) e os apresenta em formato de catálogo.</p>
+                        <p>O Isekai Hub é um <strong>agregador e indexador</strong> de informações sobre lançamentos de animes. O site coleta automaticamente dados disponíveis publicamente em sites de terceiros (fansubs, streamers, trackers) e os apresenta em formato de catálogo.</p>
                         <p>O site <strong>não hospeda, armazena nem distribui</strong> arquivos de vídeo, áudio ou legendas. Todos os links de download ou streaming apontam para servidores de terceiros sobre os quais não temos controle.</p>
                         <ul class="legal-list">
                             <li>O serviço é fornecido gratuitamente e sem garantia de disponibilidade contínua.</li>
@@ -381,7 +354,7 @@
                             <span class="legal-section-icon">✅</span>
                             <h2>Uso aceitável</h2>
                         </div>
-                        <p>Ao utilizar o Animes Achimid, você concorda em <strong>não</strong>:</p>
+                        <p>Ao utilizar o Isekai Hub, você concorda em <strong>não</strong>:</p>
                         <ul class="legal-list">
                             <li>Usar o site para fins ilícitos ou que violem leis brasileiras ou internacionais;</li>
                             <li>Realizar scraping, crawling automatizado ou qualquer extração em massa de dados sem autorização prévia por escrito;</li>
@@ -399,13 +372,13 @@
                             <span class="legal-section-icon">💬</span>
                             <h2>Conteúdo de usuários</h2>
                         </div>
-                        <p>O Animes Achimid permite que usuários publiquem comentários nas páginas de anime. Ao publicar:</p>
+                        <p>O Isekai Hub permite que usuários publiquem comentários nas páginas de anime. Ao publicar:</p>
                         <ul class="legal-list">
                             <li>Você é o único responsável pelo conteúdo que publica;</li>
                             <li>Proibido: conteúdo ofensivo, discriminatório, com spoilers não sinalizados, spam ou material ilegal;</li>
                             <li>Comentários podem ser moderados, editados ou removidos sem aviso prévio caso violem estas regras;</li>
                             <li>Contas que reiteradamente violem as regras podem ser banidas permanentemente;</li>
-                            <li>Ao publicar, você concede ao Animes Achimid licença para exibir o conteúdo no site.</li>
+                            <li>Ao publicar, você concede ao Isekai Hub licença para exibir o conteúdo no site.</li>
                         </ul>
                     </div>
 
@@ -414,7 +387,7 @@
                             <span class="legal-section-icon">⚖️</span>
                             <h2>Isenção de responsabilidade</h2>
                         </div>
-                        <p>O Animes Achimid é fornecido "como está" e "conforme disponível", sem garantias expressas ou implícitas de qualquer tipo. Em particular:</p>
+                        <p>O Isekai Hub é fornecido "como está" e "conforme disponível", sem garantias expressas ou implícitas de qualquer tipo. Em particular:</p>
                         <ul class="legal-list">
                             <li><strong>Conteúdo de terceiros</strong> — não nos responsabilizamos pela qualidade, legalidade ou disponibilidade dos conteúdos nos sites externos para os quais apontamos;</li>
                             <li><strong>Disponibilidade</strong> — não garantimos que o serviço estará disponível 100% do tempo; interrupções para manutenção podem ocorrer;</li>
@@ -432,7 +405,7 @@
                         <ul class="legal-list">
                             <li>A data de "Última atualização" no topo desta página será revisada;</li>
                             <li>Alterações significativas serão comunicadas através do próprio site;</li>
-                            <li>O uso continuado do Animes Achimid após as alterações implica aceitação dos novos termos.</li>
+                            <li>O uso continuado do Isekai Hub após as alterações implica aceitação dos novos termos.</li>
                         </ul>
                     </div>
 
@@ -453,6 +426,6 @@
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
 </body>
 </html>

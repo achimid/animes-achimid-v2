@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Animes Achimid</title>
+    <title>Painel Admin - Isekai Hub</title>
     <meta name="robots" content="noindex, nofollow">
 
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -48,6 +48,10 @@
                         <span class="tab-label">Animes</span>
                         <span class="tab-badge" th:text="${recentAnimes.size()}">0</span>
                     </button>
+                    <a href="/admin/users" class="admin-tab" style="text-decoration:none;">
+                        <span class="tab-icon">👥</span>
+                        <span class="tab-label">Usuários</span>
+                    </a>
                 </div>
 
                 <!-- ===== Aba: Sites monitorados ===== -->
@@ -60,48 +64,50 @@
                         <button class="btn-admin btn-admin-accent" id="btnRunAllExtractions">▶ Executar todas</button>
                     </div>
 
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>Site</th>
-                                <th>Fila</th>
-                                <th>Status</th>
-                                <th>Última execução</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="site : ${siteIntegrations}">
-                                <td><a th:href="${site.url}" target="_blank" rel="noopener" th:text="${site.name}">Site</a></td>
-                                <td>
-                                    <div class="queue-buttons">
-                                        <button th:each="q : ${T(br.com.achimid.animesachimidv2.domains.SiteIntegrationType).values()}"
-                                                th:text="${q}"
-                                                th:classappend="${site.type.name() == q.name()} ? 'active' : ''"
-                                                th:attr="data-name=${site.name},data-type=${q}"
-                                                class="btn-queue js-site-type">FAST</button>
-                                    </div>
-                                </td>
-                                <td>
-                                    <span th:class="${site.enabled} ? 'badge-on' : 'badge-off'"
-                                          th:text="${site.enabled} ? 'Ativo' : 'Inativo'">Ativo</span>
-                                </td>
-                                <td>
-                                    <span th:text="${site.lastExecutionDateFormatted() != null} ? ${site.lastExecutionDateFormatted()} : '—'">—</span>
-                                    <span th:if="${site.lastExecutionSuccess}" class="check-icon">✓</span>
-                                </td>
-                                <td class="actions-cell">
-                                    <button class="btn-admin btn-admin-run js-site-run"
-                                            th:attr="data-name=${site.name}"
-                                            title="Disparar ingestão agora">▶ Executar</button>
-                                    <button th:if="${site.enabled}" class="btn-admin btn-admin-danger js-site-toggle"
-                                            th:attr="data-name=${site.name},data-enable=false">Desabilitar</button>
-                                    <button th:unless="${site.enabled}" class="btn-admin btn-admin-accent js-site-toggle"
-                                            th:attr="data-name=${site.name},data-enable=true">Habilitar</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-scroll-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Site</th>
+                                    <th>Fila</th>
+                                    <th>Status</th>
+                                    <th class="col-hide-mobile">Última execução</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="site : ${siteIntegrations}">
+                                    <td><a th:href="${site.url}" target="_blank" rel="noopener" th:text="${site.name}">Site</a></td>
+                                    <td>
+                                        <div class="queue-buttons">
+                                            <button th:each="q : ${T(br.com.achimid.animesachimidv2.domains.SiteIntegrationType).values()}"
+                                                    th:text="${q}"
+                                                    th:classappend="${site.type.name() == q.name()} ? 'active' : ''"
+                                                    th:attr="data-name=${site.name},data-type=${q}"
+                                                    class="btn-queue js-site-type">FAST</button>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span th:class="${site.enabled} ? 'badge-on' : 'badge-off'"
+                                              th:text="${site.enabled} ? 'Ativo' : 'Inativo'">Ativo</span>
+                                    </td>
+                                    <td class="col-hide-mobile">
+                                        <span th:text="${site.lastExecutionDateFormatted() != null} ? ${site.lastExecutionDateFormatted()} : '—'">—</span>
+                                        <span th:if="${site.lastExecutionSuccess}" class="check-icon">✓</span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="btn-admin btn-admin-run js-site-run"
+                                                th:attr="data-name=${site.name}"
+                                                title="Disparar ingestão agora">▶ Executar</button>
+                                        <button th:if="${site.enabled}" class="btn-admin btn-admin-danger js-site-toggle"
+                                                th:attr="data-name=${site.name},data-enable=false">Desabilitar</button>
+                                        <button th:unless="${site.enabled}" class="btn-admin btn-admin-accent js-site-toggle"
+                                                th:attr="data-name=${site.name},data-enable=true">Habilitar</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- ===== Aba: Comentários ===== -->
@@ -167,51 +173,53 @@
                         </div>
                     </div>
 
-                    <table class="admin-table admin-animes-table">
-                        <thead>
-                            <tr>
-                                <th class="col-thumb"></th>
-                                <th>Anime</th>
-                                <th>Status</th>
-                                <th>Eps</th>
-                                <th>Cadastrado</th>
-                                <th>Sync Jikan</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="anime : ${recentAnimes}">
-                                <td class="col-thumb">
-                                    <img th:if="${anime.imageUrl != null}" th:src="${anime.imageUrl}"
-                                         class="anime-thumb" th:alt="${anime.name}" loading="lazy">
-                                    <div th:unless="${anime.imageUrl != null}" class="anime-thumb-empty">?</div>
-                                </td>
-                                <td>
-                                    <a th:href="|/anime/${anime.slug}|" class="anime-name-link" th:text="${anime.name}" target="_blank">Nome</a>
-                                </td>
-                                <td>
-                                    <span th:if="${anime.status == 'Finalizado'}" class="anime-status-badge status-finished">Encerrado</span>
-                                    <span th:if="${anime.status == 'Em Exibição'}" class="anime-status-badge status-airing">Em exibição</span>
-                                    <span th:if="${anime.status != 'Finalizado' and anime.status != 'Em Exibição'}"
-                                          class="anime-status-badge status-unknown" th:text="${anime.status ?: '—'}">—</span>
-                                </td>
-                                <td th:text="${anime.episodesCount ?: '—'}">—</td>
-                                <td th:text="${anime.createdAtFormatted() ?: '—'}">—</td>
-                                <td>
-                                    <span th:if="${anime.jikanSyncedAt != null}"
-                                          th:text="${anime.jikanSyncedAtFormatted()}">—</span>
-                                    <span th:unless="${anime.jikanSyncedAt != null}" class="never-synced">nunca</span>
-                                </td>
-                                <td class="actions-cell">
-                                    <button class="btn-admin btn-admin-run js-admin-refresh-anime"
-                                            th:attr="data-slug=${anime.slug}" title="Atualizar via Jikan">🔄</button>
-                                    <button th:if="${anime.synopsisPtBr == null or anime.synopsisPtBr.isEmpty()}"
-                                            class="btn-admin js-admin-translate-anime"
-                                            th:attr="data-slug=${anime.slug}" title="Traduzir sinopse">🇧🇷</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="table-scroll-wrapper">
+                        <table class="admin-table admin-animes-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-thumb"></th>
+                                    <th>Anime</th>
+                                    <th class="col-hide-mobile">Status</th>
+                                    <th class="col-hide-mobile">Eps</th>
+                                    <th class="col-hide-mobile">Cadastrado</th>
+                                    <th class="col-hide-mobile col-jikan-date">Sync Jikan</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="anime : ${recentAnimes}">
+                                    <td class="col-thumb">
+                                        <img th:if="${anime.imageUrl != null}" th:src="${anime.imageUrl}"
+                                             class="anime-thumb" th:alt="${anime.name}" loading="lazy">
+                                        <div th:unless="${anime.imageUrl != null}" class="anime-thumb-empty">?</div>
+                                    </td>
+                                    <td>
+                                        <a th:href="|/anime/${anime.slug}|" class="anime-name-link" th:text="${anime.name}" target="_blank">Nome</a>
+                                    </td>
+                                    <td class="col-hide-mobile">
+                                        <span th:if="${anime.status == 'Finalizado'}" class="anime-status-badge status-finished">Encerrado</span>
+                                        <span th:if="${anime.status == 'Em Exibição'}" class="anime-status-badge status-airing">Em exibição</span>
+                                        <span th:if="${anime.status != 'Finalizado' and anime.status != 'Em Exibição'}"
+                                              class="anime-status-badge status-unknown" th:text="${anime.status ?: '—'}">—</span>
+                                    </td>
+                                    <td class="col-hide-mobile" th:text="${anime.episodesCount ?: '—'}">—</td>
+                                    <td class="col-hide-mobile" th:text="${anime.createdAtFormatted() ?: '—'}">—</td>
+                                    <td class="col-hide-mobile col-jikan-date">
+                                        <span th:if="${anime.jikanSyncedAt != null}"
+                                              th:text="${anime.jikanSyncedAtFormatted()}">—</span>
+                                        <span th:unless="${anime.jikanSyncedAt != null}" class="never-synced">nunca</span>
+                                    </td>
+                                    <td class="actions-cell">
+                                        <button class="btn-admin btn-admin-run js-admin-refresh-anime"
+                                                th:attr="data-slug=${anime.slug}" title="Atualizar via Jikan">🔄</button>
+                                        <button th:if="${anime.synopsisPtBr == null or anime.synopsisPtBr.isEmpty()}"
+                                                class="btn-admin js-admin-translate-anime"
+                                                th:attr="data-slug=${anime.slug}" title="Traduzir sinopse">🇧🇷</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -220,7 +228,7 @@
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
-    <script type="text/javascript" th:src="@{/js/admin.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/admin.js}"></script>
 </body>
 </html>

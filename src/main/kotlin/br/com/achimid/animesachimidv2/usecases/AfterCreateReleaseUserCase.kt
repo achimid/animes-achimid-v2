@@ -5,6 +5,7 @@ import br.com.achimid.animesachimidv2.domains.Release
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 @Component
 class AfterCreateReleaseUserCase(
@@ -17,10 +18,15 @@ class AfterCreateReleaseUserCase(
     fun execute(release: Release, anime: Anime, fromSite: String? = null) {
         logger.info("Processing after release creation: ${release.title}")
 
-        translateAnimeInfoUserCase.execute(anime)
-
-        // FUNC-07: avisa quem favoritou o anime sobre o novo episódio (dedupe por episódio).
-        notifyFavoritesUseCase.execute(release, anime, fromSite)
+        // Tradução e notificação são independentes — rodam em paralelo e falhas são isoladas
+        val translate = CompletableFuture.runAsync {
+            runCatching { translateAnimeInfoUserCase.execute(anime) }
+                .onFailure { logger.warn("Falha na tradução de '${anime.name}': ${it.message}") }
+        }
+        val notify = CompletableFuture.runAsync {
+            runCatching { notifyFavoritesUseCase.execute(release, anime, fromSite) }
+                .onFailure { logger.warn("Falha ao notificar favoritos de '${anime.name}': ${it.message}") }
+        }
+        CompletableFuture.allOf(translate, notify).join()
     }
-
 }

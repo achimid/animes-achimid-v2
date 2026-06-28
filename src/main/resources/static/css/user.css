@@ -228,11 +228,7 @@
 .user-search-input:focus { border-color: var(--color-accent); }
 .user-search-input::placeholder { color: var(--color-text-faint); }
 
-.user-fav-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-}
+/* .user-fav-grid usa o padrão reutilizável .card-grid definido em common.css */
 
 .user-fav-card {
     position: relative;
@@ -734,9 +730,4 @@
     }
 
     .user-genres, .user-stats-bar { justify-content: center; }
-
-    .user-fav-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 12px;
-    }
 }

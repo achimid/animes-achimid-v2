@@ -21,6 +21,7 @@ class UserDocumentMapper {
         favorites = document.favorites,
         isAdmin = document.isAdmin,
         createdAt = document.createdAt,
+        lastLoginAt = document.lastLoginAt,
         notificationSitePreferences = document.notificationSitePreferences,
     )
 
@@ -32,6 +33,7 @@ class UserDocumentMapper {
         googleId = domain.googleId,
         favorites = domain.favorites,
         isAdmin = domain.isAdmin,
+        lastLoginAt = domain.lastLoginAt,
         notificationSitePreferences = domain.notificationSitePreferences,
     )
 }

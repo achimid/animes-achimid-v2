@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import java.util.concurrent.CompletableFuture.allOf
 import java.util.concurrent.CompletableFuture.supplyAsync
 
-private const val BASE_URL = "https://animes.achimid.com.br"
+private const val BASE_URL = "https://isekaihub.com.br"
 
 /** Escapa caracteres especiais para uso seguro em JSON. */
 private fun String.jsonEscape() = this
@@ -90,15 +90,20 @@ class AnimeController(
             """"name":"${anime.name.jsonEscape()}"""",
             """"url":"$BASE_URL/anime/${anime.slug}"""",
         )
+        parts += """"inLanguage":"pt-BR""""
         if (!anime.imageUrl.isNullOrBlank()) parts += """"image":"${anime.imageUrl.jsonEscape()}""""
         if (!anime.nameSecondary.isNullOrBlank()) parts += """"alternateName":"${anime.nameSecondary!!.jsonEscape()}""""
+        anime.year?.let { parts += """"datePublished":"$it"""" }
         val description = anime.getDescriptionTranslated()
         if (!description.isNullOrBlank()) parts += """"description":"${description.jsonEscape()}""""
         val genres = anime.tags
         if (!genres.isNullOrEmpty()) parts += """"genre":[${genres.joinToString(",") { "\"${it.jsonEscape()}\"" }}]"""
         val epCount = anime.episodes?.size?.takeIf { it > 0 }
         if (epCount != null) parts += """"numberOfEpisodes":$epCount"""
-        if (anime.score != null) parts += """"aggregateRating":{"@type":"AggregateRating","ratingValue":${anime.score},"bestRating":10,"worstRating":1}"""
+        if (anime.score != null) {
+            val ratingCount = anime.scoredBy?.takeIf { it > 0 }?.let { ""","ratingCount":$it""" } ?: ""
+            parts += """"aggregateRating":{"@type":"AggregateRating","ratingValue":${anime.score},"bestRating":10,"worstRating":1$ratingCount}"""
+        }
         return "{${parts.joinToString(",")}}"
     }
 
@@ -106,6 +111,6 @@ class AnimeController(
         {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
           {"@type":"ListItem","position":1,"name":"Home","item":"$BASE_URL/"},
           {"@type":"ListItem","position":2,"name":"Animes","item":"$BASE_URL/animes"},
-          {"@type":"ListItem","position":3,"name":"${anime.name.jsonEscape()}"}
+          {"@type":"ListItem","position":3,"name":"${anime.name.jsonEscape()}","item":"$BASE_URL/anime/${anime.slug}"}
         ]}""".trimIndent()
 }

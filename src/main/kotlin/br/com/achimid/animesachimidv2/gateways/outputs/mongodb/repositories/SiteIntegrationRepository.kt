@@ -37,6 +37,8 @@ class SiteIntegrationRepository(
         SiteIntegrationDocument(name = "Animes Drive", url = "https://animesdrive.online/episodio", type = MEDIUM, scriptFile = "animesdrive-script.js"),
         SiteIntegrationDocument(name = "Animes Up", url = "https://www.animesup.info/", type = MEDIUM, scriptFile = "animesup-info-script.js", disableJavaScript = true),
         SiteIntegrationDocument(name = "Erai-raws (Nyaa)", url = "https://nyaa.si/?f=0&c=0_0&q=%5BErai-raws%5D+%5B1080p", type = FAST, scriptFile = "erairaws-script.js"),
+        SiteIntegrationDocument(name = "ToonsHub (Nyaa)", url = "https://nyaa.si/?f=0&c=0_0&q=%5BToonsHub%5D", type = FAST, scriptFile = "toonshub-script.js"),
+        SiteIntegrationDocument(name = "World Fansub (Nyaa)", url = "https://nyaa.si/?f=0&c=0_0&q=%5BWF%5D", type = SLOW, scriptFile = "worldfansub-nyaa-script.js"),
         SiteIntegrationDocument(name = "Subs Please (ENG)", url = "https://subsplease.org/", type = FAST, scriptFile = "subsplease-script.js"),
         SiteIntegrationDocument(name = "Dark Animes", url = "https://darkmahou.io", type = FAST, scriptFile = "darkanimes-script.js"),
         SiteIntegrationDocument(name = "Anime Fire", url = "https://animefire.plus/", type = FAST, scriptFile = "animefire-script.js"),

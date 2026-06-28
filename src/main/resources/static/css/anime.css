@@ -29,6 +29,7 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(46, 248, 97, 0.2);
+    aspect-ratio: 2/3;
 }
 
 .anime-poster img {
@@ -579,7 +580,7 @@
 
 @media (max-width: 600px) {
     .anime-poster {
-        flex: 0 0 260px;
+        flex: 0 0 min(260px, 72vw);
         margin: 0 auto;
     }
 
@@ -591,6 +592,13 @@
     .comment-write-box {
         gap: 10px;
     }
+
+    /* modal de seleção de imagem: 3 colunas estouram em telas pequenas */
+    .image-options-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+
+@media (max-width: 360px) {
+    .image-options-grid { grid-template-columns: 1fr; }
 }
 
 .episodes-disclaimer {

@@ -354,3 +354,47 @@ function sendMessage(mensagem) {
         });
     });
 }());
+
+// Seletor de tema
+(function () {
+    var toggle = document.getElementById('themeToggle');
+    var dropdown = document.getElementById('themeDropdown');
+    var switcher = document.getElementById('themeSwitcher');
+    var options = document.querySelectorAll('.theme-option');
+    if (!toggle) return;
+
+    function applyTheme(theme) {
+        if (theme === 'verde') {
+            document.documentElement.removeAttribute('data-theme');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        options.forEach(function (o) {
+            o.classList.toggle('active', o.dataset.theme === theme);
+        });
+        localStorage.setItem('achimid-theme', theme);
+    }
+
+    var saved = localStorage.getItem('achimid-theme') || 'verde';
+    options.forEach(function (o) {
+        o.classList.toggle('active', o.dataset.theme === saved);
+    });
+
+    toggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.hidden = !dropdown.hidden;
+    });
+
+    options.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+            applyTheme(opt.dataset.theme);
+            dropdown.hidden = true;
+        });
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!switcher.contains(e.target)) {
+            dropdown.hidden = true;
+        }
+    });
+}());

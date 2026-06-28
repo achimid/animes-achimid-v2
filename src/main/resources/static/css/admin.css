@@ -403,3 +403,64 @@
     font-style: italic;
     font-size: 0.8rem;
 }
+
+/* ===== Wrapper de scroll horizontal para tabelas em mobile ===== */
+.table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-md, 6px);
+}
+
+/* ===== Responsividade mobile ===== */
+@media (max-width: 768px) {
+    .admin-wrapper {
+        padding: var(--space-4) 4% var(--space-6);
+    }
+
+    .admin-title {
+        font-size: 1.4rem;
+    }
+
+    /* Abas scrolláveis horizontalmente sem quebrar */
+    .admin-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .admin-tabs::-webkit-scrollbar { display: none; }
+
+    .admin-tab {
+        font-size: 0.78rem;
+        padding: 8px 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Esconder colunas de baixa prioridade */
+    .col-hide-mobile {
+        display: none !important;
+    }
+
+    /* Botões de fila mais compactos */
+    .queue-buttons {
+        gap: 2px;
+    }
+    .btn-queue {
+        padding: 2px 6px;
+        font-size: 0.65rem;
+    }
+
+    /* Ações menores */
+    .btn-admin {
+        padding: 5px 10px;
+        font-size: 0.75rem;
+    }
+
+    /* Painel head empilhado */
+    .admin-panel-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

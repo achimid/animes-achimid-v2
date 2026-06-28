@@ -15,6 +15,19 @@ fun stripSeasonFromTitle(title: String): String = title
     .replace(Regex("""\s{2,}"""), " ")
     .trim()
 
+/**
+ * Remove informação de episódio, qualidade e idioma do título raspado para obter o nome base do anime.
+ * Usado na reatribuição em lote para encontrar releases similares na fila de revisão.
+ */
+fun extractBaseTitle(title: String): String = title
+    .replace(Regex("""\s*[-–]\s*(ep\.?\s*\d+|episode\s*\d+|\d+\s*$)""", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("""\[\s*\d{3,4}p\s*\]""", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("""\[\s*[^\]]+\s*\]"""), "")
+    .replace(Regex("""\(\s*(PT-BR|DUB|LEG|LEGENDADO|DUAL|AUDIO)\s*\)""", RegexOption.IGNORE_CASE), "")
+    .replace(Regex("""\s{2,}"""), " ")
+    .trim()
+    .lowercase()
+
 fun String?.padLeft(length: Int = 3): String? {
     val episodeNumber = this?.toIntOrNull() ?: return this
 

@@ -14,25 +14,25 @@ class LegalController {
     @GetMapping("/dmca")
     fun dmca(model: Model): String = render(
         model, "dmca", "DMCA e Direitos Autorais",
-        "Política de direitos autorais do Animes Achimid. Entenda como funcionamos e como solicitar remoção de conteúdo indexado."
+        "Política de direitos autorais do Isekai Hub. Entenda como funcionamos e como solicitar remoção de conteúdo indexado."
     )
 
     @GetMapping("/cookies")
     fun cookies(model: Model): String = render(
         model, "cookies", "Política de Cookies",
-        "Saiba quais cookies o Animes Achimid utiliza, para que servem e como você pode gerenciá-los ou recusá-los."
+        "Saiba quais cookies o Isekai Hub utiliza, para que servem e como você pode gerenciá-los ou recusá-los."
     )
 
     @GetMapping("/privacy")
     fun privacy(model: Model): String = render(
         model, "privacy", "Política de Privacidade",
-        "Política de privacidade do Animes Achimid conforme a LGPD. Saiba quais dados coletamos e como os protegemos."
+        "Política de privacidade do Isekai Hub conforme a LGPD. Saiba quais dados coletamos e como os protegemos."
     )
 
     @GetMapping("/terms")
     fun terms(model: Model): String = render(
         model, "terms", "Termos de Uso",
-        "Termos e condições de uso do Animes Achimid. Conheça as regras para utilizar o site."
+        "Termos e condições de uso do Isekai Hub. Conheça as regras para utilizar o site."
     )
 
     private fun render(model: Model, page: String, title: String, description: String): String {

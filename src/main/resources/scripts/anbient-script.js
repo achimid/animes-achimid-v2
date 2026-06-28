@@ -84,7 +84,7 @@ async function extract() {
                 redirect: 'follow'
             }
 
-            await fetch("https://animes.achimid.com.br/api/v1/integration", requestOptions)
+            await fetch("https://isekaihub.com.br/api/v1/integration", requestOptions)
                 .then(response => response.text())
                 .then(result => console.log(result))
                 .catch(error => console.log('error', error))            

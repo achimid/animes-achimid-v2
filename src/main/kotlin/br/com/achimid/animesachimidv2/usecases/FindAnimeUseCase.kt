@@ -22,7 +22,7 @@ class FindAnimeUseCase(
             ?: animeGateway.findById(idOrSlug)
             ?: fallback(idOrSlug)
 
-        val episodes = anime.id.let(releaseGateway::findByAnimeIdOrderByEpisodeDesc).map {
+        val episodes = anime.id.let(releaseGateway::findAllByAnimeIdOrderByEpisodeDesc).map {
             return@map EpisodeInfo(
                 number = it.animeEpisode,
                 title = it.animeName,

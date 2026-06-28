@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -39,7 +40,12 @@ class WebPushGateway(
     @Value("\${webpush.subject}") private val subject: String,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
-    private val restTemplate = RestTemplate()
+    private val restTemplate = RestTemplate(
+        SimpleClientHttpRequestFactory().apply {
+            setConnectTimeout(5_000)
+            setReadTimeout(10_000)
+        }
+    )
     private val b64 = Base64.getUrlEncoder().withoutPadding()
     private val b64Dec = Base64.getUrlDecoder()
 

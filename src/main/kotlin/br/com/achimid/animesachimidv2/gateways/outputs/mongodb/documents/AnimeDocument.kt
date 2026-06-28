@@ -44,6 +44,7 @@ data class AnimeDocument(
     val infoList: List<AnimeDetailsInfoDocument>? = null,
     @Indexed
     val score: Double? = null,
+    val scoredBy: Int? = null,
     val popularity: String? = null,
     val rank: String? = null,
     val streamingUrl: String? = null,

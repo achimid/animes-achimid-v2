@@ -15,18 +15,20 @@ function renderDay(day) {
         } else {
             results.forEach(item => {
                 const releasedMark = item.released ? ' ✓' : '';
-                const tags = (item.anime.tags || []).slice(0, 3).join(', ');
+                const tags = (item.anime?.tags || []).slice(0, 3).join(', ');
+                const imgSrc = item.anime?.imageUrl || item.imageUrl || '';
+                const fallbackSrc = item.imageUrl || '';
                 container.innerHTML += `
-                    <a href="/anime/${item.anime.slug}" class="list-item">
+                    <a href="/anime/${item.anime?.slug}" class="list-item">
                         <div class="list-img-wrapper">
-                            <img src="${item.imageUrl}" class="list-img" alt="${item.title}" loading="lazy">
+                            <img src="${imgSrc}" onerror="if(this.src!=='${fallbackSrc}')this.src='${fallbackSrc}';else this.style.opacity='0'" class="list-img" alt="${item.title}" loading="lazy">
                             <span class="list-time-overlay">${item.time}${releasedMark}</span>
                         </div>
                         <div class="list-content">
                             <span class="list-title">${item.title}</span>
                             <div class="list-tags">
-                                <span class="tag-epi">★ ${item.anime.score || '?'}</span>
-                                <span class="tag-genre">${item.anime.status}</span>
+                                <span class="tag-epi">★ ${item.anime?.score || '?'}</span>
+                                <span class="tag-genre">${item.anime?.status || ''}</span>
                             </div>
                             <div class="list-meta">${tags}</div>
                         </div>

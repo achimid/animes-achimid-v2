@@ -4,6 +4,9 @@ import br.com.achimid.animesachimidv2.domains.User
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.mappers.UserDocumentMapper
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.UserRepository
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 
@@ -37,4 +40,13 @@ class UserGateway(
 
     fun findByFavorite(animeId: String): List<User> =
         repository.findByFavoritesContaining(animeId).map(mapper::fromDocument)
+
+    fun findGoogleUsers(page: Int, size: Int, query: String?): Page<User> {
+        val pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "lastLoginAt"))
+        return if (query.isNullOrBlank()) {
+            repository.findByEmailNotNull(pageable).map(mapper::fromDocument)
+        } else {
+            repository.findGoogleUsersByQuery(query, pageable).map(mapper::fromDocument)
+        }
+    }
 }

@@ -61,6 +61,9 @@ class AnimeGateway(
         .let(animeRepository::save)
         .let(mapper::fromDocument)
 
+    fun findAllByIds(ids: List<String>): List<Anime> =
+        animeRepository.findAllById(ids).map(mapper::fromDocument)
+
     @Cacheable("animesCache")
     fun findAll(pageRequest: PageRequest): Page<Anime> {
         return animeRepository.findAll(pageRequest).map(mapper::fromDocument)

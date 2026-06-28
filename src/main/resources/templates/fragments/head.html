@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <!-- ==========================================================================
+         commonAssets: tudo que é IDÊNTICO em todas as páginas públicas.
+         Trocar fonte/favicon/tag do GA aqui = 1 edição (antes eram 7+ arquivos).
+         ========================================================================== -->
+    <th:block th:fragment="commonAssets">
+        <script>
+            (function(){var t=localStorage.getItem('achimid-theme');if(t&&t!=='verde')document.documentElement.setAttribute('data-theme',t);})();
+        </script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Favicons + manifest -->
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/favicon/site.webmanifest">
+
+        <!-- Fontes -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics (gtag.js) com consent mode / LGPD -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HLVCCN1PD8"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
+            try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
+            gtag('js', new Date());
+            gtag('config', 'G-HLVCCN1PD8', { 'cookie_domain': 'isekaihub.com.br' });
+        </script>
+        <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c">
+    </th:block>
+
+    <!-- ==========================================================================
+         seo(title, description, path, image, ogType): título + canonical + Open
+         Graph + Twitter Card. `image` e `ogType` aceitam null (usam padrão).
+         path = caminho relativo (ex.: '/animes'); a base do domínio é fixa aqui.
+         ========================================================================== -->
+    <th:block th:fragment="seo(title, description, path, image, ogType)">
+        <title th:text="${title}">Isekai Hub</title>
+        <meta name="description" th:content="${description}">
+        <link rel="canonical" th:href="|https://isekaihub.com.br${path}|">
+
+        <meta property="og:type" th:content="${ogType} ?: 'website'">
+        <meta property="og:locale" content="pt_BR">
+        <meta property="og:site_name" content="Isekai Hub">
+        <meta property="og:title" th:content="${title}">
+        <meta property="og:description" th:content="${description}">
+        <meta property="og:url" th:content="|https://isekaihub.com.br${path}|">
+        <meta property="og:image" th:content="${image} ?: 'https://isekaihub.com.br/img/banner-small.png'">
+
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" th:content="${title}">
+        <meta name="twitter:description" th:content="${description}">
+        <meta name="twitter:image" th:content="${image} ?: 'https://isekaihub.com.br/img/banner-small.png'">
+    </th:block>
+
+</head>
+</html>

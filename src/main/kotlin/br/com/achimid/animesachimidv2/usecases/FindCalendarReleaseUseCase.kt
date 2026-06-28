@@ -4,10 +4,11 @@ import br.com.achimid.animesachimidv2.domains.Calendar
 import br.com.achimid.animesachimidv2.domains.CalendarItem
 import br.com.achimid.animesachimidv2.gateways.outputs.http.SubsPleaseAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
+import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.CalendarSnapshotGateway
 import org.slf4j.LoggerFactory
-import org.springframework.boot.context.event.ApplicationReadyEvent
+import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.context.event.EventListener
+import org.springframework.cache.interceptor.SimpleKey
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
@@ -16,6 +17,8 @@ class FindCalendarReleaseUseCase(
     private val searchUseCase: SearchUseCase,
     private val subsPleaseAPIGateway: SubsPleaseAPIGateway,
     private val animeGateway: AnimeGateway,
+    private val snapshotGateway: CalendarSnapshotGateway,
+    private val cacheManager: CacheManager,
 ) {
 
     val logger = LoggerFactory.getLogger(this::class.java)
@@ -25,11 +28,25 @@ class FindCalendarReleaseUseCase(
     /**
      * Agenda híbrida (FUNC-08): combina a agenda do SubsPlease com os animes em exibição já ingeridos
      * (via broadcast do Jikan), unificados por id do anime. Se o SubsPlease falhar, monta uma semana
-     * vazia e preenche só com os dados locais — então a agenda nunca fica indisponível (corrige o 500).
+     * vazia e preenche só com os dados locais — então a agenda nunca fica indisponível.
      */
-    @EventListener(ApplicationReadyEvent::class, condition = "'\${spring.profiles.active}' == 'prod'")
     @Cacheable("calendarCache")
-    fun execute(): Calendar {
+    fun execute(): Calendar = fetchAndMerge()
+
+    /**
+     * Busca agenda fresca do SubsPlease, salva snapshot no MongoDB e popula o Caffeine cache.
+     * Chamado pelo [CalendarCacheWarmer] na inicialização e pelo [br.com.achimid.animesachimidv2.cron.JikanLoadTask] às 04:00.
+     */
+    fun executeAndSave(): Calendar {
+        val calendar = fetchAndMerge()
+        snapshotGateway.save(calendar)
+        cacheManager.getCache("calendarCache")?.put(SimpleKey.EMPTY, calendar)
+        val total = calendar.schedule.values.sumOf { it.size }
+        logger.info("Snapshot do calendário salvo no MongoDB ($total itens)")
+        return calendar
+    }
+
+    private fun fetchAndMerge(): Calendar {
         val calendar = try {
             subsPleaseAPIGateway.findFullSchedule().also { schedule ->
                 val futures = schedule.schedule.entries.flatMapIndexed { index, entry ->

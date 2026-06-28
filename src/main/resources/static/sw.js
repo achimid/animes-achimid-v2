@@ -1,10 +1,10 @@
-/* Service Worker — Web Push (VAPID) para Animes Achimid */
+/* Service Worker — Web Push (VAPID) para Isekai Hub */
 
 self.addEventListener('push', event => {
     let data = {};
     try { data = event.data ? event.data.json() : {}; } catch (_) {}
 
-    const title = data.title || 'Animes Achimid';
+    const title = data.title || 'Isekai Hub';
     const options = {
         body: data.body || 'Novo episódio disponível!',
         icon: data.icon || '/favicon/favicon-32x32.png',

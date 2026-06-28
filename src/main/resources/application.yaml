@@ -26,8 +26,15 @@ spring:
       auto-index-creation: true
 
 server:
-  port: ${PORT:3000}
+  port: ${PORT:3010}
   shutdown: graceful
+  servlet:
+    session:
+      timeout: 30d
+      cookie:
+        max-age: 2592000
+        http-only: true
+        same-site: lax
   tomcat:
     threads:
       max: ${TOMCAT_THREADS_MAX:200}
@@ -36,7 +43,7 @@ server:
   compression:
     enabled: true
     min-response-size: 1024
-    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain,text/css,text/javascript,application/javascript
 
 logging:
   level:
@@ -60,6 +67,13 @@ external:
     url: "https://translate.achimid.com.br"
   anilist:
     url: "https://graphql.anilist.co"
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 10000
 
 integration:
   callbackUrl: ${CALLBACK_URL}

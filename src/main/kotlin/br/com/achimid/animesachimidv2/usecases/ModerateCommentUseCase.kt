@@ -44,7 +44,7 @@ class ModerateCommentUseCase(
                 .map { CommentWithContext(anime.id, anime.slug, anime.name, it) }
         }.sortedByDescending { it.comment.createdAt }
 
-    @CacheEvict("animeCache", allEntries = true)
+    @CacheEvict("animeCache", key = "#animeId")
     fun moderate(animeId: String, commentId: String, approve: Boolean): Boolean =
         animeGateway.updateCommentStatus(
             animeId,
@@ -52,7 +52,7 @@ class ModerateCommentUseCase(
             if (approve) CommentStatus.APPROVED else CommentStatus.REJECTED
         )
 
-    @CacheEvict("animeCache", allEntries = true)
+    @CacheEvict("animeCache", key = "#animeId")
     fun delete(animeId: String, commentId: String): Boolean =
         animeGateway.deleteComment(animeId, commentId)
 }

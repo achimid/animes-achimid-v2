@@ -1,72 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Animes Achimid - Sua central de animes</title>
+    <th:block th:replace="~{fragments/head :: commonAssets}"></th:block>
 
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
+    <meta name="keywords" content="lançamentos de anime, anime legendado PT-BR, calendário de animes, animes da temporada, episódios novos, assistir anime online, fansub">
 
-    <meta name="description" content="Encontre informações e lançamentos de animes no Animes Achimid">
-    <meta name="keywords" content="Anime, Lançamento, Temporada, Fansub, Grátis">
-    <meta property="og:title" content="Animes Achimid - Sua central de animes">
-    <meta property="og:description" content="Acompanhe os últimos lançamentos, calendários e informações da temporada de animes.">
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="Animes Achimid" />
-    <meta property="og:url" content="https://animes.achimid.com.br/">
+    <th:block th:replace="~{fragments/head :: seo('Isekai Hub - Sua central de animes', 'Isekai Hub: acompanhe lançamentos de animes em tempo real, calendário semanal da temporada e um catálogo com busca por gênero e episódios novos legendados em PT-BR.', '/', null, null)}"></th:block>
 
-    <meta property="og:image" content="https://animes.achimid.com.br/img/banner-small.png">
-    <meta property="og:image:secure_url" content="https://animes.achimid.com.br/img/banner-small.png">
+    <!-- og:image: dimensões do banner (complementam o og:image do fragmento seo) -->
+    <meta property="og:image:secure_url" content="https://isekaihub.com.br/img/banner-small.png">
     <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1033">
     <meta property="og:image:height" content="486">
-
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Animes Achimid">
-    <meta name="twitter:description" content="Sua central de animes feita de fã para fã.">
-    <meta name="twitter:image" content="https://animes.achimid.com.br/img/banner-small.png">
-
-    <link rel="canonical" href="https://animes.achimid.com.br" />
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/favicon/site.webmanifest">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
-        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
-        gtag('js', new Date());
-        gtag('config', 'G-89V9QWJ1Q4');
-    </script>
-    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c">
 
     <!-- JSON-LD: WebSite + SearchAction (Google Sitelinks Search Box) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Animes Achimid",
-      "url": "https://animes.achimid.com.br",
+      "name": "Isekai Hub",
+      "url": "https://isekaihub.com.br",
       "description": "Agregador de lançamentos de animes com calendário, catálogo e informações da temporada.",
       "inLanguage": "pt-BR",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://animes.achimid.com.br/animes?query={search_term_string}"
+          "urlTemplate": "https://isekaihub.com.br/animes?query={search_term_string}"
         },
         "query-input": "required name=search_term_string"
       }
@@ -310,8 +272,8 @@
 
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
     <script th:inline="javascript">/*<![CDATA[*/window.IS_ADMIN=/*[[${isAdmin}]]*/false;/*]]>*/</script>
-    <script type="text/javascript" th:src="@{/js/home.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/home.js}"></script>
 </body>
 </html>

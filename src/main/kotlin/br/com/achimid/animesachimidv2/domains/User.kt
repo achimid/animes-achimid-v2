@@ -11,7 +11,9 @@ data class User(
     val favorites: Set<String>? = null,
     val isAdmin: Boolean = false,
     val createdAt: Instant? = null,
+    val lastLoginAt: Instant? = null,
     val notificationSitePreferences: Map<String, Set<String>>? = null,
 ) {
     fun memberSince(): String? = createdAt?.toString()?.substring(0, 10)
+    fun lastLoginDate(): String? = lastLoginAt?.toString()?.substring(0, 10)
 }

@@ -1,6 +1,5 @@
 package br.com.achimid.animesachimidv2.usecases
 
-import br.com.achimid.animesachimidv2.domains.AnimeComment
 import br.com.achimid.animesachimidv2.domains.dto.Fallowing
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.UserGateway
@@ -18,9 +17,8 @@ class FindFallowingAnimesUseCase(
     fun execute(userId: String? = null): List<Fallowing> {
         if (userId.isNullOrEmpty()) return emptyList()
 
-        return userGateway.findById(userId)?.favorites?.take(3).orEmpty()
-            .mapNotNull(animeGateway::findById)
-            .map { Fallowing(it.name, it.imageUrl) }
+        val ids = userGateway.findById(userId)?.favorites?.take(3).orEmpty()
+        return animeGateway.findAllByIds(ids).map { Fallowing(it.name, it.imageUrl) }
     }
 
 }

@@ -81,11 +81,7 @@
 }
 
 /* --- Grid de Cards --- */
-.fav-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 20px;
-}
+/* .fav-grid agora usa o padrão reutilizável .card-grid definido em common.css */
 
 /* --- Card individual --- */
 .fav-card {
@@ -255,12 +251,8 @@
     padding: 40px;
 }
 
-/* Responsividade */
+/* Responsividade (o grid de cards é responsivo via .card-grid em common.css) */
 @media (max-width: 600px) {
-    .fav-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-        gap: 14px;
-    }
     .fav-page-header {
         flex-direction: column;
         align-items: flex-start;

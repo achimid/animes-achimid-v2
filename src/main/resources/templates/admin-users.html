@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários - Admin</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}" />
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/admin.css}" />
+    <style>
+        .users-table { width: 100%; border-collapse: collapse; }
+        .users-table th, .users-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--color-border, #2a2a2a); font-size: 0.9rem; vertical-align: middle; }
+        .users-table th { color: var(--color-text-muted, #aaa); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.4px; }
+        .users-table tr:hover td { background: rgba(255,255,255,0.03); }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; vertical-align: middle; }
+        .user-avatar-placeholder { width: 32px; height: 32px; border-radius: 50%; background: var(--color-surface-2, #2a2a3e); display: inline-flex; align-items: center; justify-content: center; color: var(--color-text-muted, #aaa); font-size: 0.8rem; vertical-align: middle; }
+        .badge-admin { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; background: rgba(88,166,255,0.15); color: #58a6ff; }
+        .date-cell { color: var(--color-text-muted, #aaa); font-size: 0.82rem; white-space: nowrap; }
+        .date-never { color: var(--color-text-muted, #aaa); font-style: italic; font-size: 0.8rem; }
+        .user-name { font-weight: 600; font-size: 0.9rem; }
+        .user-email { color: var(--color-text-muted, #aaa); font-size: 0.82rem; margin-top: 1px; }
+        .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-input { flex: 1; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--color-border, #333); background: var(--bg-dark, #0f0f1a); color: #fff; font-size: 0.9rem; }
+        .search-input:focus { outline: none; border-color: var(--primary-blue, #3b82f6); }
+        .btn-search { padding: 8px 20px; border-radius: 8px; background: var(--primary-blue, #3b82f6); color: #fff; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+        .btn-clear { padding: 8px 16px; border-radius: 8px; background: transparent; color: var(--color-text-muted, #aaa); border: 1px solid var(--color-border, #333); cursor: pointer; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; }
+
+        @media (max-width: 640px) {
+            .col-created { display: none; }
+            .user-avatar, .user-avatar-placeholder { width: 28px; height: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header th:replace="~{fragments/layout :: header}"></header>
+
+    <div class="main-wrapper">
+        <main class="content-area">
+            <div class="admin-wrapper">
+
+                <div style="display:flex; align-items:center; gap:16px; margin-bottom:20px; flex-wrap:wrap;">
+                    <a href="/admin" style="color:var(--color-text-muted,#aaa); text-decoration:none; font-size:0.9rem;">← Painel admin</a>
+                    <h1 class="admin-title" style="margin:0;">Usuários Google</h1>
+                    <span style="color:var(--color-text-muted,#aaa); font-size:0.9rem;" th:text="|${totalElements} usuários|"></span>
+                </div>
+
+                <form action="/admin/users" method="get" class="search-bar">
+                    <input type="text" name="query" class="search-input"
+                           placeholder="Buscar por e-mail ou nome..."
+                           th:value="${query}">
+                    <button type="submit" class="btn-search">Buscar</button>
+                    <a th:if="${!#strings.isEmpty(query)}" href="/admin/users" class="btn-clear">Limpar</a>
+                </form>
+
+                <section class="admin-section" th:if="${users.isEmpty()}">
+                    <p class="admin-empty">Nenhum usuário encontrado.</p>
+                </section>
+
+                <section class="admin-section" th:unless="${users.isEmpty()}">
+                    <div class="table-scroll-wrapper">
+                        <table class="users-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:44px;"></th>
+                                    <th>Usuário</th>
+                                    <th>Admin</th>
+                                    <th class="col-created">Membro desde</th>
+                                    <th>Último login</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="u : ${users}">
+                                    <td>
+                                        <img th:if="${u.picture != null}" th:src="${u.picture}" class="user-avatar" alt="" onerror="this.style.display='none'">
+                                        <span th:unless="${u.picture != null}" class="user-avatar-placeholder">👤</span>
+                                    </td>
+                                    <td>
+                                        <div class="user-name" th:text="${u.username ?: '(sem nome)'}">Nome</div>
+                                        <div class="user-email" th:text="${u.email}">email@exemplo.com</div>
+                                    </td>
+                                    <td>
+                                        <span th:if="${u.isAdmin}" class="badge-admin">Admin</span>
+                                        <span th:unless="${u.isAdmin}" style="color:var(--color-text-muted,#aaa); font-size:0.8rem;">—</span>
+                                    </td>
+                                    <td class="date-cell col-created">
+                                        <span th:if="${u.createdAt != null}" th:text="${u.memberSince()}">—</span>
+                                        <span th:unless="${u.createdAt != null}" class="date-never">—</span>
+                                    </td>
+                                    <td class="date-cell">
+                                        <span th:if="${u.lastLoginAt != null}" th:text="${u.lastLoginDate()}">—</span>
+                                        <span th:unless="${u.lastLoginAt != null}" class="date-never">nunca registrado</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination" th:if="${totalPages > 1}">
+                        <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                           th:href="|/admin/users?pageNumber=${i}&query=${query}|"
+                           th:text="${i + 1}"
+                           th:classappend="${i == currentPage} ? 'active' : ''">1</a>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
+</body>
+</html>

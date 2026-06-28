@@ -1,15 +1,5 @@
-/* --- RESET E VARIÁVEIS (ORIGINAIS) --- */
-:root {
-    --bg-dark: #050505;
-    --bg-card: #121212;
-    --primary-green: #2ef861;
-    --accent-orange: #ff9900;
-    --text-white: #e0e0e0;
-    --text-gray: #a0a0a0;
-    --font-main: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --font-logo: 'Bungee', cursive;
-    --font-sub: 'Inter', sans-serif;
-}
+/* Tokens (--bg-dark, --primary-green, --font-logo, etc.) vêm de common.css,
+   que sempre carrega antes desta página. (item E: tokens consolidados) */
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 

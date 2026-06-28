@@ -13,5 +13,5 @@ spring:
 #      enabled: false
 
 integration:
-  callbackUrl: ${CALLBACK_URL:"https://local.achimid.com.br/api/v1/site/integration/callback"}
-#  callbackUrl: "https://local.achimid.com.br/api/v1/site/integration/callback"
+  callbackUrl: ${CALLBACK_URL:"https://isekaihub.com.br/api/v1/site/integration/callback"}
+#  callbackUrl: "https://isekaihub.com.br/api/v1/site/integration/callback"

@@ -3,20 +3,24 @@ package br.com.achimid.animesachimidv2.cron
 import br.com.achimid.animesachimidv2.gateways.outputs.http.JikanAPIGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.repositories.AnimeRepository
+import br.com.achimid.animesachimidv2.usecases.FindCalendarReleaseUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Caching
+import org.springframework.context.annotation.Lazy
 import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 @Component
 class JikanLoadTask(
     val animeRepository: AnimeRepository,
     val animeGateway: AnimeGateway,
     val jikanGateway: JikanAPIGateway,
+    @Lazy val findCalendarReleaseUseCase: FindCalendarReleaseUseCase,
 ) {
 
     val logger = LoggerFactory.getLogger(this.javaClass)
@@ -36,6 +40,10 @@ class JikanLoadTask(
         if (animes.isEmpty()) { logger.warn("No season animes returned from Jikan"); return }
         animes.chunked(10).forEach { chunk -> animeGateway.saveAll(chunk) }
         logger.info("Current season loaded: ${animes.size} animes saved")
+        CompletableFuture.runAsync {
+            runCatching { findCalendarReleaseUseCase.executeAndSave() }
+                .onFailure { logger.warn("Falha ao atualizar snapshot do calendário após carga Jikan: ${it.message}") }
+        }
     }
 
     // Atualiza 4 animes por minuto (nulls/mais antigos primeiro), respeitando o rate limit do Jikan.

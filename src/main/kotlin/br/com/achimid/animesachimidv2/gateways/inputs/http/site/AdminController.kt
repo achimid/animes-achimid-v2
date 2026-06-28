@@ -3,6 +3,7 @@ package br.com.achimid.animesachimidv2.gateways.inputs.http.site
 import br.com.achimid.animesachimidv2.configurations.AdminAccessChecker
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.AnimeGateway
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.ReleaseGateway
+import br.com.achimid.animesachimidv2.usecases.FindGoogleUsersUseCase
 import br.com.achimid.animesachimidv2.usecases.FindSiteIntegrationsUseCase
 import br.com.achimid.animesachimidv2.usecases.ModerateCommentUseCase
 import org.springframework.data.domain.PageRequest
@@ -21,6 +22,7 @@ class AdminController(
     val moderateCommentUseCase: ModerateCommentUseCase,
     val releaseGateway: ReleaseGateway,
     val animeGateway: AnimeGateway,
+    val findGoogleUsersUseCase: FindGoogleUsersUseCase,
 ) {
 
     @GetMapping
@@ -51,5 +53,23 @@ class AdminController(
         model.addAttribute("totalPages", page.totalPages)
         model.addAttribute("totalElements", page.totalElements)
         return "admin-review"
+    }
+
+    @GetMapping("/users")
+    fun users(
+        @RequestParam(required = false) pageNumber: Int = 0,
+        @RequestParam(required = false) query: String? = null,
+        @CookieValue(value = "user_id", required = false) userId: String? = null,
+        model: Model
+    ): String {
+        if (!adminAccessChecker.isAdmin(userId)) return "redirect:/"
+
+        val page = findGoogleUsersUseCase.execute(pageNumber, 20, query)
+        model.addAttribute("users", page.content)
+        model.addAttribute("currentPage", pageNumber)
+        model.addAttribute("totalPages", page.totalPages)
+        model.addAttribute("totalElements", page.totalElements)
+        model.addAttribute("query", query ?: "")
+        return "admin-users"
     }
 }

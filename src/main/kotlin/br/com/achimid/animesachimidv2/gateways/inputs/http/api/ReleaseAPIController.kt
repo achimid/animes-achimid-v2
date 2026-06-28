@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus.NO_CONTENT
 import org.springframework.http.HttpStatus.OK
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -52,15 +53,15 @@ class ReleaseAPIController(
     }
 
     @PostMapping("/{id}/reassign")
-    @ResponseStatus(NO_CONTENT)
     fun reassign(
         @PathVariable id: String,
         @RequestBody body: Map<String, String>,
         @CookieValue(value = "user_id", required = false) userId: String? = null,
-    ) {
+    ): ResponseEntity<Map<String, Int>> {
         adminAccessChecker.requireAdmin(userId)
         val animeSlug = requireNotNull(body["animeSlug"]) { "animeSlug obrigatório" }
-        reassignReleaseUseCase.execute(id, animeSlug)
+        val autoMatched = reassignReleaseUseCase.execute(id, animeSlug)
+        return ResponseEntity.ok(mapOf("autoMatched" to autoMatched))
     }
 
     @GetMapping("/review")

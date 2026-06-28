@@ -19,6 +19,8 @@ data class UserDocument(
     val isAdmin: Boolean = false,
     val notificationSitePreferences: Map<String, Set<String>>? = null,
 
+    val lastLoginAt: Instant? = null,
+
     @CreatedDate
     val createdAt: Instant? = null,
     @LastModifiedDate

@@ -29,6 +29,7 @@ data class Anime(
     val tags: List<String>? = null,
     val infoList: List<AnimeDetailsInfo>? = null,
     val score: Double? = null,
+    val scoredBy: Int? = null,
     val popularity: String? = null,
     val rank: String? = null,
     val streamingUrl: String? = null,

@@ -19,7 +19,7 @@ class CacheConfig {
             listOf(
                 buildCache("pageAccessCache", 5, MINUTES, 1),
                 buildCache("releasesCache", 5, MINUTES, 100),
-                buildCache("animeCache", 10, MINUTES, 200),
+                buildCache("animeCache", 30, MINUTES, 200),
                 buildCache("animesCache", 5, MINUTES, 100),
                 buildCache("animeSearchCache", 5, MINUTES, 50),
                 buildCache("recommendationsCache", 2, HOURS, 5),

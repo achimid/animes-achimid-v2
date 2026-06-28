@@ -31,6 +31,8 @@ um único lugar, com calendário da temporada, busca, recomendações e favorito
 
 ## 🌐 Links Úteis
 
+- [Isekai Hub](https://isekaihub.com.br)
+- [Isekai Hub — Documentação da API (Swagger)](https://isekaihub.com.br/api)
 - [Site Principal](https://animes.achimid.com.br)
 - [Documentação da API (Swagger)](https://animes.achimid.com.br/api)
 - [AnimeX](https://animex.achimid.com.br)

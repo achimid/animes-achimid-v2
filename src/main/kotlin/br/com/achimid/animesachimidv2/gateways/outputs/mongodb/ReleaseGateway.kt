@@ -41,6 +41,10 @@ class ReleaseGateway(
         return repository.findVisibleByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
     }
 
+    fun findAllByAnimeIdOrderByEpisodeDesc(animeId: String): List<Release> {
+        return repository.findAllByAnimeIdOrderByEpisodeDesc(animeId).map(this::fromDocument)
+    }
+
     fun findByAnimeIdAndEpisodeNumber(animeId: String, episodeNumber: String): List<Release> {
         return repository.findByAnimeIdAndEpisode(animeId, episodeNumber.padLeft()!!).map(this::fromDocument)
     }
@@ -53,6 +57,11 @@ class ReleaseGateway(
 
     fun findNeedingReview(pageRequest: PageRequest): Page<Release> =
         repository.findNeedingReview(pageRequest).map(this::fromDocument)
+
+    fun findSimilarForReview(baseTitle: String): List<Release> {
+        val prefix = baseTitle.split(" ").take(3).joinToString(" ").ifBlank { baseTitle }
+        return repository.findNeedingReviewByRawTitleContaining(prefix).map(this::fromDocument)
+    }
 
     fun toDocument(release: Release): ReleaseDocument {
         return ReleaseDocument(

@@ -7,6 +7,10 @@ Disallow: /admin
 Disallow: /admin/
 Disallow: /user
 Disallow: /favorites
+Disallow: /404
 Disallow: /500
 
-Sitemap: https://animes.achimid.com.br/sitemap.xml
+# Suaviza a carga para crawlers que respeitam (Bing, Yandex; Google ignora)
+Crawl-delay: 5
+
+Sitemap: https://isekaihub.com.br/sitemap.xml

@@ -415,10 +415,18 @@
 @media (max-width: 768px) {
     .list-container { grid-template-columns: repeat(2, 1fr); }
     .calendar-centralized-wrapper    { padding: 10px 4%; }
+    .list-img { height: 200px; }
 }
 
 @media (max-width: 480px) {
+    /* 2 colunas (em vez de 1 enorme) aproveitam melhor a tela do celular */
+    .list-container { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .list-img { height: 170px; }
+}
+
+@media (max-width: 340px) {
     .list-container { grid-template-columns: 1fr; }
+    .list-img { height: 200px; }
 }
 
 /* --- CARD FINAL: POSTER COM IMAGEM DE DESTAQUE --- */

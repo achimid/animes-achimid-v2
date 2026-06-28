@@ -4,6 +4,7 @@ import br.com.achimid.animesachimidv2.domains.User
 import br.com.achimid.animesachimidv2.gateways.outputs.mongodb.UserGateway
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.util.UUID
 
 /**
@@ -31,6 +32,8 @@ class LoginWithGoogleUseCase(
         val guest = guestUserId?.let { userGateway.findById(it) }?.takeIf { it.email == null }
         val existing = userGateway.findByEmail(email)
 
+        val now = Instant.now()
+
         return when {
             // Conta já existe: mescla favoritos do convidado atual e atualiza o perfil.
             existing != null -> {
@@ -40,19 +43,20 @@ class LoginWithGoogleUseCase(
                         username = name ?: existing.username,
                         picture = picture ?: existing.picture,
                         googleId = googleId ?: existing.googleId,
-                        favorites = mergedFavorites
+                        favorites = mergedFavorites,
+                        lastLoginAt = now,
                     )
                 ).also { logger.info("Login Google: conta existente ${it.id} (mesclados ${guest?.favorites?.size ?: 0} favoritos)") }
             }
 
             // Promove o convidado a conta (mantém o mesmo id → cookie inalterado e favoritos preservados).
             guest != null -> userGateway.save(
-                guest.copy(email = email, username = name ?: guest.username, picture = picture, googleId = googleId)
+                guest.copy(email = email, username = name ?: guest.username, picture = picture, googleId = googleId, lastLoginAt = now)
             ).also { logger.info("Login Google: convidado ${it.id} promovido a conta") }
 
             // Sem convidado e sem conta: cria do zero.
             else -> userGateway.save(
-                User(id = UUID.randomUUID().toString(), email = email, username = name, picture = picture, googleId = googleId)
+                User(id = UUID.randomUUID().toString(), email = email, username = name, picture = picture, googleId = googleId, lastLoginAt = now)
             ).also { logger.info("Login Google: nova conta ${it.id}") }
         }
     }

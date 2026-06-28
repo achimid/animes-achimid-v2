@@ -1,45 +1,20 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title th:text="|${anime.name} - Animes Achimid|">Anime Page - Animes Achimid</title>
+    <th:block th:replace="~{fragments/head :: commonAssets}"></th:block>
 
     <meta name="robots" content="max-image-preview:large">
     <meta name="googlebot" content="all">
-
-    <!-- SEO: meta description dinâmica com score, gêneros e trecho da sinopse -->
-    <meta name="description" th:content="${metaDescription}">
+    <!-- keywords dinâmicas com nome + gêneros do anime -->
     <meta name="keywords" th:content="|${anime.name}, ${#strings.listJoin(anime.tags ?: {}, ', ')}, Anime, Lançamento, Fansub|">
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="video.tv_show">
-    <meta property="og:locale" content="pt_BR">
-    <meta property="og:site_name" content="Animes Achimid">
-    <meta property="og:title" th:content="|${anime.name} - Animes Achimid|">
-    <meta property="og:description" th:content="${metaDescription}">
-    <meta property="og:url" th:content="|https://animes.achimid.com.br/anime/${anime.slug}|">
-    <meta property="og:image" th:content="${anime.imageUrl}">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" th:content="|${anime.name} - Animes Achimid|">
-    <meta name="twitter:description" th:content="${metaDescription}">
-    <meta name="twitter:image" th:content="${anime.imageUrl}">
+    <!-- SEO dinâmico (title/canonical/OG/Twitter) com a capa do anime como imagem -->
+    <th:block th:replace="~{fragments/head :: seo(|${anime.name} - Isekai Hub|, ${metaDescription}, |/anime/${anime.slug}|, ${anime.imageUrl}, 'video.tv_show')}"></th:block>
+    <meta property="og:image:alt" th:content="|Capa de ${anime.name}|">
     <meta name="twitter:image:alt" th:content="|Capa de ${anime.name}|">
-
-    <link rel="canonical" th:href="|https://animes.achimid.com.br/anime/${anime.slug}|">
 
     <!-- Preload da imagem hero (LCP) -->
     <link rel="preload" as="image" th:href="${anime.imageUrl}">
-
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="manifest" href="/favicon/site.webmanifest">
-
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/common.css}">
     <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/anime.css}">
@@ -58,18 +33,6 @@
             flex-wrap: wrap;
         }
     </style>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-89V9QWJ1Q4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('consent', 'default', { 'ad_storage': 'denied', 'analytics_storage': 'denied' });
-        try { if (localStorage.getItem('cookie_consent') === 'accepted') { gtag('consent', 'update', { 'ad_storage': 'granted', 'analytics_storage': 'granted' }); } } catch (e) {}
-        gtag('js', new Date());
-        gtag('config', 'G-89V9QWJ1Q4');
-    </script>
-    <meta name="google-site-verification" content="_TNQ2lXCMgZqsSzlzOXC2PbzOrWopVSYFHmUBen1Q6c">
 
     <!-- JSON-LD: TVSeries (gerado no controller) -->
     <script type="application/ld+json" th:inline="text">[(${jsonLdTvSeries})]</script>
@@ -401,34 +364,10 @@
 
     </script>
 
-<!--    <footer th:replace="~{fragments/layout :: footer}"></footer>-->
+    <footer th:replace="~{fragments/layout :: footer}"></footer>
 
-    <footer class="footer-main">
-        <div class="footer-container">
-            <div class="logo">Animes <span>Achimid</span></div>
-            <div class="subtitle">Feito por um amante de animes. De fã para fã.</div>
-
-            <nav class="footer-nav">
-                <a href="/dmca">DMCA</a>
-                <span class="sep">|</span>
-                <a href="/cookies">Cookies</a>
-                <span class="sep">|</span>
-                <a href="/privacy">Privacidade</a>
-                <span class="sep">|</span>
-                <a href="/terms">Termos</a>
-                <span class="sep">|</span>
-                <a href="mailto:achimid@hotmail.com?subject=Contato - Animes Achimid">Contato</a>
-            </nav>
-
-            <div class="disclaimer">
-                <p>Disclaimer: Não hospedamos nenhum dos vídeos nos nossos servidores, apenas os indexamos.</p>
-                <p>&copy; 2026 <strong>Animes Achimid</strong>. Todos os direitos reservados.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
     <script th:inline="javascript">/*<![CDATA[*/window.ANIME_SLUG=/*[[${anime.slug}]]*/null;/*]]>*/</script>
-    <script type="text/javascript" th:src="@{/js/anime.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/anime.js}"></script>
 </body>
 </html>

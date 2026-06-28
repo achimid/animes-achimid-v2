@@ -21,6 +21,9 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
     @Query(value = "{ 'hidden': { '\$ne': true }, 'animeId': ?0 }", sort = "{ 'episode': -1 }")
     fun findVisibleByAnimeIdOrderByEpisodeDesc(animeId: String): List<ReleaseDocument>
 
+    @Query(value = "{ 'animeId': ?0 }", sort = "{ 'episode': -1 }")
+    fun findAllByAnimeIdOrderByEpisodeDesc(animeId: String): List<ReleaseDocument>
+
     fun findByAnimeIdAndEpisode(animeId: String, episodeNumber: String): List<ReleaseDocument>
 
     @Query(value = "{ 'createdAt': { '\$gt': ?0 }, 'hidden': { '\$ne': true } }", count = true)
@@ -30,6 +33,9 @@ interface ReleaseRepository: MongoRepository<ReleaseDocument, String> {
     @Update("{ '\$set': { 'animeImage': ?1 } }")
     fun updateAnimeImageByAnimeId(animeId: String, imageUrl: String)
 
-    @Query("{ 'needsReview': true }")
+    @Query(value = "{ 'needsReview': true }", sort = "{ 'createdAt': -1 }")
     fun findNeedingReview(pageRequest: PageRequest): Page<ReleaseDocument>
+
+    @Query("{ 'needsReview': true, 'rawSearchTitle': { '\$regex': ?0, '\$options': 'i' } }")
+    fun findNeedingReviewByRawTitleContaining(prefix: String): List<ReleaseDocument>
 }

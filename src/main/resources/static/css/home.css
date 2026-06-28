@@ -399,10 +399,10 @@
 .sidebar-search {
     width: 100%;
     padding: 8px 35px 8px 12px;
-    background: #0a0a0a;
-    border: 1px solid #333;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
     border-radius: 4px;
-    color: white;
+    color: var(--color-text);
     font-size: 0.85rem;
     outline: none;
 }
@@ -452,7 +452,7 @@
 .download-name { font-size: 0.9rem; font-weight: 600; color: var(--text-white); flex: 1; }
 
 .btn-download {
-    background: #1a1a1a;
+    background: var(--color-surface-2);
     color: var(--primary-green);
     border: 1px solid var(--primary-green);
     padding: 5px 12px;
@@ -468,7 +468,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.4s ease-out;
-    background: #0a0a0a;
+    background: var(--color-surface-2);
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -477,9 +477,9 @@
 .download-options.show { max-height: 500px; padding: 10px; margin-bottom: 10px; border-radius: 6px; }
 
 .btn-server {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #ccc;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
     padding: 6px;
     font-size: 0.7rem;
     text-align: center;
@@ -520,20 +520,20 @@
 .cal-info { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 .cal-time {
-    background: #000;
+    background: var(--color-surface-3);
     color: var(--accent-orange);
     font-size: 0.8rem;
     padding: 4px 10px;
     border-radius: 4px;
-    border: 1px solid #333;
+    border: 1px solid var(--color-border);
     font-weight: 700;
 }
 
 /* Favoritos e Estatísticas */
 .fav-item { display: flex; gap: 12px; margin-bottom: 15px; align-items: center; }
-.fav-img { width: 45px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid #333; }
+.fav-img { width: 45px; height: 60px; border-radius: 4px; object-fit: cover; border: 1px solid var(--color-border); }
 .fav-name { font-size: 0.9rem; font-weight: 700; color: var(--text-white); display: block; margin-bottom: 4px; }
-.fav-progress-bg { width: 100%; height: 6px; background: #222; border-radius: 10px; }
+.fav-progress-bg { width: 100%; height: 6px; background: var(--color-surface-3); border-radius: 10px; }
 .fav-progress-fill { height: 100%; background: var(--primary-green); border-radius: 10px; }
 
 .stats-grid {
@@ -543,8 +543,8 @@
 }
 
 .stats-cell {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid #222;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border-subtle);
     border-radius: 8px;
     padding: 12px 10px;
     text-align: center;
@@ -666,6 +666,11 @@
 @media (max-width: 1100px) {
     .main-wrapper { grid-template-columns: 1fr; }
     .anime-grid { grid-template-columns: repeat(4, 1fr); }
+    /* Em coluna única, as colunas do grid precisam ser contêineres de scroll:
+       sem isso, o carrossel da temporada (min-content enorme) "estica" a coluna
+       além da viewport e o conteúdo fica mais largo que a tela (espaço lateral). */
+    .content-area,
+    .sidebar { overflow-x: hidden; min-width: 0; }
 }
 
 @media (max-width: 900px) {
@@ -677,12 +682,15 @@
 }
 
 @media (max-width: 600px) {
+    .main-wrapper { gap: 16px; padding: 1.25rem 3%; max-width: 100%; }
     .anime-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 480px) {
+    /* nomes da sidebar (já full-width nesse ponto): nunca cortar, só ellipsis dentro do container */
     .download-item .download-name,
-    .calendar-item .cal-name { max-width: 275px; }
+    .calendar-item .cal-name,
+    .site-item .cal-name { max-width: 100%; }
 }
 
 @media (max-width: 420px) {
@@ -691,6 +699,23 @@
     .anime-card-title { font-size: 0.7rem; }
     .ep-badge, .rating-badge { font-size: 0.65rem; top: 5px; left: 5px; }
     .welcome-banner { height: 150px; }
+}
+
+@media (max-width: 400px) {
+    .main-wrapper { gap: 12px; padding: 0.85rem 3%; }
+    .anime-grid { gap: 10px; }
+    .anime-card-title { font-size: 0.68rem; }
+    /* destaque: menos respiro e capa menor para caber sem cortar */
+    .featured-overlay { padding: 12px; gap: 12px; }
+    .featured-cover { width: 64px; }
+    /* carrossel da temporada: cards e setas menores */
+    .season-scroll { gap: 10px; }
+    .season-scroll .anime-card { flex: 0 0 110px; }
+    .season-nav { width: 26px; height: 48px; font-size: 1.3rem; }
+}
+
+@media (max-width: 340px) {
+    .anime-grid { grid-template-columns: 1fr; }
 }
 
 

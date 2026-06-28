@@ -85,6 +85,7 @@ interface AnimeDocumentMapper {
             ),
             rank = jikan.rank,
             score = jikan.score,
+            scoredBy = jikan.scoredBy,
             popularity = jikan.popularity,
             season = jikan.season,
             year = jikan.year,

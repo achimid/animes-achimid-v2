@@ -16,22 +16,28 @@ class SitemapController(val animeGateway: AnimeGateway) {
 
     @GetMapping(value = ["/sitemap.xml"], produces = ["application/xml"])
     fun sitemap(model: Model): String {
+        val today = dateFormatter.format(java.time.Instant.now())
+
         val staticUrls = listOf(
-            SitemapUrl("https://animes.achimid.com.br/", null, "daily", "0.9"),
-            SitemapUrl("https://animes.achimid.com.br/animes", null, "daily", "0.9"),
-            SitemapUrl("https://animes.achimid.com.br/calendar", null, "daily", "0.8"),
+            SitemapUrl("https://isekaihub.com.br/", today, "daily", "0.9"),
+            SitemapUrl("https://isekaihub.com.br/animes", today, "daily", "0.9"),
+            SitemapUrl("https://isekaihub.com.br/calendar", today, "daily", "0.8"),
         )
+
+        val legalUrls = listOf("dmca", "cookies", "privacy", "terms").map { page ->
+            SitemapUrl("https://isekaihub.com.br/$page", null, "yearly", "0.3")
+        }
 
         val animeUrls = animeGateway.findSitemapData().map { entry ->
             SitemapUrl(
-                loc = "https://animes.achimid.com.br/anime/${entry.slug}",
+                loc = "https://isekaihub.com.br/anime/${entry.slug}",
                 lastmod = entry.updatedAt?.let { dateFormatter.format(it) },
                 changefreq = "weekly",
                 priority = "0.6",
             )
         }
 
-        model.addAttribute("urls", staticUrls + animeUrls)
+        model.addAttribute("urls", staticUrls + legalUrls + animeUrls)
         return "sitemap"
     }
 }

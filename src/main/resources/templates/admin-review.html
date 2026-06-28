@@ -41,6 +41,12 @@
         .modal-result-item img { width:32px; height:45px; object-fit:cover; border-radius:3px; }
         .modal-footer { margin-top: 16px; display:flex; gap:10px; justify-content:flex-end; }
         .btn-modal-cancel { padding: 7px 16px; border-radius: 6px; background: transparent; color: var(--color-text-muted, #aaa); border: 1px solid var(--color-border, #333); cursor: pointer; }
+        .btn-jikan { padding: 7px 14px; border-radius: 6px; background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.35); cursor: pointer; font-size: 0.85rem; display:none; margin-top: 8px; width:100%; }
+        .btn-jikan:hover { background: rgba(251,191,36,0.25); }
+        .jikan-badge { display:inline-block; padding:1px 6px; border-radius:3px; font-size:0.7rem; font-weight:700; background:rgba(251,191,36,0.2); color:#fbbf24; margin-left:6px; vertical-align:middle; }
+        /* Toast */
+        #reassignToast { position:fixed; bottom:24px; right:24px; background:var(--bg-card,#1a1a2e); border:1px solid var(--color-border,#333); border-radius:10px; padding:14px 20px; font-size:0.88rem; max-width:320px; box-shadow:0 4px 20px rgba(0,0,0,0.4); z-index:2000; display:none; animation:toastIn .2s ease; }
+        @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
     </style>
 </head>
 <body>
@@ -67,11 +73,12 @@
                 </section>
 
                 <section class="admin-section" th:unless="${releases.isEmpty()}">
+                    <div class="table-scroll-wrapper">
                     <table class="review-table">
                         <thead>
                             <tr>
                                 <th>Título do lançamento</th>
-                                <th>Título buscado (scraper)</th>
+                                <th class="col-hide-mobile">Título buscado (scraper)</th>
                                 <th>Anime atual</th>
                                 <th>Score</th>
                                 <th>Ações</th>
@@ -83,7 +90,7 @@
                                     <span th:text="${r.title}">Título</span>
                                     <div class="raw-title" th:text="|ep. ${r.animeEpisode}|">ep.</div>
                                 </td>
-                                <td>
+                                <td class="col-hide-mobile">
                                     <span th:text="${r.rawSearchTitle ?: '—'}">—</span>
                                 </td>
                                 <td>
@@ -108,6 +115,7 @@
                             </tr>
                         </tbody>
                     </table>
+                    </div>
 
                     <!-- Paginação -->
                     <div class="pagination" th:if="${totalPages > 1}">
@@ -129,25 +137,32 @@
             <p style="color:var(--color-text-muted,#aaa); font-size:0.85rem; margin-top:-8px; margin-bottom:12px;" id="modalReleaseTitle"></p>
             <input type="text" class="modal-search" id="animeSearchInput" placeholder="Buscar anime pelo nome...">
             <div class="modal-results" id="animeSearchResults"></div>
+            <button class="btn-jikan" id="btnSearchJikan">🔍 Buscar no MyAnimeList</button>
             <div class="modal-footer">
                 <button class="btn-modal-cancel" id="btnModalCancel">Cancelar</button>
             </div>
         </div>
     </div>
 
+    <!-- Toast de confirmação -->
+    <div id="reassignToast"></div>
+
     <footer th:replace="~{fragments/layout :: footer}"></footer>
 
-    <script type="text/javascript" th:src="@{/js/common.js}"></script>
+    <script defer type="text/javascript" th:src="@{/js/common.js}"></script>
     <script>
         let currentReleaseId = null;
         let searchTimeout = null;
+        let toastTimer = null;
 
+        // ===== Abertura do modal =====
         document.querySelectorAll('.js-open-reassign').forEach(btn => {
             btn.addEventListener('click', () => {
                 currentReleaseId = btn.dataset.id;
                 document.getElementById('modalReleaseTitle').textContent = btn.dataset.title || '';
                 document.getElementById('animeSearchInput').value = '';
                 document.getElementById('animeSearchResults').innerHTML = '';
+                document.getElementById('btnSearchJikan').style.display = 'none';
                 document.getElementById('reassignModal').classList.add('open');
                 document.getElementById('animeSearchInput').focus();
             });
@@ -163,50 +178,84 @@
             currentReleaseId = null;
         }
 
+        // ===== Busca local =====
         document.getElementById('animeSearchInput').addEventListener('input', e => {
             clearTimeout(searchTimeout);
             const q = e.target.value.trim();
+            document.getElementById('btnSearchJikan').style.display = 'none';
             if (q.length < 2) { document.getElementById('animeSearchResults').innerHTML = ''; return; }
-            searchTimeout = setTimeout(() => searchAnimes(q), 300);
+            searchTimeout = setTimeout(() => searchAnimes(q, false), 300);
         });
 
-        function searchAnimes(q) {
-            fetch(`/api/v1/animes?query=${encodeURIComponent(q)}&pageSize=10`)
+        function searchAnimes(q, fromJikan) {
+            const url = fromJikan
+                ? `/api/v1/admin/animes/search-jikan?query=${encodeURIComponent(q)}`
+                : `/api/v1/animes?query=${encodeURIComponent(q)}&pageSize=10`;
+
+            fetch(url)
                 .then(r => r.json())
                 .then(data => {
-                    const items = data.content || [];
+                    const items = fromJikan ? (data || []) : (data.content || []);
                     const el = document.getElementById('animeSearchResults');
-                    el.innerHTML = items.length
-                        ? items.map(a => `
-                            <div class="modal-result-item" data-slug="${a.slug}" onclick="selectAnime('${a.slug}', '${escHtml(a.name)}')">
-                                <img src="${a.imageUrl || ''}" alt="" onerror="this.style.display='none'">
-                                <span>${escHtml(a.name)}</span>
-                            </div>`).join('')
-                        : '<p style="color:var(--color-text-muted,#aaa);padding:8px;font-size:0.85rem;">Nenhum anime encontrado.</p>';
+                    const jikanBadge = fromJikan ? '<span class="jikan-badge">MAL</span>' : '';
+                    if (items.length) {
+                        el.innerHTML = items.map(a => `
+                            <div class="modal-result-item" onclick="selectAnime('${escHtml(a.slug)}', '${escHtml(a.name)}')">
+                                <img src="${escHtml(a.imageUrl || '')}" alt="" onerror="this.style.display='none'">
+                                <span>${escHtml(a.name)}${jikanBadge}</span>
+                            </div>`).join('');
+                        document.getElementById('btnSearchJikan').style.display = 'none';
+                    } else {
+                        el.innerHTML = '<p style="color:var(--color-text-muted,#aaa);padding:8px;font-size:0.85rem;">Nenhum anime encontrado na base local.</p>';
+                        if (!fromJikan) document.getElementById('btnSearchJikan').style.display = 'block';
+                    }
                 })
                 .catch(() => {});
         }
 
+        // ===== Busca no MyAnimeList =====
+        document.getElementById('btnSearchJikan').addEventListener('click', () => {
+            const q = document.getElementById('animeSearchInput').value.trim();
+            if (!q) return;
+            const btn = document.getElementById('btnSearchJikan');
+            btn.textContent = '⏳ Buscando no MyAnimeList...';
+            btn.disabled = true;
+            searchAnimes(q, true);
+            setTimeout(() => {
+                btn.textContent = '🔍 Buscar no MyAnimeList';
+                btn.disabled = false;
+            }, 3000);
+        });
+
         function escHtml(s) {
-            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
+        // ===== Seleção e reatribuição =====
         function selectAnime(slug, name) {
             if (!currentReleaseId) return;
             if (!confirm(`Reatribuir este release para "${name}"?`)) return;
-            fetch(`/api/v1/release/${currentReleaseId}/reassign`, {
+            const releaseId = currentReleaseId;
+            fetch(`/api/v1/release/${releaseId}/reassign`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ animeSlug: slug }),
-            }).then(r => {
-                if (r.ok) {
-                    const row = document.querySelector(`tr[data-id="${currentReleaseId}"]`);
-                    if (row) row.remove();
-                    closeModal();
+            }).then(r => r.ok ? r.json() : null).then(data => {
+                if (!data) return;
+                const autoMatched = data.autoMatched || 0;
+                document.querySelector(`tr[data-id="${releaseId}"]`)?.remove();
+                closeModal();
+                showToast(autoMatched > 0
+                    ? `Release reatribuído + <strong>${autoMatched}</strong> release${autoMatched > 1 ? 's similares corrigidos' : ' similar corrigido'} automaticamente.`
+                    : 'Release reatribuído com sucesso.');
+                if (autoMatched > 0) {
+                    // Remove linhas que foram auto-corrigidas (serão retiradas na próxima carga)
+                    setTimeout(() => location.reload(), 2500);
                 }
             }).catch(() => {});
         }
 
+        // ===== Confirmar match atual =====
         document.querySelectorAll('.js-confirm-match').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = btn.dataset.id;
@@ -216,16 +265,30 @@
                     return;
                 }
                 if (!confirm('Confirmar que o anime atual está correto?')) return;
-                const row = document.querySelector(`tr[data-id="${id}"]`);
                 fetch(`/api/v1/release/${id}/reassign`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ animeSlug: slug }),
-                }).then(r => {
-                    if (r.ok && row) row.remove();
+                }).then(r => r.ok ? r.json() : null).then(data => {
+                    if (!data) return;
+                    document.querySelector(`tr[data-id="${id}"]`)?.remove();
+                    const autoMatched = data.autoMatched || 0;
+                    showToast(autoMatched > 0
+                        ? `Confirmado + <strong>${autoMatched}</strong> release${autoMatched > 1 ? 's similares corrigidos' : ' similar corrigido'} automaticamente.`
+                        : 'Match confirmado.');
+                    if (autoMatched > 0) setTimeout(() => location.reload(), 2500);
                 }).catch(() => {});
             });
         });
+
+        // ===== Toast =====
+        function showToast(html) {
+            const toast = document.getElementById('reassignToast');
+            toast.innerHTML = html;
+            toast.style.display = 'block';
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 4000);
+        }
     </script>
 </body>
 </html>
